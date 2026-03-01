@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../generator/password_generator_page.dart';
 import '../../services/vault_service.dart';
+import '../../models/vault_item.dart';
 import '../../widgets/glass_panel.dart';
 import '../../widgets/neon_text.dart';
 import '../../widgets/protected_page.dart'; // ← wrapper sécurité
@@ -13,7 +14,7 @@ class VaultPage extends StatefulWidget {
 }
 
 class _VaultPageState extends State<VaultPage> {
-  List<Map<String, dynamic>> items = [];
+  List<VaultItem> items = [];
   final Map<String, bool> _showPassword = {};
 
   @override
@@ -22,25 +23,26 @@ class _VaultPageState extends State<VaultPage> {
     loadVault();
   }
 
-  /// Charge tous les items du coffre
+  /// Charge tous les items du coffre depuis le serveur
   Future<void> loadVault() async {
-    final ids = await VaultService.listIds();
-    final loadedItems = <Map<String, dynamic>>[];
-
-    for (final id in ids) {
-      final item = await VaultService.readItem(id);
-      if (item != null) {
-        loadedItems.add({'id': id, ...item});
-        _showPassword[id] = false; // mot de passe masqué par défaut
+    try {
+      final loaded = await VaultService.loadFromServer();
+      for (final item in loaded) {
+        _showPassword.putIfAbsent(item.id, () => false);
+      }
+      if (mounted) setState(() => items = loaded);
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Erreur chargement: $e")),
+        );
       }
     }
-
-    if (mounted) setState(() => items = loadedItems);
   }
 
   /// Supprime un item par son ID
   Future<void> deleteItem(String id) async {
-    await VaultService.deleteItem(id);
+    await VaultService.deleteFromServer(id);
     await loadVault();
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -106,11 +108,11 @@ class _VaultPageState extends State<VaultPage> {
                   itemCount: items.length,
                   itemBuilder: (context, index) {
                     final item = items[index];
-                    final id = item['id'] ?? '';
-                    final icon = VaultService.getVaultIcon(item['icon'] ?? '');
-                    final label = item['label'] ?? '';
-                    final password = item['password'] ?? '';
-                    final notes = item['notes'] ?? '';
+                    final id = item.id;
+                    final icon = VaultService.getVaultIcon(item.icon);
+                    final label = item.label;
+                    final password = item.password;
+                    final notes = item.notes;
                     final isVisible = _showPassword[id] ?? false;
 
                     return Padding(

@@ -115,4 +115,29 @@ class VaultService {
   static Future<void> deleteLocal(String id) async {
     await _storage.delete(key: id);
   }
+
+  /// Convertit un nom d'icône (string) en IconData
+  static IconData getVaultIcon(String iconName) {
+    switch (iconName) {
+      case 'email':
+        return Icons.email;
+      case 'wifi':
+        return Icons.wifi;
+      case 'credit_card':
+        return Icons.credit_card;
+      case 'person':
+        return Icons.person;
+      case 'vpn_key':
+        return Icons.vpn_key;
+      case 'phone':
+        return Icons.phone;
+      case 'computer':
+        return Icons.computer;
+      case 'cloud':
+        return Icons.cloud;
+      case 'lock':
+      default:
+        return Icons.lock;
+    }
+  }
 }

@@ -29,11 +29,11 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.cyanAccent),
-        foregroundColor: MaterialStateProperty.all(Colors.black),
-        elevation: MaterialStateProperty.all(8),
-        shadowColor: MaterialStateProperty.all(Colors.cyanAccent),
-        shape: MaterialStateProperty.all(
+        backgroundColor: WidgetStateProperty.all(Colors.cyanAccent),
+        foregroundColor: WidgetStateProperty.all(Colors.black),
+        elevation: WidgetStateProperty.all(8),
+        shadowColor: WidgetStateProperty.all(Colors.cyanAccent),
+        shape: WidgetStateProperty.all(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
@@ -42,7 +42,7 @@ class AppTheme {
       activeTrackColor: Colors.cyanAccent,
       inactiveTrackColor: Colors.white24,
       thumbColor: Colors.cyanAccent,
-      overlayColor: Colors.cyanAccent.withOpacity(0.2),
+      overlayColor: Colors.cyanAccent.withValues(alpha:0.2),
     ),
   );
 
@@ -74,11 +74,11 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
-        foregroundColor: MaterialStateProperty.all(Colors.white),
-        elevation: MaterialStateProperty.all(6),
-        shadowColor: MaterialStateProperty.all(Colors.blueAccent),
-        shape: MaterialStateProperty.all(
+        backgroundColor: WidgetStateProperty.all(Colors.blueAccent),
+        foregroundColor: WidgetStateProperty.all(Colors.white),
+        elevation: WidgetStateProperty.all(6),
+        shadowColor: WidgetStateProperty.all(Colors.blueAccent),
+        shape: WidgetStateProperty.all(
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
@@ -87,7 +87,7 @@ class AppTheme {
       activeTrackColor: Colors.blueAccent,
       inactiveTrackColor: Colors.black12,
       thumbColor: Colors.blueAccent,
-      overlayColor: Colors.blueAccent.withOpacity(0.2),
+      overlayColor: Colors.blueAccent.withValues(alpha:0.2),
     ),
   );
 }

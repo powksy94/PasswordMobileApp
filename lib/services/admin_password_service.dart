@@ -11,10 +11,13 @@ class AdminPasswordService {
   static Future<void> setPassword(String password) async =>
       await _storage.write(key: _adminKey, value: password);
 
-  // Vérification Team Admin
+  // Team Admin password
+  static Future<String?> getTeamAdminPassword() async =>
+      await _storage.read(key: _teamAdminKey);
+
   static Future<bool> verifyTeamAdminPassword(String input) async {
     final stored = await _storage.read(key: _teamAdminKey);
-    return stored == input;
+    return stored != null && stored == input;
   }
 
   static Future<void> setTeamAdminPassword(String password) async =>

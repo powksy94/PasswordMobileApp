@@ -111,10 +111,10 @@ class _HomePageState extends State<HomePage> {
                 Switch(
                   value: isDark,
                   onChanged: widget.onThemeToggle,
-                  activeColor: Colors.cyanAccent,
+                  activeThumbColor: Colors.cyanAccent,
                   inactiveThumbColor: Colors.blueAccent,
-                  activeTrackColor: Colors.cyanAccent.withOpacity(0.4),
-                  inactiveTrackColor: Colors.blueAccent.withOpacity(0.4),
+                  activeTrackColor: Colors.cyanAccent.withValues(alpha:0.4),
+                  inactiveTrackColor: Colors.blueAccent.withValues(alpha:0.4),
                 ),
               ],
             ),

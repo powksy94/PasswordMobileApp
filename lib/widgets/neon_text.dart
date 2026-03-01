@@ -28,12 +28,12 @@ class NeonText extends StatelessWidget {
         shadows: glow
             ? [
                 Shadow(
-                  color: color.withOpacity(0.7),
+                  color: color.withValues(alpha:0.7),
                   blurRadius: 10,
                   offset: const Offset(0, 0),
                 ),
                 Shadow(
-                  color: color.withOpacity(0.5),
+                  color: color.withValues(alpha:0.5),
                   blurRadius: 20,
                   offset: const Offset(0, 0),
                 ),

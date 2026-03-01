@@ -34,8 +34,8 @@ void showUpdateDialog(BuildContext context, String apkUrl) {
                   shadows: [
                     Shadow(
                       color: isDark
-                          ? Colors.cyanAccent.withOpacity(0.3)
-                          : Colors.blueAccent.withOpacity(0.2),
+                          ? Colors.cyanAccent.withValues(alpha:0.3)
+                          : Colors.blueAccent.withValues(alpha:0.2),
                       blurRadius: 8,
                     ),
                   ],
@@ -55,8 +55,8 @@ void showUpdateDialog(BuildContext context, String apkUrl) {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       shadowColor: isDark
-                          ? Colors.cyanAccent.withOpacity(0.4)
-                          : Colors.blueAccent.withOpacity(0.3),
+                          ? Colors.cyanAccent.withValues(alpha:0.4)
+                          : Colors.blueAccent.withValues(alpha:0.3),
                       elevation: 6,
                     ),
                     child: const Text("Plus tard"),
@@ -76,8 +76,8 @@ void showUpdateDialog(BuildContext context, String apkUrl) {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       shadowColor: isDark
-                          ? Colors.cyanAccent.withOpacity(0.6)
-                          : Colors.blueAccent.withOpacity(0.5),
+                          ? Colors.cyanAccent.withValues(alpha:0.6)
+                          : Colors.blueAccent.withValues(alpha:0.5),
                       elevation: 8,
                     ),
                     child: const Text("Mettre à jour"),

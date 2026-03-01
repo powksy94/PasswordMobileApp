@@ -1,4 +1,6 @@
 // lib/services/auth_service.dart
+import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'api_service.dart';
@@ -70,19 +72,24 @@ class AuthService {
 
   static Uint8List? getMasterKey() => _masterKey;
 
-  // Utility: generate cryptographically secure random bytes
-  static Uint8List pcSecureRandom(int length) {
-    final rnd = pc.SecureRandom('Fortuna')..seed(pc.KeyParameter(_seedFromDate()));
-    final out = Uint8List(length);
-    for (int i = 0; i < length; i++) {
-      out[i] = rnd.nextUint8();
-    }
-    return out;
+  // Returns the stored backend role string ('admin', 'team_admin', or 'user')
+  static Future<String> getUserRoleString() async {
+    return await _storage.read(key: _keyRole) ?? 'user';
   }
 
-  static Uint8List _seedFromDate() {
-    final now = DateTime.now().microsecondsSinceEpoch;
-    final bd = ByteData(8)..setInt64(0, now);
-    return bd.buffer.asUint8List();
+  // Updates token and role in secure storage after a bootstrap/role-change call
+  static Future<void> updateTokenAndRole(String newToken, String role) async {
+    await _storage.write(key: _keyToken, value: newToken);
+    await _storage.write(key: _keyRole, value: role);
+  }
+
+  // Utility: generate cryptographically secure random bytes
+  static Uint8List pcSecureRandom(int length) {
+    final rnd = Random.secure();
+    final out = Uint8List(length);
+    for (int i = 0; i < length; i++) {
+      out[i] = rnd.nextInt(256);
+    }
+    return out;
   }
 }

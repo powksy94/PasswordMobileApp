@@ -64,11 +64,31 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
     setState(() => _loading = true);
 
+    // Capture providers before any await to avoid use_build_context_synchronously
+    final roleManager = Provider.of<RoleManager>(context, listen: false);
+    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
+    final teamAdminProvider = Provider.of<TeamAdminProvider>(context, listen: false);
+
     try {
-      await Future.delayed(const Duration(seconds: 1)); // simulation login
-      await AuthService.login(emailController.text.trim());
+      await AuthService.login(
+        emailController.text.trim(),
+        passwordController.text,
+        passwordController.text,
+      );
 
       if (!mounted) return;
+
+      // Sync backend role to providers so the app reflects the real DB role
+      final roleStr = await AuthService.getUserRoleString();
+      if (!mounted) return;
+      if (roleStr == 'admin') {
+        roleManager.setRole(UserRole.admin);
+        adminProvider.activateAdmin();
+      } else if (roleStr == 'team_admin') {
+        roleManager.setRole(UserRole.teamAdmin);
+        teamAdminProvider.setTeamAdmin(true);
+      }
+
       Navigator.pushReplacementNamed(context, '/home');
 
     } catch (e) {
@@ -111,8 +131,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
     Provider.of<AdminProvider>(context, listen: false).activateAdmin();
     Provider.of<RoleManager>(context, listen: false).setRole(UserRole.admin);
-
-    await AuthService.login("admin@local");
 
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/home');
@@ -218,14 +236,38 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     }
   }
 
-  void _handleSecretTapTeamAdmin() {
+  void _handleSecretTapTeamAdmin() async {
     _tapCountTeam++;
     _tapResetTimerTeam?.cancel();
     _tapResetTimerTeam = Timer(const Duration(seconds: 2), () => _tapCountTeam = 0);
 
     if (_tapCountTeam >= 5) {
       _tapCountTeam = 0;
-      showTeamAdminDialog();
+
+      // Si aucun mot de passe Team Admin n'est défini → informer l'utilisateur
+      final stored = await AdminPasswordService.getTeamAdminPassword();
+      if (!mounted) return;
+
+      if (stored == null) {
+        showDialog(
+          context: context,
+          builder: (_) => AlertDialog(
+            title: const Text("Team Admin"),
+            content: const Text(
+              'Aucun mot de passe Team Admin n\'est défini.\n\n'
+              'L\'administrateur doit d\'abord en créer un depuis le panneau Admin.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text("OK"),
+              ),
+            ],
+          ),
+        );
+      } else {
+        showTeamAdminDialog();
+      }
     }
   }
 

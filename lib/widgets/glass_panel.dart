@@ -30,12 +30,12 @@ class GlassPanel extends StatelessWidget {
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
     final Color borderColor = isDark
-        ? Colors.cyanAccent.withOpacity(0.7)
-        : Colors.blueAccent.withOpacity(0.7);
+        ? Colors.cyanAccent.withValues(alpha:0.7)
+        : Colors.blueAccent.withValues(alpha:0.7);
 
     final Color panelColor = isDark
-        ? Colors.black.withOpacity(0.4)
-        : Colors.white.withOpacity(0.3);
+        ? Colors.black.withValues(alpha:0.4)
+        : Colors.white.withValues(alpha:0.3);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
@@ -55,7 +55,7 @@ class GlassPanel extends StatelessWidget {
             boxShadow: glow
                 ? [
                     BoxShadow(
-                      color: borderColor.withOpacity(glowIntensity),
+                      color: borderColor.withValues(alpha:glowIntensity),
                       blurRadius: 20,
                       spreadRadius: 1,
                     )

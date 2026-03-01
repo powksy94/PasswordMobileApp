@@ -32,7 +32,7 @@ class _SignupPageState extends State<SignupPage> {
     setState(() => _loading = true);
 
     try {
-      await AuthService.signup(email.text, password.text);
+      await AuthService.register(email.text, password.text, password.text);
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
@@ -40,7 +40,7 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       if (!mounted) return;
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(

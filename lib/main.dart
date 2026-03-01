@@ -12,10 +12,11 @@ import 'pages/admin/secure_admin_page.dart';
 // Theme
 import 'theme/app_theme.dart';
 
-// Providers
+// Providers & Services
 import 'services/admin_provider.dart';
 import 'services/role_manager.dart';
 import 'services/team_admin_provider.dart';
+import 'services/auth_service.dart';
 
 void main() {
   runApp(
@@ -39,6 +40,26 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   ThemeMode themeMode = ThemeMode.dark;
+
+  @override
+  void initState() {
+    super.initState();
+    // Restore backend role from secure storage when app starts
+    WidgetsBinding.instance.addPostFrameCallback((_) => _restoreRole());
+  }
+
+  Future<void> _restoreRole() async {
+    final roleStr = await AuthService.getUserRoleString();
+    if (!mounted) return;
+    final roleManager = Provider.of<RoleManager>(context, listen: false);
+    if (roleStr == 'admin') {
+      roleManager.setRole(UserRole.admin);
+      Provider.of<AdminProvider>(context, listen: false).activateAdmin();
+    } else if (roleStr == 'team_admin') {
+      roleManager.setRole(UserRole.teamAdmin);
+      Provider.of<TeamAdminProvider>(context, listen: false).setTeamAdmin(true);
+    }
+  }
 
   void changeTheme(bool isDark) {
     setState(() {

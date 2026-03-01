@@ -58,7 +58,7 @@ class PasswordStrengthBar extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           height: 8,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha:0.1),
             borderRadius: BorderRadius.circular(4),
           ),
           child: FractionallySizedBox(
@@ -70,7 +70,7 @@ class PasswordStrengthBar extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4),
                 boxShadow: [
                   BoxShadow(
-                    color: color.withOpacity(0.6),
+                    color: color.withValues(alpha:0.6),
                     blurRadius: 6,
                     spreadRadius: 1,
                   ),

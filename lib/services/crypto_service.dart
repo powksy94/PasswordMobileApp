@@ -1,5 +1,6 @@
 // lib/services/crypto_service.dart
 import 'dart:convert';
+import 'dart:math';
 import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'package:pointycastle/export.dart' as pc;
@@ -11,14 +12,15 @@ class CryptoService {
     final salt = base64Decode(saltBase64);
     final derivator = pc.PBKDF2KeyDerivator(pc.HMac(pc.SHA256Digest(), 64));
     derivator.init(pc.Pbkdf2Parameters(salt, iterations, 32));
-    final key = derivator.process(Uint8List.fromList(password.codeUnits));
+    final key = derivator.process(Uint8List.fromList(utf8.encode(password)));
     return key;
   }
 
   /// Chiffre avec AES-256-GCM (IV 12 bytes). Retourne JSON string contenant data + iv, base64.
   static String encryptText(String plain, Uint8List keyBytes) {
     final key = Key(keyBytes);
-    final ivBytes = pc.SecureRandom().nextBytes(12);
+    final rng     = Random.secure();
+    final ivBytes = Uint8List.fromList(List.generate(12, (_) => rng.nextInt(256)));
     final iv = IV(ivBytes);
     final encrypter = Encrypter(AES(key, mode: AESMode.gcm));
     final encrypted = encrypter.encrypt(plain, iv: iv);

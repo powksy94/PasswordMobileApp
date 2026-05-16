@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'role_manager.dart';
-import 'package:password_mobile_app/services/auth_service.dart';
+import 'role_provider.dart';
+import 'auth_service.dart';
 
 class RouteGuard {
   static Future<bool> canAccess(
     BuildContext context, {
     bool requiresLogin = true,
-    bool adminOnly = false,
+    bool adminOnly     = false,
   }) async {
-    final roleManager = Provider.of<RoleManager>(context, listen: false);
-    final isAdmin = roleManager.isAdmin;
-
-    final isLoggedIn = await AuthService.isLoggedIn();
+    final roleProvider = Provider.of<RoleProvider>(context, listen: false);
+    final isLoggedIn   = await AuthService.isLoggedIn();
 
     if (!isLoggedIn && requiresLogin) {
       if (context.mounted) {
@@ -21,7 +19,7 @@ class RouteGuard {
       return false;
     }
 
-    if (adminOnly && !isAdmin) {
+    if (adminOnly && !roleProvider.isAdmin) {
       if (context.mounted) {
         Navigator.of(context).pushReplacementNamed('/home');
       }

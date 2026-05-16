@@ -25,20 +25,19 @@ class _ChangeTeamAdminPasswordPageState
   }
 
   Future<void> _checkPasswordExists() async {
-    final stored = await AdminPasswordService.getTeamAdminPassword();
-    if (mounted) setState(() => _isCreation = stored == null);
+    final has = await AdminPasswordService.hasTeamAdminPassword();
+    if (mounted) setState(() => _isCreation = !has);
   }
 
   void changePassword() async {
     if (_isCreation == null) return;
 
     if (_isCreation == false) {
-      final stored = await AdminPasswordService.getTeamAdminPassword();
-      if (oldController.text != stored) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('Ancien mot de passe Team Admin incorrect')));
-        }
+      final correct = await AdminPasswordService.verifyTeamAdminPassword(oldController.text);
+      if (!mounted) return;
+      if (!correct) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text('Ancien mot de passe Team Admin incorrect')));
         return;
       }
     }

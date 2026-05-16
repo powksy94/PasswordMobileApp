@@ -1,13 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/glass_panel.dart';
-import '../../widgets/neon_text.dart';
-import '../../services/admin_provider.dart';
-import '../../services/role_manager.dart';
-import '../../services/team_admin_provider.dart';
 import '../../services/admin_password_service.dart';
-import 'package:password_mobile_app/services/auth_service.dart';
+import '../../services/auth_service.dart';
+import '../../services/role_provider.dart';
+import '../../widgets/auth/login_form.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -16,29 +13,31 @@ class LoginPage extends StatefulWidget {
   State<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final adminPasswordController = TextEditingController();
-  final teamAdminPasswordController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+class _LoginPageState extends State<LoginPage>
+    with SingleTickerProviderStateMixin {
+  final _formKey             = GlobalKey<FormState>();
+  final _emailCtrl           = TextEditingController();
+  final _passwordCtrl        = TextEditingController();
+  final _masterPasswordCtrl  = TextEditingController();
+  final _adminPasswordCtrl   = TextEditingController();
+  final _teamAdminPasswordCtrl = TextEditingController();
 
-  bool _loading = false;
+  bool _loading      = false;
+  bool _showMasterPw = false;
 
   late AnimationController _lockController;
-  late Animation<double> _rotationAnimation;
+  late Animation<double>   _rotationAnimation;
 
-  int _tapCountAdmin = 0;
+  int    _tapCountAdmin = 0;
   Timer? _tapResetTimerAdmin;
-
-  int _tapCountTeam = 0;
+  int    _tapCountTeam  = 0;
   Timer? _tapResetTimerTeam;
 
   @override
   void initState() {
     super.initState();
     _lockController = AnimationController(
-      vsync: this,
+      vsync:    this,
       duration: const Duration(milliseconds: 500),
     );
     _rotationAnimation = Tween<double>(begin: 0, end: 0.25).animate(
@@ -48,321 +47,232 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   @override
   void dispose() {
-    emailController.dispose();
-    passwordController.dispose();
-    adminPasswordController.dispose();
-    teamAdminPasswordController.dispose();
+    _emailCtrl.dispose();
+    _passwordCtrl.dispose();
+    _masterPasswordCtrl.dispose();
+    _adminPasswordCtrl.dispose();
+    _teamAdminPasswordCtrl.dispose();
     _lockController.dispose();
     _tapResetTimerAdmin?.cancel();
     _tapResetTimerTeam?.cancel();
     super.dispose();
   }
 
-  /// Login normal
-  void submitUser() async {
-    if (!formKey.currentState!.validate()) return;
+  // ── Login utilisateur ─────────────────────────────────────────────────────
 
+  Future<void> _submitUser() async {
+    if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
 
-    // Capture providers before any await to avoid use_build_context_synchronously
-    final roleManager = Provider.of<RoleManager>(context, listen: false);
-    final adminProvider = Provider.of<AdminProvider>(context, listen: false);
-    final teamAdminProvider = Provider.of<TeamAdminProvider>(context, listen: false);
+    final roleProvider = Provider.of<RoleProvider>(context, listen: false);
 
     try {
       await AuthService.login(
-        emailController.text.trim(),
-        passwordController.text,
-        passwordController.text,
+        _emailCtrl.text.trim(),
+        _passwordCtrl.text,
+        _masterPasswordCtrl.text,
       );
-
       if (!mounted) return;
 
-      // Sync backend role to providers so the app reflects the real DB role
       final roleStr = await AuthService.getUserRoleString();
       if (!mounted) return;
-      if (roleStr == 'admin') {
-        roleManager.setRole(UserRole.admin);
-        adminProvider.activateAdmin();
-      } else if (roleStr == 'team_admin') {
-        roleManager.setRole(UserRole.teamAdmin);
-        teamAdminProvider.setTeamAdmin(true);
+
+      switch (roleStr) {
+        case 'admin':
+          roleProvider.setRole(UserRole.admin);
+        case 'team_admin':
+          roleProvider.setRole(UserRole.teamAdmin);
+        default:
+          break;
       }
-
       Navigator.pushReplacementNamed(context, '/home');
-
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur utilisateur: $e')),
-        );
+        _snack('Erreur de connexion : $e');
       }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  /// Login admin
-  void submitAdminPassword() async {
-    final input = adminPasswordController.text.trim();
+  // ── Login admin local ─────────────────────────────────────────────────────
 
-    if (input.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez saisir un mot de passe admin')),
-      );
-      return;
-    }
-
+  Future<void> _submitAdminPassword() async {
+    final input = _adminPasswordCtrl.text.trim();
+    if (input.isEmpty) { _snack('Veuillez saisir un mot de passe admin'); return; }
     setState(() => _loading = true);
 
-    final existingPassword = await AdminPasswordService.getPassword();
-
-    if (existingPassword != null && input != existingPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mot de passe admin incorrect')),
-      );
-      setState(() => _loading = false);
-      return;
-    }
-
-    if (existingPassword == null) {
+    final hasPassword = await AdminPasswordService.hasPassword();
+    if (!hasPassword) {
       await AdminPasswordService.setPassword(input);
+    } else {
+      final correct = await AdminPasswordService.verifyPassword(input);
+      if (!correct) {
+        if (mounted) {
+          _snack('Mot de passe admin incorrect');
+          setState(() => _loading = false);
+        }
+        return;
+      }
     }
-
-    Provider.of<AdminProvider>(context, listen: false).activateAdmin();
-    Provider.of<RoleManager>(context, listen: false).setRole(UserRole.admin);
 
     if (!mounted) return;
+    Provider.of<RoleProvider>(context, listen: false).setRole(UserRole.admin);
     Navigator.pushReplacementNamed(context, '/home');
-
     setState(() => _loading = false);
   }
 
-  /// Login team admin
-  void submitTeamAdminPassword() async {
-    final input = teamAdminPasswordController.text.trim();
-    if (input.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez saisir un mot de passe Team Admin')),
-      );
-      return;
-    }
+  // ── Login team admin ──────────────────────────────────────────────────────
 
+  Future<void> _submitTeamAdminPassword() async {
+    final input = _teamAdminPasswordCtrl.text.trim();
+    if (input.isEmpty) { _snack('Veuillez saisir un mot de passe Team Admin'); return; }
     setState(() => _loading = true);
-
     try {
-      final correct = await AdminPasswordService.verifyTeamAdminPassword(input);
-
-      if (!correct) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Mot de passe Team Admin incorrect')),
-        );
-        return;
-      }
-
-      Provider.of<TeamAdminProvider>(context, listen: false).setTeamAdmin(true);
-      Provider.of<RoleManager>(context, listen: false).setRole(UserRole.teamAdmin);
-
+      final correct =
+          await AdminPasswordService.verifyTeamAdminPassword(input);
       if (!mounted) return;
-
+      if (!correct) { _snack('Mot de passe Team Admin incorrect'); return; }
+      Provider.of<RoleProvider>(context, listen: false)
+          .setRole(UserRole.teamAdmin);
       Navigator.pushReplacementNamed(context, '/home');
-
     } finally {
       if (mounted) setState(() => _loading = false);
     }
   }
 
-  void showAdminDialog() {
-    adminPasswordController.clear();
+  // ── Dialogues secrets ─────────────────────────────────────────────────────
+
+  void _showAdminDialog() {
+    _adminPasswordCtrl.clear();
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: const Text("Admin Login"),
+        title:   const Text('Admin Login'),
         content: TextField(
-          controller: adminPasswordController,
+          controller:  _adminPasswordCtrl,
           obscureText: true,
-          decoration: const InputDecoration(labelText: "Mot de passe admin"),
+          decoration:
+              const InputDecoration(labelText: 'Mot de passe admin'),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Annuler"),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
           ElevatedButton(
-            onPressed: submitAdminPassword,
-            child: const Text("Valider"),
+            onPressed: () { Navigator.pop(context); _submitAdminPassword(); },
+            child: const Text('Valider'),
           ),
         ],
       ),
     );
   }
 
-  void showTeamAdminDialog() {
-    teamAdminPasswordController.clear();
+  void _showTeamAdminDialog() {
+    _teamAdminPasswordCtrl.clear();
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (_) => AlertDialog(
-        title: const Text("Team Admin Login"),
+        title:   const Text('Team Admin Login'),
         content: TextField(
-          controller: teamAdminPasswordController,
+          controller:  _teamAdminPasswordCtrl,
           obscureText: true,
-          decoration: const InputDecoration(labelText: "Mot de passe Team Admin"),
+          decoration:
+              const InputDecoration(labelText: 'Mot de passe Team Admin'),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text("Annuler"),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Annuler')),
           ElevatedButton(
-            onPressed: submitTeamAdminPassword,
-            child: const Text("Valider"),
+            onPressed: () { Navigator.pop(context); _submitTeamAdminPassword(); },
+            child: const Text('Valider'),
           ),
         ],
       ),
     );
   }
+
+  // ── Tap zones secrètes ────────────────────────────────────────────────────
 
   void _handleSecretTapAdmin() {
     _tapCountAdmin++;
     _tapResetTimerAdmin?.cancel();
-    _tapResetTimerAdmin = Timer(const Duration(seconds: 2), () => _tapCountAdmin = 0);
-
+    _tapResetTimerAdmin =
+        Timer(const Duration(seconds: 2), () => _tapCountAdmin = 0);
     if (_tapCountAdmin >= 5) {
       _tapCountAdmin = 0;
       _lockController.forward(from: 0);
-      showAdminDialog();
+      _showAdminDialog();
     }
   }
 
-  void _handleSecretTapTeamAdmin() async {
+  Future<void> _handleSecretTapTeamAdmin() async {
     _tapCountTeam++;
     _tapResetTimerTeam?.cancel();
-    _tapResetTimerTeam = Timer(const Duration(seconds: 2), () => _tapCountTeam = 0);
-
+    _tapResetTimerTeam =
+        Timer(const Duration(seconds: 2), () => _tapCountTeam = 0);
     if (_tapCountTeam >= 5) {
       _tapCountTeam = 0;
-
-      // Si aucun mot de passe Team Admin n'est défini → informer l'utilisateur
-      final stored = await AdminPasswordService.getTeamAdminPassword();
+      final hasTeamPw = await AdminPasswordService.hasTeamAdminPassword();
       if (!mounted) return;
-
-      if (stored == null) {
+      if (!hasTeamPw) {
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
-            title: const Text("Team Admin"),
+            title:   const Text('Team Admin'),
             content: const Text(
               'Aucun mot de passe Team Admin n\'est défini.\n\n'
-              'L\'administrateur doit d\'abord en créer un depuis le panneau Admin.',
+              'L\'administrateur doit d\'abord en créer un.',
             ),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text("OK"),
+                child: const Text('OK'),
               ),
             ],
           ),
         );
       } else {
-        showTeamAdminDialog();
+        _showTeamAdminDialog();
       }
     }
   }
 
+  void _snack(String msg) =>
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+
+  // ── Build ─────────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       body: Stack(
         children: [
           Center(
-            child: GlassPanel(
-              width: 350,
-              padding: const EdgeInsets.all(20),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    NeonText(
-                      text: "Connexion",
-                      fontSize: 28,
-                      color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-                      glow: true,
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: emailController,
-                      validator: (v) => v != null && v.contains("@") ? null : "Email invalide",
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                        filled: true,
-                        fillColor: isDark ? Colors.white10 : Colors.black12,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: passwordController,
-                      obscureText: true,
-                      validator: (v) => v != null && v.length >= 6 ? null : "6 caractères minimum",
-                      decoration: InputDecoration(
-                        labelText: "Mot de passe",
-                        filled: true,
-                        fillColor: isDark ? Colors.white10 : Colors.black12,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _loading ? null : submitUser,
-                        child: _loading
-                            ? const SizedBox(
-                                height: 18,
-                                width: 18,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              )
-                            : const Text("Se connecter"),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    RotationTransition(
-                      turns: _rotationAnimation,
-                      child: const Icon(Icons.lock, size: 40, color: Colors.amberAccent),
-                    ),
-                    const SizedBox(height: 12),
-                    TextButton(
-                      onPressed: () => Navigator.pushNamed(context, "/signup"),
-                      child: Text(
-                        "Créer un compte",
-                        style: TextStyle(
-                            color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                  ],
-                ),
+            child: SingleChildScrollView(
+              child: LoginForm(
+                formKey:           _formKey,
+                emailCtrl:         _emailCtrl,
+                passwordCtrl:      _passwordCtrl,
+                masterPasswordCtrl: _masterPasswordCtrl,
+                loading:           _loading,
+                showMasterPw:      _showMasterPw,
+                onToggleMasterPw:  () =>
+                    setState(() => _showMasterPw = !_showMasterPw),
+                onSubmit:          _submitUser,
+                onSignup:          () => Navigator.pushNamed(context, '/signup'),
+                rotationAnimation: _rotationAnimation,
               ),
             ),
           ),
-
-          /// Accès admin caché
           Positioned(
-            top: 20,
-            right: 20,
+            top: 20, right: 20,
             child: GestureDetector(
               onTap: _handleSecretTapAdmin,
               child: const Icon(Icons.admin_panel_settings, size: 30),
             ),
           ),
-
-          /// Accès team admin caché
           Positioned(
-            top: 20,
-            left: 20,
+            top: 20, left: 20,
             child: GestureDetector(
               onTap: _handleSecretTapTeamAdmin,
               child: const Icon(Icons.group, size: 30, color: Colors.greenAccent),

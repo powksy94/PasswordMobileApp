@@ -32,6 +32,13 @@ class ApiService {
     );
   }
 
+  Future<void> updateItem(String token, String id, Map<String, dynamic> payload) async {
+    await _dio.put('/vault/$id',
+      data: payload,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
   Future<void> deleteItem(String token, String id) async {
     await _dio.delete('/vault/$id',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
@@ -50,6 +57,25 @@ class ApiService {
     await _dio.post(
       '/admin/role',
       data: {'userId': userId, 'role': role},
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
+  Future<void> changePassword(
+    String token,
+    String currentPassword,
+    String newPassword,
+  ) async {
+    await _dio.post(
+      '/auth/change-password',
+      data: {'currentPassword': currentPassword, 'newPassword': newPassword},
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
+  Future<void> deleteAccount(String token) async {
+    await _dio.delete(
+      '/auth/account',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
   }

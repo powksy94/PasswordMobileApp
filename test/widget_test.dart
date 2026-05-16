@@ -1,30 +1,40 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:password_mobile_app_new/main.dart';
+import 'package:password_mobile_app/services/password_generator.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
+  group('PasswordGenerator', () {
+    test('génère un mot de passe de la longueur demandée', () {
+      final pwd = PasswordGenerator.generate(length: 20);
+      expect(pwd.length, equals(20));
+    });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    test('respecte les types de caractères activés', () {
+      final pwd = PasswordGenerator.generate(
+        length: 32,
+        useLower: true,
+        useUpper: false,
+        useDigits: false,
+        useSpecials: false,
+        requireAllTypes: false,
+      );
+      expect(RegExp(r'[A-Z]').hasMatch(pwd), isFalse);
+      expect(RegExp(r'[0-9]').hasMatch(pwd), isFalse);
+    });
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    test('exclut les caractères spécifiés', () {
+      final pwd = PasswordGenerator.generate(length: 64, exclude: 'aeiou');
+      expect(RegExp(r'[aeiou]').hasMatch(pwd), isFalse);
+    });
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    test('lève une exception si tous les caractères sont exclus', () {
+      const alphabet = 'abcdefghijklmnopqrstuvwxyz'
+          'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+          '0123456789'
+          r'!@#$%^&*()-_=+[]{};:,.?/<>|';
+      expect(
+        () => PasswordGenerator.generate(length: 8, exclude: alphabet),
+        throwsException,
+      );
+    });
   });
 }

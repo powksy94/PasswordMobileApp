@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../widgets/glass_panel.dart';
-import '../../widgets/password_strength_bar.dart';
-import '../../widgets/neon_text.dart';
+import '../../widgets/common/glass_panel.dart';
+import '../../widgets/common/neon_text.dart';
+import '../../widgets/auth/password_section.dart';
 import '../../services/auth_service.dart';
 
 class SignupPage extends StatefulWidget {
@@ -12,39 +12,42 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final email = TextEditingController();
-  final password = TextEditingController();
-  final confirmPassword = TextEditingController();
-  final formKey = GlobalKey<FormState>();
+  final _formKey              = GlobalKey<FormState>();
+  final _emailCtrl            = TextEditingController();
+  final _passwordCtrl         = TextEditingController();
+  final _confirmPasswordCtrl  = TextEditingController();
+  final _masterPwCtrl         = TextEditingController();
+  final _confirmMasterPwCtrl  = TextEditingController();
   bool _loading = false;
 
   @override
   void dispose() {
-    email.dispose();
-    password.dispose();
-    confirmPassword.dispose();
+    _emailCtrl.dispose();
+    _passwordCtrl.dispose();
+    _confirmPasswordCtrl.dispose();
+    _masterPwCtrl.dispose();
+    _confirmMasterPwCtrl.dispose();
     super.dispose();
   }
 
-  Future<void> submit() async {
-    if (!formKey.currentState!.validate()) return;
-
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
     setState(() => _loading = true);
-
     try {
-      await AuthService.register(email.text, password.text, password.text);
+      await AuthService.register(
+        _emailCtrl.text.trim(),
+        _passwordCtrl.text,
+        _masterPwCtrl.text,
+      );
       if (!mounted) return;
-
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Compte créé avec succès !')),
       );
-
-      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/login');
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur: ${e.toString()}')),
+        SnackBar(content: Text('Erreur : ${e.toString()}')),
       );
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -53,62 +56,87 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final fill   = isDark ? Colors.white10 : Colors.black12;
 
     return Scaffold(
       body: Center(
-        child: GlassPanel(
-          width: 350,
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                NeonText(
-                  text: "Créer un compte",
-                  fontSize: 28,
-                  color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-                  glow: true,
-                ),
-                const SizedBox(height: 20),
-                TextFormField(
-                  controller: email,
-                  validator: (v) => v != null && v.contains("@") ? null : "Email invalide",
-                  decoration: const InputDecoration(labelText: "Email", filled: true),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: password,
-                  obscureText: true,
-                  onChanged: (_) => setState(() {}),
-                  validator: (v) => v != null && v.length >= 6 ? null : "6 caractères minimum",
-                  decoration: const InputDecoration(labelText: "Mot de passe", filled: true),
-                ),
-                const SizedBox(height: 8),
-                PasswordStrengthBar(password: password.text),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: confirmPassword,
-                  obscureText: true,
-                  validator: (v) => v == password.text ? null : "Les mots de passe ne correspondent pas",
-                  decoration: const InputDecoration(labelText: "Confirmer le mot de passe", filled: true),
-                ),
-                const SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _loading ? null : submit,
-                    child: _loading
-                        ? const CircularProgressIndicator()
-                        : const Text("Créer le compte"),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          child: GlassPanel(
+            width:   350,
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  NeonText(
+                    text: 'Créer un compte', fontSize: 26, color: accent, glow: true),
+                  const SizedBox(height: 20),
+
+                  // Email
+                  TextFormField(
+                    controller:   _emailCtrl,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (v) =>
+                        v != null && v.contains('@') ? null : 'Email invalide',
+                    decoration: InputDecoration(
+                      labelText:  'Email',
+                      prefixIcon: const Icon(Icons.email_outlined),
+                      filled:     true,
+                      fillColor:  fill,
+                    ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pushReplacementNamed(context, "/login"),
-                  child: const Text("Déjà un compte ? Se connecter"),
-                ),
-              ],
+                  const SizedBox(height: 12),
+
+                  // Mot de passe de connexion
+                  PasswordSection(
+                    label:             'Mot de passe de connexion',
+                    controller:        _passwordCtrl,
+                    confirmController: _confirmPasswordCtrl,
+                    minLength:         6,
+                    confirmValidator:  (v) => v == _passwordCtrl.text
+                        ? null
+                        : 'Les mots de passe ne correspondent pas',
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Mot de passe maître
+                  PasswordSection(
+                    label:             'Mot de passe maître (chiffre votre coffre)',
+                    controller:        _masterPwCtrl,
+                    confirmController: _confirmMasterPwCtrl,
+                    minLength:         8,
+                    showToggle:        true,
+                    withInfoIcon:      true,
+                    warningText:       'Ne peut pas être récupéré si oublié — notez-le.',
+                    confirmValidator:  (v) => v == _masterPwCtrl.text
+                        ? null
+                        : 'Les mots de passe maîtres ne correspondent pas',
+                  ),
+                  const SizedBox(height: 24),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _loading ? null : _submit,
+                      child: _loading
+                          ? const SizedBox(
+                              height: 18, width: 18,
+                              child: CircularProgressIndicator(strokeWidth: 2))
+                          : const Text('Créer le compte'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: () =>
+                        Navigator.pushReplacementNamed(context, '/login'),
+                    child: const Text('Déjà un compte ? Se connecter'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../services/role_manager.dart';
+import '../../services/role_provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/api_service.dart';
+import '../../widgets/admin/user_role_tile.dart';
 import 'change_admin_password_page.dart';
 import 'change_team_admin_password_page.dart';
 
@@ -16,14 +17,15 @@ class SecureAdminPage extends StatefulWidget {
 class _SecureAdminPageState extends State<SecureAdminPage>
     with WidgetsBindingObserver {
   List<Map<String, dynamic>>? _users;
-  bool _loadingUsers = false;
+  bool    _loadingUsers = false;
   String? _usersError;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadUsersIfAdmin());
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _loadUsersIfAdmin());
   }
 
   @override
@@ -33,20 +35,15 @@ class _SecureAdminPageState extends State<SecureAdminPage>
   }
 
   Future<void> _loadUsersIfAdmin() async {
-    final roleManager = Provider.of<RoleManager>(context, listen: false);
-    if (!roleManager.isAdmin) return;
+    final roleProvider = Provider.of<RoleProvider>(context, listen: false);
+    if (!roleProvider.isAdmin) return;
 
-    setState(() {
-      _loadingUsers = true;
-      _usersError = null;
-    });
+    setState(() { _loadingUsers = true; _usersError = null; });
     try {
       final token = await AuthService.getToken();
       if (token == null) return;
       final raw = await ApiService().getAllUsers(token);
-      if (mounted) {
-        setState(() => _users = raw.cast<Map<String, dynamic>>());
-      }
+      if (mounted) setState(() => _users = raw.cast<Map<String, dynamic>>());
     } catch (e) {
       if (mounted) setState(() => _usersError = e.toString());
     } finally {
@@ -63,7 +60,7 @@ class _SecureAdminPageState extends State<SecureAdminPage>
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur: $e')),
+          SnackBar(content: Text('Erreur : $e')),
         );
       }
     }
@@ -71,23 +68,23 @@ class _SecureAdminPageState extends State<SecureAdminPage>
 
   @override
   Widget build(BuildContext context) {
-    final roleManager = Provider.of<RoleManager>(context);
+    final roleProvider = Provider.of<RoleProvider>(context);
 
-    if (!roleManager.isAdmin && !roleManager.isTeamAdmin) {
-      Future.microtask(() {
+    if (!roleProvider.isAdmin && !roleProvider.isTeamAdmin) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) Navigator.pushReplacementNamed(context, '/home');
       });
       return const SizedBox.shrink();
     }
 
-    final bool isAdmin = roleManager.isAdmin;
-    final bool isTeamAdmin = roleManager.isTeamAdmin;
+    final isAdmin     = roleProvider.isAdmin;
+    final isTeamAdmin = roleProvider.isTeamAdmin;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon:      const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pushReplacementNamed(context, '/home'),
         ),
         actions: [
@@ -115,24 +112,27 @@ class _SecureAdminPageState extends State<SecureAdminPage>
             ),
             const SizedBox(height: 25),
 
-            // --- Mots de passe ---
-            ElevatedButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const ChangeAdminPasswordPage()),
+            if (isAdmin) ...[
+              ElevatedButton(
+                onPressed: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => const ChangeAdminPasswordPage()),
+                ),
+                child: const Text('Changer mot de passe Admin'),
               ),
-              child: const Text('Changer mot de passe Admin'),
-            ),
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
+            ],
+
             ElevatedButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const ChangeTeamAdminPasswordPage()),
+                MaterialPageRoute(
+                    builder: (_) => const ChangeTeamAdminPasswordPage()),
               ),
               child: const Text('Changer mot de passe Team Admin'),
             ),
 
-            // --- Gestion des utilisateurs (admin uniquement) ---
             if (isAdmin) ...[
               const SizedBox(height: 32),
               const Divider(),
@@ -140,12 +140,11 @@ class _SecureAdminPageState extends State<SecureAdminPage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Utilisateurs',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  const Text('Utilisateurs',
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
                   IconButton(
-                    icon: const Icon(Icons.refresh),
+                    icon:    const Icon(Icons.refresh),
                     onPressed: _loadUsersIfAdmin,
                     tooltip: 'Actualiser',
                   ),
@@ -155,41 +154,15 @@ class _SecureAdminPageState extends State<SecureAdminPage>
               if (_loadingUsers)
                 const Center(child: CircularProgressIndicator()),
               if (_usersError != null)
-                Text(
-                  'Erreur : $_usersError',
-                  style: const TextStyle(color: Colors.redAccent),
-                ),
+                Text('Erreur : $_usersError',
+                    style: const TextStyle(color: Colors.redAccent)),
               if (_users != null)
-                ..._users!.map((user) {
-                  final String userId = user['id'].toString();
-                  final String email = user['email']?.toString() ?? '';
-                  final String currentRole = user['role']?.toString() ?? 'user';
-
-                  return Card(
-                    margin: const EdgeInsets.symmetric(vertical: 6),
-                    child: ListTile(
-                      leading: const Icon(Icons.person),
-                      title: Text(email, overflow: TextOverflow.ellipsis),
-                      subtitle: Text(currentRole),
-                      trailing: DropdownButton<String>(
-                        value: ['admin', 'user', 'team_admin'].contains(currentRole)
-                            ? currentRole
-                            : 'user',
-                        underline: const SizedBox(),
-                        items: const [
-                          DropdownMenuItem(value: 'user', child: Text('User')),
-                          DropdownMenuItem(value: 'admin', child: Text('Admin')),
-                          DropdownMenuItem(value: 'team_admin', child: Text('Team Admin')),
-                        ],
-                        onChanged: (newRole) {
-                          if (newRole != null && newRole != currentRole) {
-                            _updateRole(userId, newRole);
-                          }
-                        },
-                      ),
-                    ),
-                  );
-                }),
+                ..._users!.map((user) => UserRoleTile(
+                      email:       user['email']?.toString() ?? '',
+                      currentRole: user['role']?.toString()  ?? 'user',
+                      onRoleChanged: (newRole) =>
+                          _updateRole(user['id'].toString(), newRole),
+                    )),
             ],
           ],
         ),

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:flutter/material.dart';
 
 class GlassPanel extends StatelessWidget {
   final double width;
@@ -8,8 +8,6 @@ class GlassPanel extends StatelessWidget {
   final double borderRadius;
   final EdgeInsets padding;
   final Widget child;
-
-  // Glow/border options
   final bool glow;
   final double glowIntensity;
 
@@ -27,36 +25,31 @@ class GlassPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final Color borderColor = isDark
-        ? Colors.cyanAccent.withValues(alpha:0.7)
-        : Colors.blueAccent.withValues(alpha:0.7);
-
-    final Color panelColor = isDark
-        ? Colors.black.withValues(alpha:0.4)
-        : Colors.white.withValues(alpha:0.3);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark
+        ? Colors.cyanAccent.withValues(alpha: 0.7)
+        : Colors.blueAccent.withValues(alpha: 0.7);
+    final panelColor = isDark
+        ? Colors.black.withValues(alpha: 0.4)
+        : Colors.white.withValues(alpha: 0.3);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(borderRadius),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
         child: Container(
-          width: width,
-          height: height,
+          width:   width,
+          height:  height,
           padding: padding,
           decoration: BoxDecoration(
-            color: panelColor,
+            color:        panelColor,
             borderRadius: BorderRadius.circular(borderRadius),
-            border: Border.all(
-              color: borderColor,
-              width: 1.5,
-            ),
+            border:       Border.all(color: borderColor, width: 1.5),
             boxShadow: glow
                 ? [
                     BoxShadow(
-                      color: borderColor.withValues(alpha:glowIntensity),
-                      blurRadius: 20,
+                      color:       borderColor.withValues(alpha: glowIntensity),
+                      blurRadius:  20,
                       spreadRadius: 1,
                     )
                   ]

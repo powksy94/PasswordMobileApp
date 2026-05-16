@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import '../services/route_guard.dart';
+import '../../services/route_guard.dart';
 
-/// Widget wrapper pour sécuriser une page
 class ProtectedPage extends StatefulWidget {
   final Widget child;
-  final bool requiresLogin; // Accès réservé aux utilisateurs connectés
-  final bool adminOnly;     // Accès réservé aux admins
+  final bool requiresLogin;
+  final bool adminOnly;
 
   const ProtectedPage({
     super.key,
@@ -19,7 +18,7 @@ class ProtectedPage extends StatefulWidget {
 }
 
 class _ProtectedPageState extends State<ProtectedPage> {
-  bool _allowed = false;
+  bool _allowed  = false;
   bool _checking = true;
 
   @override
@@ -32,12 +31,11 @@ class _ProtectedPageState extends State<ProtectedPage> {
     final allowed = await RouteGuard.canAccess(
       context,
       requiresLogin: widget.requiresLogin,
-      adminOnly: widget.adminOnly,
+      adminOnly:     widget.adminOnly,
     );
-
     if (mounted) {
       setState(() {
-        _allowed = allowed;
+        _allowed  = allowed;
         _checking = false;
       });
     }
@@ -46,18 +44,9 @@ class _ProtectedPageState extends State<ProtectedPage> {
   @override
   Widget build(BuildContext context) {
     if (_checking) {
-      // Loader pendant la vérification
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-
-    if (!_allowed) {
-      // Redirection déjà gérée par RouteGuard
-      return const SizedBox.shrink();
-    }
-
-    // Accès autorisé → affiche la page enfant
+    if (!_allowed) return const SizedBox.shrink();
     return widget.child;
   }
 }

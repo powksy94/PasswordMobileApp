@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../generator/password_generator_page.dart';
 import '../../services/vault_service.dart';
 import '../../models/vault_item.dart';
-import '../../widgets/glass_panel.dart';
-import '../../widgets/neon_text.dart';
-import '../../widgets/protected_page.dart'; // ← wrapper sécurité
+import '../../widgets/common/neon_text.dart';
+import '../../widgets/common/protected_page.dart';
+import '../../widgets/vault/vault_item_card.dart';
+import '../../widgets/vault/offline_banner.dart';
+import '../../widgets/vault/vault_search_bar.dart';
+import 'edit_vault_item_page.dart';
+import 'vault_export_handler.dart';
 
 class VaultPage extends StatefulWidget {
   const VaultPage({super.key});
@@ -14,8 +19,11 @@ class VaultPage extends StatefulWidget {
 }
 
 class _VaultPageState extends State<VaultPage> {
-  List<VaultItem> items = [];
-  final Map<String, bool> _showPassword = {};
+  List<VaultItem> _items     = [];
+  bool            _fromCache = false;
+  final Map<String, bool>     _showPassword    = {};
+  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -23,61 +31,135 @@ class _VaultPageState extends State<VaultPage> {
     loadVault();
   }
 
-  /// Charge tous les items du coffre depuis le serveur
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  List<VaultItem> get _filtered {
+    if (_searchQuery.isEmpty) return _items;
+    final q = _searchQuery.toLowerCase();
+    return _items
+        .where((i) =>
+            i.label.toLowerCase().contains(q) ||
+            i.login.toLowerCase().contains(q))
+        .toList();
+  }
+
+  // ── Chargement ────────────────────────────────────────────────────────────
+
   Future<void> loadVault() async {
     try {
-      final loaded = await VaultService.loadFromServer();
-      for (final item in loaded) {
+      final result = await VaultService.loadFromServer();
+      for (final item in result.items) {
         _showPassword.putIfAbsent(item.id, () => false);
       }
-      if (mounted) setState(() => items = loaded);
+      if (mounted) {
+        setState(() {
+          _items     = result.items;
+          _fromCache = result.fromCache;
+        });
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Erreur chargement: $e")),
+          SnackBar(content: Text('Erreur chargement : $e')),
         );
       }
     }
   }
 
-  /// Supprime un item par son ID
-  Future<void> deleteItem(String id) async {
-    await VaultService.deleteFromServer(id);
-    await loadVault();
-    if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Item supprimé")),
-      );
+  // ── Actions ────────────────────────────────────────────────────────────────
+
+  Future<void> _deleteItem(String id) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title:   const Text('Supprimer'),
+        content: const Text('Supprimer cet élément définitivement ?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Annuler'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+            child: const Text('Supprimer'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+
+    try {
+      await VaultService.deleteFromServer(id);
+      await loadVault();
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Item supprimé')));
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('Erreur suppression : $e')));
+      }
     }
   }
 
+  void _copyToClipboard(String text, String label) async {
+    await Clipboard.setData(ClipboardData(text: text));
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('$label copié — effacé dans 30 s')),
+    );
+    Future.delayed(const Duration(seconds: 30), () async {
+      final data = await Clipboard.getData('text/plain');
+      if (data?.text == text) {
+        await Clipboard.setData(const ClipboardData(text: ''));
+      }
+    });
+  }
+
+  Future<void> _openEdit(VaultItem item) async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => EditVaultItemPage(item: item)),
+    );
+    await loadVault();
+  }
+
+  // ── Build ─────────────────────────────────────────────────────────────────
+
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
     return ProtectedPage(
-      requiresLogin: true, // 🔐 Vérification automatique admin/login
+      requiresLogin: true,
       child: Scaffold(
         appBar: AppBar(
           title: NeonText(
-            text: 'Coffre-fort',
-            fontSize: 22,
-            color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-            glow: true,
-          ),
+              text: 'Coffre-fort', fontSize: 22, color: accent, glow: true),
           backgroundColor: Colors.transparent,
           elevation: 0,
           actions: [
             IconButton(
-              icon: const Icon(Icons.add),
+              icon:      const Icon(Icons.upload_file),
+              tooltip:   'Exporter le vault',
+              onPressed: () => showVaultExportDialog(context, _items),
+            ),
+            IconButton(
+              icon:    const Icon(Icons.add),
               tooltip: 'Ajouter un mot de passe',
               onPressed: () async {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => PasswordGeneratorPage(
-                      onVaultUpdated: loadVault,
-                    ),
+                    builder: (_) =>
+                        PasswordGeneratorPage(onVaultUpdated: loadVault),
                   ),
                 );
               },
@@ -91,97 +173,53 @@ class _VaultPageState extends State<VaultPage> {
                   ? [Colors.black, Colors.grey[900]!]
                   : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
               begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+              end:   Alignment.bottomRight,
             ),
           ),
-          padding: const EdgeInsets.all(16),
-          child: items.isEmpty
-              ? Center(
-                  child: NeonText(
-                    text: 'Coffre vide',
-                    fontSize: 20,
-                    color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-                    glow: true,
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    final item = items[index];
-                    final id = item.id;
-                    final icon = VaultService.getVaultIcon(item.icon);
-                    final label = item.label;
-                    final password = item.password;
-                    final notes = item.notes;
-                    final isVisible = _showPassword[id] ?? false;
-
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: GlassPanel(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(
-                                  icon,
-                                  color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-                                  size: 32,
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: NeonText(
-                                    text: label,
-                                    fontSize: 18,
-                                    color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-                                    glow: true,
-                                    bold: true,
-                                  ),
-                                ),
-                                IconButton(
-                                  icon: Icon(
-                                    isVisible ? Icons.visibility_off : Icons.visibility,
-                                    color: Colors.orangeAccent,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _showPassword[id] = !isVisible;
-                                    });
-                                  },
-                                  tooltip: isVisible ? "Masquer le mot de passe" : "Afficher le mot de passe",
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.delete, color: Colors.redAccent),
-                                  onPressed: () => deleteItem(id),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            SelectableText(
-                              isVisible ? password : '●●●●●●●●',
-                              style: TextStyle(
-                                color: isDark ? Colors.white70 : Colors.black87,
-                                fontFamily: 'monospace',
-                              ),
-                            ),
-                            if (notes.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 4),
-                                child: Text(
-                                  notes,
-                                  style: TextStyle(
-                                    color: isDark ? Colors.white54 : Colors.black54,
-                                  ),
-                                ),
-                              ),
-                          ],
+          child: Column(
+            children: [
+              if (_fromCache) const OfflineBanner(),
+              VaultSearchBar(
+                controller: _searchController,
+                query:      _searchQuery,
+                onChanged:  (v) => setState(() => _searchQuery = v),
+                onClear:    () {
+                  _searchController.clear();
+                  setState(() => _searchQuery = '');
+                },
+              ),
+              Expanded(
+                child: _filtered.isEmpty
+                    ? Center(
+                        child: NeonText(
+                          text:     _searchQuery.isEmpty
+                              ? 'Coffre vide'
+                              : 'Aucun résultat',
+                          fontSize: 20,
+                          color:    accent,
+                          glow:     true,
                         ),
+                      )
+                    : ListView.builder(
+                        padding:     const EdgeInsets.all(16),
+                        itemCount:   _filtered.length,
+                        itemBuilder: (_, i) {
+                          final item = _filtered[i];
+                          return VaultItemCard(
+                            item:             item,
+                            showPassword:     _showPassword[item.id] ?? false,
+                            onTogglePassword: () => setState(
+                              () => _showPassword[item.id] =
+                                  !(_showPassword[item.id] ?? false)),
+                            onCopy:   _copyToClipboard,
+                            onEdit:   () => _openEdit(item),
+                            onDelete: () => _deleteItem(item.id),
+                          );
+                        },
                       ),
-                    );
-                  },
-                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

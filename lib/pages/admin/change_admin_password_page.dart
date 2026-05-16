@@ -14,8 +14,10 @@ class _ChangeAdminPasswordPageState extends State<ChangeAdminPasswordPage> {
   final confirmController = TextEditingController();
 
   void changePassword() async {
-    final storedPassword = await AdminPasswordService.getPassword();
-    if (oldController.text != storedPassword) {
+    final correct = await AdminPasswordService.verifyPassword(oldController.text);
+    if (!mounted) return;
+
+    if (!correct) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Ancien mot de passe incorrect')));
       return;
@@ -26,6 +28,7 @@ class _ChangeAdminPasswordPageState extends State<ChangeAdminPasswordPage> {
       return;
     }
     await AdminPasswordService.setPassword(newController.text);
+    if (!mounted) return;
     ScaffoldMessenger.of(context)
         .showSnackBar(const SnackBar(content: Text('Mot de passe admin modifié')));
     Navigator.pop(context);

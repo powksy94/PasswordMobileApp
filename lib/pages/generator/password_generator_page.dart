@@ -1,13 +1,13 @@
-// password_generator_page.dart
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/services.dart';
 import '../../services/password_generator.dart';
 import '../../services/vault_service.dart';
-import '../../widgets/glass_panel.dart';
-import '../../widgets/password_strength_bar.dart';
-import '../../widgets/neon_text.dart';
-import '../../widgets/protected_page.dart';
+import '../../widgets/common/password_strength_bar.dart';
+import '../../widgets/common/protected_page.dart';
+import '../../widgets/generator/generated_password_display.dart';
+import '../../widgets/generator/generator_controls.dart';
+import '../../widgets/generator/vault_save_form.dart';
 
 class PasswordGeneratorPage extends StatefulWidget {
   final VoidCallback? onVaultUpdated;
@@ -19,99 +19,103 @@ class PasswordGeneratorPage extends StatefulWidget {
 }
 
 class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
-  int length = 16;
-  bool useLower = true,
-      useUpper = true,
-      useDigits = true,
-      useSpecials = true,
-      requireAll = true;
+  // Paramètres du générateur
+  int    length      = 16;
+  bool   useLower    = true;
+  bool   useUpper    = true;
+  bool   useDigits   = true;
+  bool   useSpecials = true;
+  bool   requireAll  = true;
+  String exclude     = '';
 
-  bool showPassword = false;
-  String exclude = "";
-  String password = "";
+  // État du mot de passe affiché
+  String password     = '';
+  bool   showPassword = false;
 
-  final TextEditingController labelController = TextEditingController();
-  final TextEditingController notesController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    password = "";
-    labelController.clear();
-    notesController.clear();
-  }
+  // Champs de sauvegarde
+  final _labelCtrl = TextEditingController();
+  final _loginCtrl = TextEditingController();
+  final _notesCtrl = TextEditingController();
 
   @override
   void dispose() {
-    password = "";
-    labelController.dispose();
-    notesController.dispose();
+    _labelCtrl.dispose();
+    _loginCtrl.dispose();
+    _notesCtrl.dispose();
     super.dispose();
   }
 
-  void generate() {
+  // ── Logique ───────────────────────────────────────────────────────────────
+
+  void _generate() {
     setState(() {
       password = PasswordGenerator.generate(
-        length: length,
-        useLower: useLower,
-        useUpper: useUpper,
-        useDigits: useDigits,
-        useSpecials: useSpecials,
+        length:          length,
+        useLower:        useLower,
+        useUpper:        useUpper,
+        useDigits:       useDigits,
+        useSpecials:     useSpecials,
         requireAllTypes: requireAll,
-        exclude: exclude,
+        exclude:         exclude,
       );
       showPassword = false;
     });
   }
 
-  Future<void> addToVault() async {
-    if (labelController.text.isEmpty) {
+  Future<void> _addToVault() async {
+    if (_labelCtrl.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Veuillez entrer un label pour le mot de passe."),
-        ),
+        const SnackBar(content: Text('Veuillez entrer un label pour le mot de passe.')),
       );
       return;
     }
-
     try {
       await VaultService.addToServer(
-        label: labelController.text,
+        label:    _labelCtrl.text,
+        login:    _loginCtrl.text,
         password: password,
-        notes: notesController.text,
-        icon: "lock",
+        notes:    _notesCtrl.text,
+        icon:     'lock',
       );
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Mot de passe ajouté au coffre !")),
+        const SnackBar(content: Text('Mot de passe ajouté au coffre !')),
       );
-
       widget.onVaultUpdated?.call();
-
-      password = "";
-      labelController.clear();
-      notesController.clear();
-      showPassword = false;
-      setState(() {});
+      setState(() {
+        password     = '';
+        showPassword = false;
+      });
+      _labelCtrl.clear();
+      _loginCtrl.clear();
+      _notesCtrl.clear();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Erreur lors de l'ajout : $e")),
       );
     }
   }
 
-  void copyPassword() {
+  void _copyPassword() {
     if (password.isEmpty) return;
-    Clipboard.setData(ClipboardData(text: password));
+    final copied = password;
+    Clipboard.setData(ClipboardData(text: copied));
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Mot de passe copié dans le presse-papier")),
+      const SnackBar(content: Text('Mot de passe copié — effacé dans 30 s')),
     );
+    Future.delayed(const Duration(seconds: 30), () async {
+      final data = await Clipboard.getData('text/plain');
+      if (data?.text == copied) {
+        await Clipboard.setData(const ClipboardData(text: ''));
+      }
+    });
   }
+
+  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    final bool isDark = Theme.of(context).brightness == Brightness.dark;
-
     return ProtectedPage(
       requiresLogin: true,
       child: Scaffold(
@@ -119,97 +123,44 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
           padding: const EdgeInsets.all(16),
           child: ListView(
             children: [
-              GlassPanel(
-                width: double.infinity,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: SelectableText(
-                        password.isEmpty
-                            ? "Mot de passe vide"
-                            : (showPassword ? password : '●●●●●●●●'),
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: isDark ? Colors.cyanAccent : Colors.blueAccent,
-                        ),
-                      ),
-                    ),
-                    if (password.isNotEmpty) ...[
-                      IconButton(
-                        icon: Icon(
-                          showPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                          color: Colors.orangeAccent,
-                        ),
-                        onPressed: () =>
-                            setState(() => showPassword = !showPassword),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.copy, color: Colors.greenAccent),
-                        onPressed: copyPassword,
-                      ),
-                    ],
-                  ],
-                ),
+              GeneratedPasswordDisplay(
+                password:           password,
+                showPassword:       showPassword,
+                onToggleVisibility: () => setState(() => showPassword = !showPassword),
+                onCopy:             _copyPassword,
               ),
               const SizedBox(height: 8),
               PasswordStrengthBar(password: password),
               const SizedBox(height: 12),
-              NeonText(
-                text: "Longueur : $length",
-                fontSize: 16,
-                color: isDark ? Colors.cyanAccent : Colors.blueAccent,
+              GeneratorControls(
+                length:           length,
+                useLower:         useLower,
+                useUpper:         useUpper,
+                useDigits:        useDigits,
+                useSpecials:      useSpecials,
+                onLengthChanged:  (v) => setState(() => length      = v),
+                onLowerChanged:   (v) => setState(() => useLower    = v),
+                onUpperChanged:   (v) => setState(() => useUpper    = v),
+                onDigitsChanged:  (v) => setState(() => useDigits   = v),
+                onSpecialsChanged:(v) => setState(() => useSpecials  = v),
               ),
-              Slider(
-                value: length.toDouble(),
-                min: 4,
-                max: 64,
-                divisions: 60,
-                label: "$length",
-                onChanged: (v) => setState(() => length = v.toInt()),
-              ),
-              CheckboxListTile(
-                value: useLower,
-                onChanged: (v) => setState(() => useLower = v!),
-                title: const Text("Minuscules"),
-              ),
-              CheckboxListTile(
-                value: useUpper,
-                onChanged: (v) => setState(() => useUpper = v!),
-                title: const Text("Majuscules"),
-              ),
-              CheckboxListTile(
-                value: useDigits,
-                onChanged: (v) => setState(() => useDigits = v!),
-                title: const Text("Chiffres"),
-              ),
-              CheckboxListTile(
-                value: useSpecials,
-                onChanged: (v) => setState(() => useSpecials = v!),
-                title: const Text("Spéciaux"),
-              ),
-              TextField(
-                controller: labelController,
-                decoration: const InputDecoration(labelText: "Label du mot de passe"),
-              ),
-              TextField(
-                controller: notesController,
-                decoration:
-                    const InputDecoration(labelText: "Notes (optionnel)"),
+              const SizedBox(height: 12),
+              VaultSaveForm(
+                labelController: _labelCtrl,
+                loginController: _loginCtrl,
+                notesController: _notesCtrl,
               ),
               const SizedBox(height: 12),
               ElevatedButton.icon(
-                onPressed: generate,
-                icon: const Icon(Icons.refresh),
-                label: const Text("Générer"),
+                onPressed: _generate,
+                icon:  const Icon(Icons.refresh),
+                label: const Text('Générer'),
               ),
               const SizedBox(height: 8),
               ElevatedButton.icon(
-                onPressed: addToVault,
-                icon: const FaIcon(FontAwesomeIcons.vault),
-                label: const Text("Ajouter au coffre"),
+                onPressed: password.isEmpty ? null : _addToVault,
+                icon:  const FaIcon(FontAwesomeIcons.vault),
+                label: const Text('Ajouter au coffre'),
               ),
             ],
           ),

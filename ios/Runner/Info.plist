@@ -45,5 +45,7 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Pour déverrouiller votre coffre-fort de mots de passe</string>
 </dict>
 </plist>

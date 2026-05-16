@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class NeonText extends StatelessWidget {
   final String text;
   final double fontSize;
-  final Color color;
-  final bool glow;
-  final bool bold; // ← Ajouté
+  final Color  color;
+  final bool   glow;
+  final bool   bold;
 
   const NeonText({
     super.key,
@@ -13,7 +13,7 @@ class NeonText extends StatelessWidget {
     this.fontSize = 24,
     required this.color,
     this.glow = false,
-    this.bold = false, // ← par défaut false
+    this.bold = false,
   });
 
   @override
@@ -22,20 +22,20 @@ class NeonText extends StatelessWidget {
       text,
       textAlign: TextAlign.center,
       style: TextStyle(
-        fontSize: fontSize,
-        fontWeight: bold ? FontWeight.bold : FontWeight.normal, // ← Utilise bold
-        color: color,
+        fontSize:   fontSize,
+        fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+        color:      color,
         shadows: glow
             ? [
                 Shadow(
-                  color: color.withValues(alpha:0.7),
+                  color:      color.withValues(alpha: 0.7),
                   blurRadius: 10,
-                  offset: const Offset(0, 0),
+                  offset:     const Offset(0, 0),
                 ),
                 Shadow(
-                  color: color.withValues(alpha:0.5),
+                  color:      color.withValues(alpha: 0.5),
                   blurRadius: 20,
-                  offset: const Offset(0, 0),
+                  offset:     const Offset(0, 0),
                 ),
               ]
             : null,

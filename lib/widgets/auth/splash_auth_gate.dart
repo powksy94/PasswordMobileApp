@@ -62,10 +62,10 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
       body: Center(
         child: GlassPanel(
           width:        260,
-          height:       180,
           blur:         8,
           borderRadius: 16,
           child: Column(
+            mainAxisSize:      MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(

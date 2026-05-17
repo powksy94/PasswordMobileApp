@@ -83,10 +83,24 @@ class VaultPageState extends State<VaultPage> {
 
   Future<void> openAddPassword() async {
     if (!mounted) return;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
     await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => PasswordGeneratorPage(onVaultUpdated: loadVault),
+        builder: (_) => Scaffold(
+          appBar: AppBar(
+            title: NeonText(
+              text: 'Ajouter un mot de passe',
+              fontSize: 18,
+              color: accent,
+              glow: true,
+            ),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          body: PasswordGeneratorPage(onVaultUpdated: loadVault),
+        ),
       ),
     );
   }

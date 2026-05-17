@@ -43,7 +43,14 @@ class VaultItemCard extends StatelessWidget {
                 const SizedBox(width: 10),
                 Expanded(
                   child: NeonText(
-                    text: item.label, fontSize: 16, color: accent, glow: true, bold: true),
+                    text:     item.label,
+                    fontSize: 16,
+                    color:    accent,
+                    glow:     true,
+                    bold:     true,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ),
                 _iconBtn(Icons.edit_outlined,  accent,           'Modifier',  onEdit),
                 const SizedBox(width: 4),

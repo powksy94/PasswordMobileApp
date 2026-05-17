@@ -4,21 +4,22 @@ import '../generator/password_generator_page.dart';
 import '../../services/vault_service.dart';
 import '../../models/vault_item.dart';
 import '../../widgets/common/neon_text.dart';
-import '../../widgets/common/protected_page.dart';
 import '../../widgets/vault/vault_item_card.dart';
 import '../../widgets/vault/offline_banner.dart';
 import '../../widgets/vault/vault_search_bar.dart';
 import 'edit_vault_item_page.dart';
 import 'vault_export_handler.dart';
+import 'vault_import_handler.dart';
 
 class VaultPage extends StatefulWidget {
   const VaultPage({super.key});
 
   @override
-  State<VaultPage> createState() => _VaultPageState();
+  State<VaultPage> createState() => VaultPageState();
 }
 
-class _VaultPageState extends State<VaultPage> {
+// State public → accessible via GlobalKey depuis HomePage
+class VaultPageState extends State<VaultPage> {
   List<VaultItem> _items     = [];
   bool            _fromCache = false;
   final Map<String, bool>     _showPassword    = {};
@@ -47,7 +48,7 @@ class _VaultPageState extends State<VaultPage> {
         .toList();
   }
 
-  // ── Chargement ────────────────────────────────────────────────────────────
+  // ── Actions publiques (appelées par HomePage via GlobalKey) ───────────────
 
   Future<void> loadVault() async {
     try {
@@ -70,7 +71,27 @@ class _VaultPageState extends State<VaultPage> {
     }
   }
 
-  // ── Actions ────────────────────────────────────────────────────────────────
+  void openExport() {
+    if (mounted) showVaultExportDialog(context, _items);
+  }
+
+  Future<void> openImport() async {
+    if (!mounted) return;
+    final imported = await showVaultImportDialog(context);
+    if (imported) await loadVault();
+  }
+
+  Future<void> openAddPassword() async {
+    if (!mounted) return;
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => PasswordGeneratorPage(onVaultUpdated: loadVault),
+      ),
+    );
+  }
+
+  // ── Actions internes ──────────────────────────────────────────────────────
 
   Future<void> _deleteItem(String id) async {
     final confirmed = await showDialog<bool>(
@@ -130,97 +151,64 @@ class _VaultPageState extends State<VaultPage> {
     await loadVault();
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
+  // ── Build — pas de Scaffold ni d'AppBar (géré par HomePage) ──────────────
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
-    return ProtectedPage(
-      requiresLogin: true,
-      child: Scaffold(
-        appBar: AppBar(
-          title: NeonText(
-              text: 'Coffre-fort', fontSize: 22, color: accent, glow: true),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          actions: [
-            IconButton(
-              icon:      const Icon(Icons.upload_file),
-              tooltip:   'Exporter le vault',
-              onPressed: () => showVaultExportDialog(context, _items),
-            ),
-            IconButton(
-              icon:    const Icon(Icons.add),
-              tooltip: 'Ajouter un mot de passe',
-              onPressed: () async {
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        PasswordGeneratorPage(onVaultUpdated: loadVault),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [Colors.black, Colors.grey[900]!]
+              : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
+        ),
+      ),
+      child: Column(
+        children: [
+          if (_fromCache) const OfflineBanner(),
+          VaultSearchBar(
+            controller: _searchController,
+            query:      _searchQuery,
+            onChanged:  (v) => setState(() => _searchQuery = v),
+            onClear:    () {
+              _searchController.clear();
+              setState(() => _searchQuery = '');
+            },
+          ),
+          Expanded(
+            child: _filtered.isEmpty
+                ? Center(
+                    child: NeonText(
+                      text:     _searchQuery.isEmpty ? 'Coffre vide' : 'Aucun résultat',
+                      fontSize: 20,
+                      color:    accent,
+                      glow:     true,
+                    ),
+                  )
+                : ListView.builder(
+                    padding:     const EdgeInsets.all(16),
+                    itemCount:   _filtered.length,
+                    itemBuilder: (_, i) {
+                      final item = _filtered[i];
+                      return VaultItemCard(
+                        item:             item,
+                        showPassword:     _showPassword[item.id] ?? false,
+                        onTogglePassword: () => setState(
+                          () => _showPassword[item.id] =
+                              !(_showPassword[item.id] ?? false)),
+                        onCopy:   _copyToClipboard,
+                        onEdit:   () => _openEdit(item),
+                        onDelete: () => _deleteItem(item.id),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
-          ],
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: isDark
-                  ? [Colors.black, Colors.grey[900]!]
-                  : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-              begin: Alignment.topLeft,
-              end:   Alignment.bottomRight,
-            ),
           ),
-          child: Column(
-            children: [
-              if (_fromCache) const OfflineBanner(),
-              VaultSearchBar(
-                controller: _searchController,
-                query:      _searchQuery,
-                onChanged:  (v) => setState(() => _searchQuery = v),
-                onClear:    () {
-                  _searchController.clear();
-                  setState(() => _searchQuery = '');
-                },
-              ),
-              Expanded(
-                child: _filtered.isEmpty
-                    ? Center(
-                        child: NeonText(
-                          text:     _searchQuery.isEmpty
-                              ? 'Coffre vide'
-                              : 'Aucun résultat',
-                          fontSize: 20,
-                          color:    accent,
-                          glow:     true,
-                        ),
-                      )
-                    : ListView.builder(
-                        padding:     const EdgeInsets.all(16),
-                        itemCount:   _filtered.length,
-                        itemBuilder: (_, i) {
-                          final item = _filtered[i];
-                          return VaultItemCard(
-                            item:             item,
-                            showPassword:     _showPassword[item.id] ?? false,
-                            onTogglePassword: () => setState(
-                              () => _showPassword[item.id] =
-                                  !(_showPassword[item.id] ?? false)),
-                            onCopy:   _copyToClipboard,
-                            onEdit:   () => _openEdit(item),
-                            onDelete: () => _deleteItem(item.id),
-                          );
-                        },
-                      ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

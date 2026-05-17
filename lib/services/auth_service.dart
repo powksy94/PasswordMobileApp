@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api_service.dart';
 import 'crypto_service.dart';
 
@@ -15,22 +16,18 @@ class AuthService {
   static const _keyVerification = 'key_verification';
   static const _keyMasterKey    = 'master_key_b64';
 
-  // Texte connu chiffré avec la master key pour vérification locale
+  // Flag soft-logout : token conservé mais session marquée fermée
+  static const _prefLoggedOut = 'session_logged_out';
+
   static const _verificationText = 'VAULT_VERIFY_v1';
-
-  static final ApiService _api = ApiService();
-
-  // Clé dérivée en mémoire seulement
+  static final  ApiService _api  = ApiService();
   static Uint8List? _masterKey;
 
-  // ── Register ────────────────────────────────────────────────────────────────
+  // ── Register ─────────────────────────────────────────────────────────────────
 
   static Future<void> register(
-    String email,
-    String password,
-    String masterPassword,
-  ) async {
-    final saltBytes = pcSecureRandom(16);
+      String email, String password, String masterPassword) async {
+    final saltBytes  = pcSecureRandom(16);
     final saltBase64 = base64Encode(saltBytes);
 
     await _api.register(email, password, saltBase64);
@@ -43,31 +40,72 @@ class AuthService {
     await _persistKeyArtifacts(key);
   }
 
-  // ── Login ────────────────────────────────────────────────────────────────────
+  // ── Login ─────────────────────────────────────────────────────────────────────
 
-  static Future<void> login(
-    String email,
-    String password,
-    String masterPassword,
-  ) async {
+  // ── Login étape 1 : authentification serveur uniquement ─────────────────────
+
+  /// Vérifie email + mot de passe de connexion auprès du serveur.
+  /// Retourne (token, role, salt) sans dériver la master key.
+  static Future<({String token, String role, String salt})> loginToServer(
+      String email, String password) async {
     final res = await _api.login(email, password);
-    final token      = res['token'] as String;
-    final role       = res['role']  as String? ?? 'user';
-    final saltBase64 = res['salt']  as String;
+    return (
+      token: res['token'] as String,
+      role:  res['role']  as String? ?? 'user',
+      salt:  res['salt']  as String,
+    );
+  }
 
-    final key = CryptoService.deriveKey(masterPassword, saltBase64);
+  // ── Login étape 2 : dérivation de la master key ───────────────────────────────
+
+  /// Complète la connexion en dérivant et stockant la master key.
+  /// Appelé après [loginToServer] une fois le mot de passe maître connu.
+  static Future<void> completeLogin({
+    required String token,
+    required String role,
+    required String salt,
+    required String masterPassword,
+    required String email,
+  }) async {
+    final key = CryptoService.deriveKey(masterPassword, salt);
     _masterKey = key;
 
     await _storage.write(key: _keyToken, value: token);
     await _storage.write(key: _keyRole,  value: role);
     await _storage.write(key: _keyEmail, value: email);
-    await _storage.write(key: _keySalt,  value: saltBase64);
+    await _storage.write(key: _keySalt,  value: salt);
     await _persistKeyArtifacts(key);
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_prefLoggedOut);
   }
 
-  // ── Logout ───────────────────────────────────────────────────────────────────
+  // ── Compat : login en une seule passe (interne) ───────────────────────────────
+  static Future<void> login(
+      String email, String password, String masterPassword) async {
+    final s = await loginToServer(email, password);
+    await completeLogin(
+      token:          s.token,
+      role:           s.role,
+      salt:           s.salt,
+      masterPassword: masterPassword,
+      email:          email,
+    );
+  }
+
+  // ── Logout (soft) ─────────────────────────────────────────────────────────────
+  //
+  // On garde le token + master key dans le storage pour permettre la reconnexion
+  // biométrique. Le flag `session_logged_out` indique que la session est fermée.
 
   static Future<void> logout() async {
+    _masterKey = null;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_prefLoggedOut, true);
+  }
+
+  // Supprime tout (utilisé à la suppression de compte).
+  static Future<void> fullLogout() async {
     _masterKey = null;
     await _storage.delete(key: _keyToken);
     await _storage.delete(key: _keyRole);
@@ -75,14 +113,45 @@ class AuthService {
     await _storage.delete(key: _keySalt);
     await _storage.delete(key: _keyVerification);
     await _storage.delete(key: _keyMasterKey);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_prefLoggedOut);
   }
 
-  // ── Auto-lock ────────────────────────────────────────────────────────────────
+  // ── Vérifications de session ──────────────────────────────────────────────────
 
-  /// Efface la clé de la mémoire (vault verrouillé). Ne déconnecte pas l'utilisateur.
+  /// Session active (token présent ET pas de flag logout).
+  static Future<bool> isLoggedIn() async {
+    final token     = await _storage.read(key: _keyToken);
+    if (token == null) return false;
+    final prefs     = await SharedPreferences.getInstance();
+    final loggedOut = prefs.getBool(_prefLoggedOut) ?? false;
+    return !loggedOut;
+  }
+
+  /// Token présent mais session fermée → reconnexion biométrique possible.
+  static Future<bool> hasLoggedOutSession() async {
+    final token     = await _storage.read(key: _keyToken);
+    if (token == null) return false;
+    final prefs     = await SharedPreferences.getInstance();
+    return prefs.getBool(_prefLoggedOut) ?? false;
+  }
+
+  /// Restaure la session après auth biométrique réussie (local_auth).
+  static Future<bool> restoreSessionAfterBiometric() async {
+    final token = await _storage.read(key: _keyToken);
+    if (token == null) return false;
+    final success = await unlockFromStorage(); // restaure master key
+    if (!success) return false;
+    // Lève le flag logged_out
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_prefLoggedOut);
+    return true;
+  }
+
+  // ── Auto-lock ─────────────────────────────────────────────────────────────────
+
   static void clearMasterKey() => _masterKey = null;
 
-  /// Déverrouille avec le mot de passe maître. Retourne true si correct.
   static Future<bool> unlockWithMasterPassword(String masterPassword) async {
     final saltBase64 = await _storage.read(key: _keySalt);
     if (saltBase64 == null) return false;
@@ -91,7 +160,6 @@ class AuthService {
 
     final token = await _storage.read(key: _keyVerification);
     if (token == null) {
-      // Pas de token de vérification (compte ancien) → accepte et persiste
       _masterKey = key;
       await _persistKeyArtifacts(key);
       return true;
@@ -107,7 +175,6 @@ class AuthService {
     }
   }
 
-  /// Déverrouille depuis le stockage sécurisé (utilisé après auth biométrique).
   static Future<bool> unlockFromStorage() async {
     final stored = await _storage.read(key: _keyMasterKey);
     if (stored == null) return false;
@@ -115,18 +182,12 @@ class AuthService {
     return true;
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────────
+  // ── Helpers ───────────────────────────────────────────────────────────────────
 
-  static Future<bool> isLoggedIn() async =>
-      (await _storage.read(key: _keyToken)) != null;
-
-  static Future<String?> getToken() => _storage.read(key: _keyToken);
-
-  static Future<String?> getRole() => _storage.read(key: _keyRole);
-
-  static Uint8List? getMasterKey() => _masterKey;
-
-  static Future<String> getUserRoleString() async =>
+  static Future<String?> getToken()          => _storage.read(key: _keyToken);
+  static Future<String?> getRole()           => _storage.read(key: _keyRole);
+  static Uint8List?      getMasterKey()      => _masterKey;
+  static Future<String>  getUserRoleString() async =>
       await _storage.read(key: _keyRole) ?? 'user';
 
   static Future<void> updateTokenAndRole(String newToken, String role) async {
@@ -137,14 +198,15 @@ class AuthService {
   static Uint8List pcSecureRandom(int length) {
     final rnd = Random.secure();
     final out = Uint8List(length);
-    for (int i = 0; i < length; i++) { out[i] = rnd.nextInt(256); }
+    for (int i = 0; i < length; i++) {
+      out[i] = rnd.nextInt(256);
+    }
     return out;
   }
 
-  // Stocke le token de vérification + la clé pour déverrouillage biométrique
   static Future<void> _persistKeyArtifacts(Uint8List key) async {
     final verificationToken = CryptoService.encryptText(_verificationText, key);
     await _storage.write(key: _keyVerification, value: verificationToken);
-    await _storage.write(key: _keyMasterKey, value: base64Encode(key));
+    await _storage.write(key: _keyMasterKey,    value: base64Encode(key));
   }
 }

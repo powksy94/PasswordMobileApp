@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 import '../../services/password_generator.dart';
 import '../../services/vault_service.dart';
 import '../../widgets/common/password_strength_bar.dart';
-import '../../widgets/common/protected_page.dart';
 import '../../widgets/generator/generated_password_display.dart';
 import '../../widgets/generator/generator_controls.dart';
 import '../../widgets/generator/vault_save_form.dart';
@@ -112,16 +111,13 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
     });
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
+  // ── Build — pas de Scaffold (géré par HomePage) ──────────────────────────
 
   @override
   Widget build(BuildContext context) {
-    return ProtectedPage(
-      requiresLogin: true,
-      child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: ListView(
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: ListView(
             children: [
               GeneratedPasswordDisplay(
                 password:           password,
@@ -163,8 +159,6 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
                 label: const Text('Ajouter au coffre'),
               ),
             ],
-          ),
-        ),
       ),
     );
   }

@@ -25,6 +25,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _index = 0;
 
+  // GlobalKeys pour accéder aux méthodes publiques des pages d'onglet
+  final _vaultKey  = GlobalKey<VaultPageState>();
+  final _healthKey = GlobalKey<PasswordHealthPageState>();
+
   late RoleProvider _roleProvider;
   UserRole?         _prevRole;
   VoidCallback?     _roleListener;
@@ -90,95 +94,131 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark  = widget.currentThemeMode == ThemeMode.dark;
-    final accent  = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final isDark = widget.currentThemeMode == ThemeMode.dark;
+    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: NeonText(
-          text: _titles[_index], fontSize: 22, color: accent, glow: true),
-        actions: [
-          if (_roleProvider.isAdmin)
-            IconButton(
-              icon: Icon(Icons.shield, color: accent, size: 26),
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const SecureAdminPage())),
-            ),
-          if (_roleProvider.isTeamAdmin)
-            IconButton(
-              icon: Icon(Icons.verified_user,
-                  color: isDark ? Colors.orangeAccent : Colors.deepOrange,
-                  size: 26),
-              onPressed: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => const SecureAdminPage())),
-            ),
-          Row(
-            children: [
-              Icon(isDark ? Icons.dark_mode : Icons.light_mode, color: accent),
-              Switch(
-                value:              isDark,
-                onChanged:          widget.onThemeToggle,
-                activeThumbColor:   Colors.cyanAccent,
-                inactiveThumbColor: Colors.blueAccent,
-                activeTrackColor:   Colors.cyanAccent.withValues(alpha: 0.4),
-                inactiveTrackColor: Colors.blueAccent.withValues(alpha: 0.4),
+    return PopScope(
+      canPop: false,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: NeonText(
+            text: _titles[_index], fontSize: 22, color: accent, glow: true),
+          actions: [
+            // ── Actions admin / team-admin ───────────────────────────────
+            if (_roleProvider.isAdmin)
+              IconButton(
+                icon: Icon(Icons.shield, color: accent, size: 26),
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const SecureAdminPage())),
+              ),
+            if (_roleProvider.isTeamAdmin)
+              IconButton(
+                icon: Icon(Icons.verified_user,
+                    color: isDark ? Colors.orangeAccent : Colors.deepOrange,
+                    size: 26),
+                onPressed: () => Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const SecureAdminPage())),
+              ),
+
+            // ── Actions spécifiques à chaque onglet ───────────────────────
+            if (_index == 1) ...[
+              IconButton(
+                icon:    const Icon(Icons.download_rounded),
+                tooltip: 'Importer un vault',
+                onPressed: () => _vaultKey.currentState?.openImport(),
+              ),
+              IconButton(
+                icon:    const Icon(Icons.upload_file),
+                tooltip: 'Exporter le vault',
+                onPressed: () => _vaultKey.currentState?.openExport(),
+              ),
+              IconButton(
+                icon:    const Icon(Icons.add),
+                tooltip: 'Ajouter un mot de passe',
+                onPressed: () => _vaultKey.currentState?.openAddPassword(),
               ),
             ],
-          ),
-          PopupMenuButton<String>(
-            icon: Icon(Icons.more_vert, color: accent),
-            onSelected: (v) {
-              if (v == 'settings') Navigator.pushNamed(context, '/settings');
-              if (v == 'logout')   _logout();
-            },
-            itemBuilder: (_) => const [
-              PopupMenuItem(
-                value: 'settings',
-                child: Row(children: [
-                  Icon(Icons.manage_accounts, size: 20),
-                  SizedBox(width: 10),
-                  Text('Paramètres du compte'),
-                ]),
+            if (_index == 2)
+              IconButton(
+                icon:    Icon(Icons.refresh, color: accent),
+                tooltip: 'Actualiser',
+                onPressed: () => _healthKey.currentState?.refresh(),
               ),
-              PopupMenuDivider(),
-              PopupMenuItem(
-                value: 'logout',
-                child: Row(children: [
-                  Icon(Icons.logout, size: 20, color: Colors.redAccent),
-                  SizedBox(width: 10),
-                  Text('Déconnexion',
-                      style: TextStyle(color: Colors.redAccent)),
-                ]),
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: IndexedStack(
-        index: _index,
-        children: [
-          PasswordGeneratorPage(onVaultUpdated: () => setState(() {})),
-          const VaultPage(),
-          const PasswordHealthPage(),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex:     _index,
-        backgroundColor:  Colors.transparent,
-        elevation:        0,
-        selectedItemColor:   accent,
-        unselectedItemColor: isDark ? Colors.white54 : Colors.black45,
-        type: BottomNavigationBarType.fixed,
-        onTap: (i) => setState(() => _index = i),
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.password), label: 'Générateur'),
-          BottomNavigationBarItem(icon: Icon(Icons.lock), label: 'Vault'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.health_and_safety), label: 'Santé'),
-        ],
+
+            // ── Thème + menu ─────────────────────────────────────────────
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(isDark ? Icons.dark_mode : Icons.light_mode, color: accent),
+                Switch(
+                  value:              isDark,
+                  onChanged:          widget.onThemeToggle,
+                  activeThumbColor:   Colors.cyanAccent,
+                  inactiveThumbColor: Colors.blueAccent,
+                  activeTrackColor:   Colors.cyanAccent.withValues(alpha: 0.4),
+                  inactiveTrackColor: Colors.blueAccent.withValues(alpha: 0.4),
+                ),
+              ],
+            ),
+            PopupMenuButton<String>(
+              icon: Icon(Icons.more_vert, color: accent),
+              onSelected: (v) {
+                if (v == 'settings') Navigator.pushNamed(context, '/settings');
+                if (v == 'logout')   _logout();
+              },
+              itemBuilder: (_) => const [
+                PopupMenuItem(
+                  value: 'settings',
+                  child: Row(children: [
+                    Icon(Icons.manage_accounts, size: 20),
+                    SizedBox(width: 10),
+                    Text('Paramètres du compte'),
+                  ]),
+                ),
+                PopupMenuDivider(),
+                PopupMenuItem(
+                  value: 'logout',
+                  child: Row(children: [
+                    Icon(Icons.logout, size: 20, color: Colors.redAccent),
+                    SizedBox(width: 10),
+                    Text('Déconnexion',
+                        style: TextStyle(color: Colors.redAccent)),
+                  ]),
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        body: IndexedStack(
+          index: _index,
+          children: [
+            PasswordGeneratorPage(
+              onVaultUpdated: () => _vaultKey.currentState?.loadVault(),
+            ),
+            VaultPage(key: _vaultKey),
+            PasswordHealthPage(key: _healthKey),
+          ],
+        ),
+
+        bottomNavigationBar: BottomNavigationBar(
+          currentIndex:     _index,
+          backgroundColor:  Colors.transparent,
+          elevation:        0,
+          selectedItemColor:   accent,
+          unselectedItemColor: isDark ? Colors.white54 : Colors.black45,
+          type: BottomNavigationBarType.fixed,
+          onTap: (i) => setState(() => _index = i),
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.password), label: 'Générateur'),
+            BottomNavigationBarItem(icon: Icon(Icons.lock), label: 'Vault'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.health_and_safety), label: 'Santé'),
+          ],
+        ),
       ),
     );
   }

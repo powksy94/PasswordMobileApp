@@ -91,7 +91,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   }
 
   Future<void> _logoutAndRedirect() async {
-    await AuthService.logout();
+    await AuthService.fullLogout();
     if (!mounted) return;
     Provider.of<RoleProvider>(context, listen: false).deactivate();
     Navigator.pushNamedAndRemoveUntil(context, '/login', (r) => false);

@@ -13,10 +13,11 @@ class PasswordHealthPage extends StatefulWidget {
   const PasswordHealthPage({super.key});
 
   @override
-  State<PasswordHealthPage> createState() => _PasswordHealthPageState();
+  State<PasswordHealthPage> createState() => PasswordHealthPageState();
 }
 
-class _PasswordHealthPageState extends State<PasswordHealthPage> {
+// State public → accessible via GlobalKey depuis HomePage
+class PasswordHealthPageState extends State<PasswordHealthPage> {
   List<VaultItem> _items = [];
   bool    _loading = true;
   String? _error;
@@ -27,6 +28,12 @@ class _PasswordHealthPageState extends State<PasswordHealthPage> {
     _load();
   }
 
+  // ── Action publique (appelée par HomePage via GlobalKey) ──────────────────
+
+  Future<void> refresh() => _load();
+
+  // ── Analyses ───────────────────────────────────────────────────────────────
+
   Future<void> _load() async {
     setState(() { _loading = true; _error = null; });
     try {
@@ -36,8 +43,6 @@ class _PasswordHealthPageState extends State<PasswordHealthPage> {
       if (mounted) setState(() { _error = e.toString(); _loading = false; });
     }
   }
-
-  // ── Analyses ───────────────────────────────────────────────────────────────
 
   List<VaultItem> get _weak =>
       _items.where((i) => PasswordScore.compute(i.password) < 60).toList();
@@ -67,7 +72,7 @@ class _PasswordHealthPageState extends State<PasswordHealthPage> {
     await _load();
   }
 
-  // ── Build ──────────────────────────────────────────────────────────────────
+  // ── Build — pas de Scaffold ni d'AppBar (géré par HomePage) ──────────────
 
   @override
   Widget build(BuildContext context) {
@@ -75,142 +80,126 @@ class _PasswordHealthPageState extends State<PasswordHealthPage> {
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
     if (_loading) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Center(child: CircularProgressIndicator());
     }
     if (_error != null) {
-      return Scaffold(
-        body: Center(
-          child: Text('Erreur : $_error',
-              style: const TextStyle(color: Colors.redAccent)),
-        ),
+      return Center(
+        child: Text('Erreur : $_error',
+            style: const TextStyle(color: Colors.redAccent)),
       );
     }
 
     final weak       = _weak;
     final duplicates = _duplicateGroups;
 
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: NeonText(
-          text: 'Santé des mots de passe', fontSize: 20, color: accent, glow: true),
-        actions: [
-          IconButton(icon: Icon(Icons.refresh, color: accent), onPressed: _load),
-        ],
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [Colors.black, Colors.grey[900]!]
-                : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-            begin: Alignment.topLeft,
-            end:   Alignment.bottomRight,
-          ),
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isDark
+              ? [Colors.black, Colors.grey[900]!]
+              : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
+          begin: Alignment.topLeft,
+          end:   Alignment.bottomRight,
         ),
-        child: _items.isEmpty
-            ? Center(
-                child: NeonText(
-                    text: 'Coffre vide', fontSize: 20, color: accent, glow: true))
-            : ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  HealthScoreCard(
-                    score:       _globalScore,
-                    total:       _items.length,
-                    strongCount: _items
-                        .where((i) => PasswordScore.compute(i.password) >= 80)
-                        .length,
-                    weakCount:   weak.length,
-                    dupCount:    duplicates.fold(0, (s, g) => s + g.length),
+      ),
+      child: _items.isEmpty
+          ? Center(
+              child: NeonText(
+                  text: 'Coffre vide', fontSize: 20, color: accent, glow: true))
+          : ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                HealthScoreCard(
+                  score:       _globalScore,
+                  total:       _items.length,
+                  strongCount: _items
+                      .where((i) => PasswordScore.compute(i.password) >= 80)
+                      .length,
+                  weakCount:   weak.length,
+                  dupCount:    duplicates.fold(0, (s, g) => s + g.length),
+                ),
+
+                if (weak.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  HealthSectionHeader(
+                    icon:     Icons.warning_amber_rounded,
+                    title:    'Mots de passe faibles (${weak.length})',
+                    subtitle: 'Score < 60 — à remplacer en priorité',
+                    color:    Colors.redAccent,
                   ),
+                  const SizedBox(height: 8),
+                  GlassPanel(
+                    width:   double.infinity,
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      children: weak
+                          .map((i) =>
+                              HealthItemTile(item: i, onEdit: () => _openEdit(i)))
+                          .toList(),
+                    ),
+                  ),
+                ],
 
-                  // ── Faibles ─────────────────────────────────────────────
-                  if (weak.isNotEmpty) ...[
-                    const SizedBox(height: 20),
-                    HealthSectionHeader(
-                      icon:     Icons.warning_amber_rounded,
-                      title:    'Mots de passe faibles (${weak.length})',
-                      subtitle: 'Score < 60 — à remplacer en priorité',
-                      color:    Colors.redAccent,
-                    ),
-                    const SizedBox(height: 8),
-                    GlassPanel(
-                      width:   double.infinity,
-                      padding: EdgeInsets.zero,
-                      child: Column(
-                        children: weak
-                            .map((i) =>
-                                HealthItemTile(item: i, onEdit: () => _openEdit(i)))
-                            .toList(),
-                      ),
-                    ),
-                  ],
-
-                  // ── Doublons ─────────────────────────────────────────────
-                  if (duplicates.isNotEmpty) ...[
-                    const SizedBox(height: 20),
-                    HealthSectionHeader(
-                      icon:     Icons.copy_all,
-                      title:    'Mots de passe réutilisés (${duplicates.length} groupe(s))',
-                      subtitle: 'Le même mot de passe est utilisé sur plusieurs services',
-                      color:    Colors.orangeAccent,
-                    ),
-                    const SizedBox(height: 8),
-                    ...duplicates.map((group) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: GlassPanel(
-                            width:   double.infinity,
-                            padding: EdgeInsets.zero,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
-                                  child: Text(
-                                    '${group.length} services — même mot de passe',
-                                    style: const TextStyle(
-                                      color:      Colors.orangeAccent,
-                                      fontSize:   12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                if (duplicates.isNotEmpty) ...[
+                  const SizedBox(height: 20),
+                  HealthSectionHeader(
+                    icon:     Icons.copy_all,
+                    title:    'Mots de passe réutilisés (${duplicates.length} groupe(s))',
+                    subtitle: 'Le même mot de passe est utilisé sur plusieurs services',
+                    color:    Colors.orangeAccent,
+                  ),
+                  const SizedBox(height: 8),
+                  ...duplicates.map((group) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: GlassPanel(
+                          width:   double.infinity,
+                          padding: EdgeInsets.zero,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
+                                child: Text(
+                                  '${group.length} services — même mot de passe',
+                                  style: const TextStyle(
+                                    color:      Colors.orangeAccent,
+                                    fontSize:   12,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                ...group.map((i) =>
-                                    HealthItemTile(item: i, onEdit: () => _openEdit(i))),
-                              ],
-                            ),
+                              ),
+                              ...group.map((i) =>
+                                  HealthItemTile(item: i, onEdit: () => _openEdit(i))),
+                            ],
                           ),
-                        )),
-                  ],
-
-                  // ── Tout va bien ─────────────────────────────────────────
-                  if (weak.isEmpty && duplicates.isEmpty) ...[
-                    const SizedBox(height: 20),
-                    GlassPanel(
-                      width: double.infinity,
-                      child: Column(
-                        children: [
-                          const Icon(Icons.verified_rounded,
-                              color: Colors.cyanAccent, size: 48),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Excellent ! Aucun problème détecté.',
-                            style: TextStyle(
-                              color:      isDark ? Colors.white : Colors.black87,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-
-                  const SizedBox(height: 24),
+                        ),
+                      )),
                 ],
-              ),
-      ),
+
+                if (weak.isEmpty && duplicates.isEmpty) ...[
+                  const SizedBox(height: 20),
+                  GlassPanel(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        const Icon(Icons.verified_rounded,
+                            color: Colors.cyanAccent, size: 48),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Excellent ! Aucun problème détecté.',
+                          style: TextStyle(
+                            color:      isDark ? Colors.white : Colors.black87,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+
+                const SizedBox(height: 24),
+              ],
+            ),
     );
   }
 }

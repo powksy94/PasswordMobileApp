@@ -44,7 +44,7 @@ class _ProtectedPageState extends State<ProtectedPage> {
   @override
   Widget build(BuildContext context) {
     if (_checking) {
-      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+      return const Center(child: CircularProgressIndicator());
     }
     if (!_allowed) return const SizedBox.shrink();
     return widget.child;

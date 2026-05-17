@@ -3,6 +3,7 @@ import '../../widgets/common/glass_panel.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../widgets/auth/password_section.dart';
 import '../../services/auth_service.dart';
+import '../../utils/api_error.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -47,7 +48,7 @@ class _SignupPageState extends State<SignupPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur : ${e.toString()}')),
+        SnackBar(content: Text(apiErrorMessage(e))),
       );
     } finally {
       if (mounted) setState(() => _loading = false);

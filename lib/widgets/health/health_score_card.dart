@@ -55,12 +55,11 @@ class HealthScoreCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _Stat('$total',       'Total',    color),
-              _Stat('$strongCount', 'Forts',    Colors.cyanAccent),
-              _Stat('$weakCount',   'Faibles',  Colors.redAccent),
-              _Stat('$dupCount',    'Doublons', Colors.orangeAccent),
+              Expanded(child: _Stat('$total',       'Total',    color)),
+              Expanded(child: _Stat('$strongCount', 'Forts',    Colors.cyanAccent)),
+              Expanded(child: _Stat('$weakCount',   'Faibles',  Colors.redAccent)),
+              Expanded(child: _Stat('$dupCount',    'Doublons', Colors.orangeAccent)),
             ],
           ),
         ],

@@ -46,8 +46,8 @@ class GeneratorControls extends StatelessWidget {
         Slider(
           value:     length.toDouble(),
           min:       4,
-          max:       64,
-          divisions: 60,
+          max:       40,
+          divisions: 36,
           label:     '$length',
           onChanged: (v) => onLengthChanged(v.toInt()),
         ),

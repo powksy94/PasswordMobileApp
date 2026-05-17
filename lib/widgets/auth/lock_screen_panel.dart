@@ -29,13 +29,19 @@ class LockScreenPanel extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
+    final panelWidth = (MediaQuery.sizeOf(context).width - 48).clamp(260.0, 340.0);
+
     return GlassPanel(
-      width:   340,
+      width:   panelWidth,
       padding: const EdgeInsets.all(28),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.lock_rounded, size: 56, color: accent),
+          Image.asset(
+            'assets/icons/password-mobile-app-logo.png',
+            width:  80,
+            height: 80,
+          ),
           const SizedBox(height: 16),
           NeonText(
             text: 'Vault verrouillé', fontSize: 24, color: accent, glow: true),

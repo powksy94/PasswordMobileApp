@@ -3,8 +3,8 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:biometric_storage/biometric_storage.dart';
-import 'package:path_provider/path_provider.dart';
 import '../models/vault_item.dart';
+import '../utils/downloads_directory.dart';
 import 'crypto_service.dart';
 
 /// Export du vault chiffré avec une clé stockée dans le Keystore hardware.
@@ -41,10 +41,11 @@ class BiometricExportService {
     final store = await BiometricStorage().getStorage(
       _storeName,
       options: StorageFileInitOptions(
-        authenticationRequired:             true,
-        // authenticationValidityDurationSeconds > 0 permet le PIN de secours
-        authenticationValidityDurationSeconds: 30,
-        androidBiometricOnly:               false,
+        authenticationRequired:                true,
+        // -1 = toujours demander l'empreinte, sans fenêtre de validité
+        // androidBiometricOnly: true requis avec -1 (pas de fallback PIN)
+        authenticationValidityDurationSeconds: -1,
+        androidBiometricOnly:                  true,
       ),
       promptInfo: _promptInfo,
     );
@@ -58,6 +59,29 @@ class BiometricExportService {
       return key;
     }
     return base64Decode(stored);
+  }
+
+  // ── Import : récupère la clé pour déchiffrer un fichier existant ─────────────
+
+  /// Déclenche la biométrie et retourne la clé de chiffrement stockée.
+  /// Retourne null si non dispo ou si l'utilisateur annule.
+  static Future<Uint8List?> getKeyForDecrypt() async {
+    try {
+      final store = await BiometricStorage().getStorage(
+        _storeName,
+        options: StorageFileInitOptions(
+          authenticationRequired:                true,
+          authenticationValidityDurationSeconds: -1,
+          androidBiometricOnly:                  true,
+        ),
+        promptInfo: _promptInfo,
+      );
+      final stored = await store.read();
+      if (stored == null) return null;
+      return Uint8List.fromList(base64Decode(stored));
+    } catch (_) {
+      return null;
+    }
   }
 
   // ── Export ─────────────────────────────────────────────────────────────────
@@ -82,7 +106,7 @@ class BiometricExportService {
       // Produit {"data":"...","iv":"..."} — même format AES-GCM que le vault
       final encrypted = CryptoService.encryptText(jsonStr, key);
 
-      final dir       = await getApplicationDocumentsDirectory();
+      final dir       = await getDownloadsDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final file      = File('${dir.path}/vault_secure_$timestamp.enc');
       await file.writeAsString(encrypted);

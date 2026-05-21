@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 // Pages
 import 'pages/auth/login_page.dart';
@@ -8,7 +9,6 @@ import 'pages/auth/lock_screen.dart';
 import 'pages/home/home_page.dart';
 import 'pages/vault/vault_page.dart';
 import 'pages/generator/password_generator_page.dart';
-import 'pages/admin/secure_admin_page.dart';
 import 'pages/settings/account_settings_page.dart';
 
 // Theme & widgets
@@ -19,7 +19,9 @@ import 'widgets/auth/splash_auth_gate.dart';
 import 'services/role_provider.dart';
 import 'services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     ChangeNotifierProvider(
       create: (_) => RoleProvider(),
@@ -39,14 +41,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   ThemeMode themeMode = ThemeMode.dark;
   DateTime? _pausedAt;
 
-  static const _lockTimeout  = Duration(minutes: 5);
+  static const _lockTimeout = Duration(minutes: 5);
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _restoreRole());
   }
 
   @override
@@ -54,8 +55,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-
-  // ── Cycle de vie ─────────────────────────────────────────────────────────
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -75,34 +74,18 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     }
   }
 
-  // ── Restauration du rôle au démarrage ────────────────────────────────────
-
-  Future<void> _restoreRole() async {
-    final roleStr = await AuthService.getUserRoleString();
-    if (!mounted) return;
-    final roleProvider = Provider.of<RoleProvider>(context, listen: false);
-    switch (roleStr) {
-      case 'admin':
-        roleProvider.setRole(UserRole.admin);
-      case 'team_admin':
-        roleProvider.setRole(UserRole.teamAdmin);
-      default:
-        break;
-    }
-  }
-
   void changeTheme(bool isDark) =>
       setState(() => themeMode = isDark ? ThemeMode.dark : ThemeMode.light);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title:                    'Password Mobile App',
+      title:                     'Password Mobile App',
       debugShowCheckedModeBanner: false,
-      theme:                    AppTheme.lightTheme,
-      darkTheme:                AppTheme.darkTheme,
-      themeMode:                themeMode,
-      navigatorKey:             _navigatorKey,
+      theme:                     AppTheme.lightTheme,
+      darkTheme:                 AppTheme.darkTheme,
+      themeMode:                 themeMode,
+      navigatorKey:              _navigatorKey,
       initialRoute: '/splash',
       routes: {
         '/splash':    (_) => const SplashAuthGate(),
@@ -115,7 +98,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             ),
         '/vault':     (_) => const VaultPage(),
         '/generator': (_) => const PasswordGeneratorPage(),
-        '/admin':     (_) => const SecureAdminPage(),
         '/settings':  (_) => const AccountSettingsPage(),
       },
     );

@@ -73,6 +73,23 @@ class ApiService {
     );
   }
 
+  Future<void> registerFcmToken(String token, String fcmToken) async {
+    await _dio.post(
+      '/auth/fcm-token',
+      data: {'fcmToken': fcmToken},
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
+  Future<void> respondAdminSession(
+      String token, String sessionId, bool approved) async {
+    await _dio.post(
+      '/admin-auth/respond',
+      data: {'sessionId': sessionId, 'approved': approved},
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
   Future<void> deleteAccount(String token) async {
     await _dio.delete(
       '/auth/account',

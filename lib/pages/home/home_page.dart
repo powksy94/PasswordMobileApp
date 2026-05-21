@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import '../vault/vault_page.dart';
 import '../vault/password_health_page.dart';
 import '../generator/password_generator_page.dart';
-import '../admin/secure_admin_page.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../services/role_provider.dart';
 import '../../services/auth_service.dart';
+import '../../services/fcm_service.dart';
 
 class HomePage extends StatefulWidget {
   final void Function(bool) onThemeToggle;
@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
 
     if (!_listenerAdded) {
       _listenerAdded = true;
+      FcmService.listenForeground(context); // écoute les notifications admin
       _prevRole      = _roleProvider.role;
       _roleListener  = () {
         if (!mounted) return;
@@ -106,21 +107,6 @@ class _HomePageState extends State<HomePage> {
           title: NeonText(
             text: _titles[_index], fontSize: 22, color: accent, glow: true),
           actions: [
-            // ── Actions admin / team-admin ───────────────────────────────
-            if (_roleProvider.isAdmin)
-              IconButton(
-                icon: Icon(Icons.shield, color: accent, size: 26),
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const SecureAdminPage())),
-              ),
-            if (_roleProvider.isTeamAdmin)
-              IconButton(
-                icon: Icon(Icons.verified_user,
-                    color: isDark ? Colors.orangeAccent : Colors.deepOrange,
-                    size: 26),
-                onPressed: () => Navigator.push(context,
-                    MaterialPageRoute(builder: (_) => const SecureAdminPage())),
-              ),
 
             // ── Actions spécifiques à chaque onglet ───────────────────────
             if (_index == 1) ...[

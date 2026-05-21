@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/biometric_service.dart';
+import '../../services/fcm_service.dart';
 import '../../services/role_provider.dart';
 import '../../utils/api_error.dart';
 import '../../widgets/auth/login_form.dart';
 import '../../widgets/auth/master_password_dialog.dart';
-import 'local_admin_login.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -17,16 +17,15 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage>
     with SingleTickerProviderStateMixin {
-  final _formKey      = GlobalKey<FormState>();
-  final _emailCtrl    = TextEditingController();
+  final _formKey     = GlobalKey<FormState>();
+  final _emailCtrl   = TextEditingController();
   final _passwordCtrl = TextEditingController();
 
   bool _loading       = false;
   bool _showBiometric = false;
 
-  late AnimationController        _lockController;
-  late Animation<double>          _rotationAnimation;
-  late LocalAdminLoginHandler     _adminHandler;
+  late AnimationController _lockController;
+  late Animation<double>   _rotationAnimation;
 
   @override
   void initState() {
@@ -38,12 +37,6 @@ class _LoginPageState extends State<LoginPage>
     _rotationAnimation = Tween<double>(begin: 0, end: 0.25).animate(
       CurvedAnimation(parent: _lockController, curve: Curves.easeInOut),
     );
-    _adminHandler = LocalAdminLoginHandler(
-      lockController: _lockController,
-      adminCtrl:      TextEditingController(),
-      teamAdminCtrl:  TextEditingController(),
-      setLoading:     (v) { if (mounted) setState(() => _loading = v); },
-    );
     _checkBiometricAvailability();
   }
 
@@ -52,7 +45,6 @@ class _LoginPageState extends State<LoginPage>
     _emailCtrl.dispose();
     _passwordCtrl.dispose();
     _lockController.dispose();
-    _adminHandler.dispose();
     super.dispose();
   }
 
@@ -92,6 +84,7 @@ class _LoginPageState extends State<LoginPage>
     final roleStr = await AuthService.getUserRoleString();
     if (!mounted) return;
     _applyRole(roleStr);
+    FcmService.initialize();
     Navigator.pushReplacementNamed(context, '/home');
   }
 
@@ -102,7 +95,6 @@ class _LoginPageState extends State<LoginPage>
     setState(() => _loading = true);
 
     try {
-      // Étape 1 : authentification serveur
       final session = await AuthService.loginToServer(
         _emailCtrl.text.trim(),
         _passwordCtrl.text,
@@ -110,7 +102,6 @@ class _LoginPageState extends State<LoginPage>
       if (!mounted) return;
       setState(() => _loading = false);
 
-      // Étape 2 : mot de passe maître (dialog séparée)
       final masterPw = await showMasterPasswordDialog(context);
       if (masterPw == null || masterPw.isEmpty || !mounted) return;
 
@@ -127,6 +118,7 @@ class _LoginPageState extends State<LoginPage>
       final roleStr = await AuthService.getUserRoleString();
       if (!mounted) return;
       _applyRole(roleStr);
+      FcmService.initialize();
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
       if (mounted) _snack(apiErrorMessage(e));
@@ -152,40 +144,20 @@ class _LoginPageState extends State<LoginPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Center(
-            child: SingleChildScrollView(
-              child: LoginForm(
-                formKey:           _formKey,
-                emailCtrl:         _emailCtrl,
-                passwordCtrl:      _passwordCtrl,
-                loading:           _loading,
-                onSubmit:          _submitUser,
-                onSignup:          () => Navigator.pushNamed(context, '/signup'),
-                rotationAnimation: _rotationAnimation,
-                showBiometric:     _showBiometric,
-                onBiometricTap:    _loginWithBiometric,
-              ),
-            ),
+      body: Center(
+        child: SingleChildScrollView(
+          child: LoginForm(
+            formKey:           _formKey,
+            emailCtrl:         _emailCtrl,
+            passwordCtrl:      _passwordCtrl,
+            loading:           _loading,
+            onSubmit:          _submitUser,
+            onSignup:          () => Navigator.pushNamed(context, '/signup'),
+            rotationAnimation: _rotationAnimation,
+            showBiometric:     _showBiometric,
+            onBiometricTap:    _loginWithBiometric,
           ),
-          // Accès admin — 5 taps haut-droite
-          Positioned(
-            top: 20, right: 20,
-            child: GestureDetector(
-              onTap: () => _adminHandler.handleAdminTap(context),
-              child: const Icon(Icons.admin_panel_settings, size: 30),
-            ),
-          ),
-          // Accès team admin — 5 taps haut-gauche
-          Positioned(
-            top: 20, left: 20,
-            child: GestureDetector(
-              onTap: () => _adminHandler.handleTeamAdminTap(context),
-              child: const Icon(Icons.group, size: 30, color: Colors.greenAccent),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

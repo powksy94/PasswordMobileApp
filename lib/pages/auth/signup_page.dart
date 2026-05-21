@@ -75,7 +75,48 @@ class _SignupPageState extends State<SignupPage> {
                 children: [
                   NeonText(
                     text: 'Créer un compte', fontSize: 26, color: accent, glow: true),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 12),
+
+                  // Explication onboarding
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color:        accent.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border:       Border.all(color: accent.withValues(alpha: 0.25)),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(Icons.info_outline, size: 16, color: accent),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Deux mots de passe distincts',
+                              style: TextStyle(
+                                color:      accent,
+                                fontSize:   13,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          '🔐  Mot de passe de connexion — vérifié par le serveur.\n'
+                          '🗝️  Mot de passe maître — chiffre votre coffre localement. '
+                          'Impossible à récupérer s\'il est perdu.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color:    isDark ? Colors.white70 : Colors.black87,
+                            height:   1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
 
                   // Email
                   TextFormField(

@@ -1,4 +1,4 @@
-package com.example.password_mobile_app_new
+package com.passwordmobileapp.app
 
 import io.flutter.embedding.android.FlutterFragmentActivity
 

@@ -1,5 +1,5 @@
 name: password_mobile_app
-description: Full Flutter app with Android installer + themes
+description: Password manager with AES-256 encrypted vault, biometric unlock and secure export.
 version: 1.0.0+1
 
 environment:

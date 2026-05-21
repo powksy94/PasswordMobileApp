@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"  android:maxSdkVersion="32"/>
 
     <application
-        android:label="password_mobile_app_new"
+        android:label="Password Mobile App"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

@@ -90,6 +90,15 @@ class ApiService {
     );
   }
 
+  Future<void> respondVaultAuth(
+      String token, String sessionId, bool approved) async {
+    await _dio.post(
+      '/admin/vault/auth/respond',
+      data: {'sessionId': sessionId, 'approved': approved},
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
   Future<void> deleteAccount(String token) async {
     await _dio.delete(
       '/auth/account',

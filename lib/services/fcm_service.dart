@@ -5,26 +5,22 @@ import 'auth_service.dart';
 import 'biometric_service.dart';
 
 /// Gère Firebase Cloud Messaging :
-/// - Enregistrement du token FCM sur le backend
-/// - Réception des notifications d'approbation admin
+/// - Enregistrement du token FCM
+/// - Notifications d'approbation admin (connexion dashboard)
+/// - Notifications d'approbation vault admin (accès au vault)
 class FcmService {
   static final _fcm = FirebaseMessaging.instance;
 
   // ── Initialisation ────────────────────────────────────────────────────────
 
   static Future<void> initialize() async {
-    // Demande la permission (Android 13+)
     await _fcm.requestPermission(
-      alert:         true,
-      badge:         true,
-      sound:         true,
-      provisional:   false,
+      alert:       true,
+      badge:       true,
+      sound:       true,
+      provisional: false,
     );
-
-    // Enregistre le token FCM sur le backend après connexion
     await _registerToken();
-
-    // Rafraîchit le token si Firebase le renouvelle
     FirebaseMessaging.instance.onTokenRefresh.listen(_sendTokenToServer);
   }
 
@@ -43,48 +39,61 @@ class FcmService {
     } catch (_) {}
   }
 
-  // ── Handler des notifications foreground ─────────────────────────────────
+  // ── Handler foreground ────────────────────────────────────────────────────
 
   static void listenForeground(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {
       if (!context.mounted) return;
-      final data = message.data;
-      if (data['type'] == 'admin_approval_request') {
-        _showApprovalDialog(context, data['sessionId'] ?? '');
+      final data      = message.data;
+      final type      = data['type'] as String?;
+      final sessionId = data['sessionId'] as String? ?? '';
+
+      switch (type) {
+        case 'admin_approval_request':
+          _showDialog(context, sessionId, _DialogType.adminLogin);
+        case 'admin_vault_auth':
+          _showDialog(context, sessionId, _DialogType.vaultAccess);
       }
     });
   }
 
-  // ── Dialog d'approbation ──────────────────────────────────────────────────
-
-  static void _showApprovalDialog(BuildContext context, String sessionId) {
+  static void _showDialog(
+      BuildContext context, String sessionId, _DialogType type) {
     showDialog(
-      context: context,
+      context:            context,
       barrierDismissible: false,
-      builder: (_) => _AdminApprovalDialog(sessionId: sessionId),
+      builder: (_) => _ApprovalDialog(sessionId: sessionId, type: type),
     );
   }
 }
 
-// ── Widget dialog d'approbation ───────────────────────────────────────────────
+// ── Type de dialog ────────────────────────────────────────────────────────────
 
-class _AdminApprovalDialog extends StatefulWidget {
-  final String sessionId;
-  const _AdminApprovalDialog({required this.sessionId});
+enum _DialogType { adminLogin, vaultAccess }
+
+// ── Widget dialog générique ───────────────────────────────────────────────────
+
+class _ApprovalDialog extends StatefulWidget {
+  final String      sessionId;
+  final _DialogType type;
+  const _ApprovalDialog({required this.sessionId, required this.type});
 
   @override
-  State<_AdminApprovalDialog> createState() => _AdminApprovalDialogState();
+  State<_ApprovalDialog> createState() => _ApprovalDialogState();
 }
 
-class _AdminApprovalDialogState extends State<_AdminApprovalDialog> {
+class _ApprovalDialogState extends State<_ApprovalDialog> {
   bool _loading = false;
 
+  bool get _isVault => widget.type == _DialogType.vaultAccess;
+
   Future<void> _respond(bool approved) async {
-    // Si approbation → vérifie l'empreinte avant d'envoyer
     if (approved) {
-      final ok = await BiometricService.authenticate(
-        reason: 'Confirmez votre identité pour approuver la connexion admin',
-      );
+      final reason = _isVault
+          ? 'Confirmez votre identité pour accéder au vault admin'
+          : 'Confirmez votre identité pour approuver la connexion admin';
+
+      final ok = await BiometricService.authenticate(reason: reason);
       if (!ok) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -99,7 +108,11 @@ class _AdminApprovalDialogState extends State<_AdminApprovalDialog> {
     try {
       final token = await AuthService.getToken();
       if (token == null) return;
-      await ApiService().respondAdminSession(token, widget.sessionId, approved);
+      if (_isVault) {
+        await ApiService().respondVaultAuth(token, widget.sessionId, approved);
+      } else {
+        await ApiService().respondAdminSession(token, widget.sessionId, approved);
+      }
     } catch (_) {}
     if (mounted) Navigator.pop(context);
   }
@@ -108,15 +121,21 @@ class _AdminApprovalDialogState extends State<_AdminApprovalDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Row(
-        children: const [
-          Icon(Icons.admin_panel_settings, color: Colors.orangeAccent),
-          SizedBox(width: 10),
-          Text('Connexion admin'),
+        children: [
+          Icon(
+            _isVault ? Icons.lock_open_rounded : Icons.admin_panel_settings,
+            color: _isVault ? Colors.cyanAccent : Colors.orangeAccent,
+          ),
+          const SizedBox(width: 10),
+          Text(_isVault ? 'Accès vault admin' : 'Connexion admin'),
         ],
       ),
-      content: const Text(
-        'Une tentative de connexion au panneau d\'administration vient d\'être effectuée.\n\n'
-        'Êtes-vous à l\'origine de cette connexion ?',
+      content: Text(
+        _isVault
+            ? 'Une demande d\'accès au vault admin vient d\'être effectuée.\n\n'
+              'Approuvez pour déverrouiller le vault.'
+            : 'Une tentative de connexion au panneau d\'administration vient d\'être effectuée.\n\n'
+              'Êtes-vous à l\'origine de cette connexion ?',
       ),
       actions: [
         TextButton(

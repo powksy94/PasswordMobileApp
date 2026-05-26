@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../services/biometric_service.dart';
+import '../../services/fcm_service.dart';
 import '../common/glass_panel.dart';
 
 class SplashAuthGate extends StatefulWidget {
@@ -39,6 +40,7 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
           final success = await AuthService.unlockFromStorage();
           if (!mounted) return;
           if (success) {
+            FcmService.initialize();
             Navigator.pushReplacementNamed(context, '/home');
             return;
           }

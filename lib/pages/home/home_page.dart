@@ -43,7 +43,8 @@ class _HomePageState extends State<HomePage> {
 
     if (!_listenerAdded) {
       _listenerAdded = true;
-      FcmService.listenForeground(context); // écoute les notifications admin
+      FcmService.initialize();
+      FcmService.listenForeground(context);
       _prevRole      = _roleProvider.role;
       _roleListener  = () {
         if (!mounted) return;

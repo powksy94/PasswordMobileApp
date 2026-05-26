@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'api_service.dart';
 import 'auth_service.dart';
 import 'biometric_service.dart';
@@ -11,6 +12,11 @@ import 'biometric_service.dart';
 class FcmService {
   static final _fcm = FirebaseMessaging.instance;
 
+  static const _channelId   = 'admin_auth';
+  static const _channelName = 'Approbations admin';
+
+  static final _localNotifications = FlutterLocalNotificationsPlugin();
+
   // ── Initialisation ────────────────────────────────────────────────────────
 
   static Future<void> initialize() async {
@@ -20,6 +26,25 @@ class FcmService {
       sound:       true,
       provisional: false,
     );
+
+    // Création du canal Android (requis Android 8+)
+    const androidChannel = AndroidNotificationChannel(
+      _channelId,
+      _channelName,
+      importance: Importance.high,
+    );
+    await _localNotifications
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidChannel);
+
+    // Affichage des notifications FCM en foreground
+    await _fcm.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
     await _registerToken();
     FirebaseMessaging.instance.onTokenRefresh.listen(_sendTokenToServer);
   }
@@ -28,33 +53,60 @@ class FcmService {
 
   static Future<void> _registerToken() async {
     final token = await _fcm.getToken();
+    debugPrint('[FCM] token FCM obtenu: ${token != null ? "${token.substring(0, 20)}..." : "null"}');
     if (token != null) await _sendTokenToServer(token);
   }
 
   static Future<void> _sendTokenToServer(String token) async {
     try {
       final authToken = await AuthService.getToken();
-      if (authToken == null) return;
+      if (authToken == null) {
+        debugPrint('[FCM] authToken null — token non envoyé');
+        return;
+      }
+      debugPrint('[FCM] envoi token au serveur...');
       await ApiService().registerFcmToken(authToken, token);
-    } catch (_) {}
+      debugPrint('[FCM] token enregistré avec succès');
+    } catch (e) {
+      debugPrint('[FCM] erreur enregistrement token: $e');
+    }
   }
 
-  // ── Handler foreground ────────────────────────────────────────────────────
+  // ── Handlers foreground + background (tap sur notif) ─────────────────────
 
   static void listenForeground(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {
+      debugPrint('[FCM] onMessage reçu: type=${message.data['type']}');
       if (!context.mounted) return;
-      final data      = message.data;
-      final type      = data['type'] as String?;
-      final sessionId = data['sessionId'] as String? ?? '';
-
-      switch (type) {
-        case 'admin_approval_request':
-          _showDialog(context, sessionId, _DialogType.adminLogin);
-        case 'admin_vault_auth':
-          _showDialog(context, sessionId, _DialogType.vaultAccess);
-      }
+      _handleMessage(context, message.data);
     });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      debugPrint('[FCM] onMessageOpenedApp: type=${message.data['type']}');
+      if (!context.mounted) return;
+      _handleMessage(context, message.data);
+    });
+
+    // Message qui a ouvert l'app depuis l'état terminé
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message == null) return;
+      debugPrint('[FCM] getInitialMessage: type=${message.data['type']}');
+      if (!context.mounted) return;
+      _handleMessage(context, message.data);
+    });
+  }
+
+  static void _handleMessage(BuildContext context, Map<String, dynamic> data) {
+    final type      = data['type'] as String?;
+    final sessionId = data['sessionId'] as String? ?? '';
+    debugPrint('[FCM] _handleMessage: type=$type sessionId=$sessionId');
+
+    switch (type) {
+      case 'admin_approval_request':
+        _showDialog(context, sessionId, _DialogType.adminLogin);
+      case 'admin_vault_auth':
+        _showDialog(context, sessionId, _DialogType.vaultAccess);
+    }
   }
 
   static void _showDialog(

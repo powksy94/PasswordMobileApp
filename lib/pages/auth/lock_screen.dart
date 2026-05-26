@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../services/biometric_service.dart';
+import '../../services/fcm_service.dart';
 import '../../widgets/auth/lock_screen_panel.dart';
 
 class LockScreen extends StatefulWidget {
@@ -43,6 +44,7 @@ class _LockScreenState extends State<LockScreen> {
     if (!mounted) return;
 
     if (success) {
+      FcmService.initialize();
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -62,6 +64,7 @@ class _LockScreenState extends State<LockScreen> {
     setState(() => _loading = false);
 
     if (success) {
+      FcmService.initialize();
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       _passwordCtrl.clear();
@@ -92,16 +95,26 @@ class _LockScreenState extends State<LockScreen> {
             end:   Alignment.bottomRight,
           ),
         ),
-        child: Center(
-          child: LockScreenPanel(
-            biometricAvailable: _biometricAvailable,
-            passwordCtrl:       _passwordCtrl,
-            showPassword:       _showPassword,
-            loading:            _loading,
-            onBiometric:        _unlockBiometric,
-            onUnlock:           _unlockPassword,
-            onTogglePassword:   () => setState(() => _showPassword = !_showPassword),
-            onLogout:           _logout,
+        child: SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minHeight: MediaQuery.sizeOf(context).height,
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: LockScreenPanel(
+                  biometricAvailable: _biometricAvailable,
+                  passwordCtrl:       _passwordCtrl,
+                  showPassword:       _showPassword,
+                  loading:            _loading,
+                  onBiometric:        _unlockBiometric,
+                  onUnlock:           _unlockPassword,
+                  onTogglePassword:   () => setState(() => _showPassword = !_showPassword),
+                  onLogout:           _logout,
+                ),
+              ),
+            ),
           ),
         ),
       ),

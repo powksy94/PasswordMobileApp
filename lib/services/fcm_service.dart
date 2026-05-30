@@ -53,20 +53,15 @@ class FcmService {
 
   static Future<void> _registerToken() async {
     final token = await _fcm.getToken();
-    debugPrint('[FCM] token FCM obtenu: ${token != null ? "${token.substring(0, 20)}..." : "null"}');
+
     if (token != null) await _sendTokenToServer(token);
   }
 
   static Future<void> _sendTokenToServer(String token) async {
     try {
       final authToken = await AuthService.getToken();
-      if (authToken == null) {
-        debugPrint('[FCM] authToken null — token non envoyé');
-        return;
-      }
-      debugPrint('[FCM] envoi token au serveur...');
+      if (authToken == null) return;
       await ApiService().registerFcmToken(authToken, token);
-      debugPrint('[FCM] token enregistré avec succès');
     } catch (e) {
       debugPrint('[FCM] erreur enregistrement token: $e');
     }
@@ -76,21 +71,17 @@ class FcmService {
 
   static void listenForeground(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {
-      debugPrint('[FCM] onMessage reçu: type=${message.data['type']}');
       if (!context.mounted) return;
       _handleMessage(context, message.data);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      debugPrint('[FCM] onMessageOpenedApp: type=${message.data['type']}');
       if (!context.mounted) return;
       _handleMessage(context, message.data);
     });
 
-    // Message qui a ouvert l'app depuis l'état terminé
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message == null) return;
-      debugPrint('[FCM] getInitialMessage: type=${message.data['type']}');
       if (!context.mounted) return;
       _handleMessage(context, message.data);
     });
@@ -99,7 +90,6 @@ class FcmService {
   static void _handleMessage(BuildContext context, Map<String, dynamic> data) {
     final type      = data['type'] as String?;
     final sessionId = data['sessionId'] as String? ?? '';
-    debugPrint('[FCM] _handleMessage: type=$type sessionId=$sessionId');
 
     switch (type) {
       case 'admin_approval_request':

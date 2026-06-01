@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 // Pages
 import 'pages/auth/login_page.dart';
 import 'pages/auth/signup_page.dart';
+import 'pages/auth/signup_success_page.dart';
 import 'pages/auth/lock_screen.dart';
 import 'pages/home/home_page.dart';
 import 'pages/vault/vault_page.dart';
@@ -16,12 +17,14 @@ import 'theme/app_theme.dart';
 import 'widgets/auth/splash_auth_gate.dart';
 
 // Services
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'services/role_provider.dart';
 import 'services/auth_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await MobileAds.instance.initialize();
   runApp(
     ChangeNotifierProvider(
       create: (_) => RoleProvider(),
@@ -90,7 +93,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       routes: {
         '/splash':    (_) => const SplashAuthGate(),
         '/login':     (_) => const LoginPage(),
-        '/signup':    (_) => const SignupPage(),
+        '/signup':         (_) => const SignupPage(),
+        '/signup-success': (_) => const SignupSuccessPage(),
         '/lock':      (_) => const LockScreen(),
         '/home':      (_) => HomePage(
               onThemeToggle:    changeTheme,

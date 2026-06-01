@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../widgets/common/glass_panel.dart';
 import '../../widgets/common/neon_text.dart';
-import '../../widgets/auth/password_section.dart';
+import '../../widgets/auth/signup_step1.dart';
+import '../../widgets/auth/signup_step2.dart';
 import '../../services/auth_service.dart';
 import '../../utils/api_error.dart';
 
@@ -13,13 +14,17 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final _formKey              = GlobalKey<FormState>();
-  final _emailCtrl            = TextEditingController();
-  final _passwordCtrl         = TextEditingController();
-  final _confirmPasswordCtrl  = TextEditingController();
-  final _masterPwCtrl         = TextEditingController();
-  final _confirmMasterPwCtrl  = TextEditingController();
-  bool _loading = false;
+  final _formKey1            = GlobalKey<FormState>();
+  final _formKey2            = GlobalKey<FormState>();
+  final _emailCtrl           = TextEditingController();
+  final _passwordCtrl        = TextEditingController();
+  final _confirmPasswordCtrl = TextEditingController();
+  final _masterPwCtrl        = TextEditingController();
+  final _confirmMasterPwCtrl = TextEditingController();
+
+  int  _step         = 0;
+  bool _showTutorial = true;
+  bool _loading      = false;
 
   @override
   void dispose() {
@@ -31,8 +36,15 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
+  void _nextStep() {
+    if (!_formKey1.currentState!.validate()) return;
+    setState(() { _step = 1; _showTutorial = true; });
+  }
+
+  void _prevStep() => setState(() { _step = 0; _showTutorial = false; });
+
   Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
+    if (!_formKey2.currentState!.validate()) return;
     setState(() => _loading = true);
     try {
       await AuthService.register(
@@ -41,10 +53,7 @@ class _SignupPageState extends State<SignupPage> {
         _masterPwCtrl.text,
       );
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Compte créé avec succès !')),
-      );
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacementNamed(context, '/signup-success');
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -59,7 +68,6 @@ class _SignupPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
-    final fill   = isDark ? Colors.white10 : Colors.black12;
 
     return Scaffold(
       body: Center(
@@ -68,117 +76,69 @@ class _SignupPageState extends State<SignupPage> {
           child: GlassPanel(
             width:   350,
             padding: const EdgeInsets.all(24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  NeonText(
-                    text: 'Créer un compte', fontSize: 26, color: accent, glow: true),
-                  const SizedBox(height: 12),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                NeonText(text: 'Créer un compte', fontSize: 26, color: accent, glow: true),
+                const SizedBox(height: 16),
 
-                  // Explication onboarding
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color:        accent.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(10),
-                      border:       Border.all(color: accent.withValues(alpha: 0.25)),
+                // Barre de progression
+                Row(
+                  children: List.generate(2, (i) => Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(right: i < 1 ? 6 : 0),
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color:        i <= _step ? accent : accent.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(Icons.info_outline, size: 16, color: accent),
-                            const SizedBox(width: 6),
-                            Text(
-                              'Deux mots de passe distincts',
-                              style: TextStyle(
-                                color:      accent,
-                                fontSize:   13,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                  )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6, bottom: 16),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text('Étape ${_step + 1} / 2',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color:    isDark ? Colors.white38 : Colors.black38,
+                        )),
+                  ),
+                ),
+
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 300),
+                  child: _step == 0
+                      ? SignupStep1(
+                          key:                  const ValueKey(0),
+                          formKey:              _formKey1,
+                          emailCtrl:            _emailCtrl,
+                          passwordCtrl:         _passwordCtrl,
+                          confirmPasswordCtrl:  _confirmPasswordCtrl,
+                          showTutorial:         _showTutorial,
+                          onDismissTutorial:    () => setState(() => _showTutorial = false),
+                          onNext:               _nextStep,
+                        )
+                      : SignupStep2(
+                          key:                  const ValueKey(1),
+                          formKey:              _formKey2,
+                          masterPwCtrl:         _masterPwCtrl,
+                          confirmMasterPwCtrl:  _confirmMasterPwCtrl,
+                          showTutorial:         _showTutorial,
+                          loading:              _loading,
+                          onDismissTutorial:    () => setState(() => _showTutorial = false),
+                          onSubmit:             _submit,
+                          onBack:               _prevStep,
                         ),
-                        const SizedBox(height: 6),
-                        Text(
-                          '🔐  Mot de passe de connexion — vérifié par le serveur.\n'
-                          '🗝️  Mot de passe maître — chiffre votre coffre localement. '
-                          'Impossible à récupérer s\'il est perdu.',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color:    isDark ? Colors.white70 : Colors.black87,
-                            height:   1.4,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                ),
 
-                  // Email
-                  TextFormField(
-                    controller:   _emailCtrl,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (v) =>
-                        v != null && v.contains('@') ? null : 'Email invalide',
-                    decoration: InputDecoration(
-                      labelText:  'Email',
-                      prefixIcon: const Icon(Icons.email_outlined),
-                      filled:     true,
-                      fillColor:  fill,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  // Mot de passe de connexion
-                  PasswordSection(
-                    label:             'Mot de passe de connexion',
-                    controller:        _passwordCtrl,
-                    confirmController: _confirmPasswordCtrl,
-                    minLength:         6,
-                    confirmValidator:  (v) => v == _passwordCtrl.text
-                        ? null
-                        : 'Les mots de passe ne correspondent pas',
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Mot de passe maître
-                  PasswordSection(
-                    label:             'Mot de passe maître (chiffre votre coffre)',
-                    controller:        _masterPwCtrl,
-                    confirmController: _confirmMasterPwCtrl,
-                    minLength:         8,
-                    showToggle:        true,
-                    withInfoIcon:      true,
-                    warningText:       'Ne peut pas être récupéré si oublié — notez-le.',
-                    confirmValidator:  (v) => v == _masterPwCtrl.text
-                        ? null
-                        : 'Les mots de passe maîtres ne correspondent pas',
-                  ),
-                  const SizedBox(height: 24),
-
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _loading ? null : _submit,
-                      child: _loading
-                          ? const SizedBox(
-                              height: 18, width: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2))
-                          : const Text('Créer le compte'),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  TextButton(
-                    onPressed: () =>
-                        Navigator.pushReplacementNamed(context, '/login'),
-                    child: const Text('Déjà un compte ? Se connecter'),
-                  ),
-                ],
-              ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
+                  child:     const Text('Déjà un compte ? Se connecter'),
+                ),
+              ],
             ),
           ),
         ),

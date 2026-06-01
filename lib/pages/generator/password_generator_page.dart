@@ -32,15 +32,17 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
   bool   showPassword = false;
 
   // Champs de sauvegarde
-  final _labelCtrl = TextEditingController();
-  final _loginCtrl = TextEditingController();
-  final _notesCtrl = TextEditingController();
+  final _labelCtrl    = TextEditingController();
+  final _loginCtrl    = TextEditingController();
+  final _notesCtrl    = TextEditingController();
+  final _scrollCtrl   = ScrollController();
 
   @override
   void dispose() {
     _labelCtrl.dispose();
     _loginCtrl.dispose();
     _notesCtrl.dispose();
+    _scrollCtrl.dispose();
     super.dispose();
   }
 
@@ -58,6 +60,13 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
         exclude:         exclude,
       );
       showPassword = false;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollCtrl.animateTo(
+        _scrollCtrl.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeOut,
+      );
     });
   }
 
@@ -118,16 +127,8 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: ListView(
+            controller: _scrollCtrl,
             children: [
-              GeneratedPasswordDisplay(
-                password:           password,
-                showPassword:       showPassword,
-                onToggleVisibility: () => setState(() => showPassword = !showPassword),
-                onCopy:             _copyPassword,
-              ),
-              const SizedBox(height: 8),
-              PasswordStrengthBar(password: password),
-              const SizedBox(height: 12),
               GeneratorControls(
                 length:           length,
                 useLower:         useLower,
@@ -141,23 +142,34 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
                 onSpecialsChanged:(v) => setState(() => useSpecials  = v),
               ),
               const SizedBox(height: 12),
-              VaultSaveForm(
-                labelController: _labelCtrl,
-                loginController: _loginCtrl,
-                notesController: _notesCtrl,
-              ),
-              const SizedBox(height: 12),
               ElevatedButton.icon(
                 onPressed: _generate,
                 icon:  const Icon(Icons.refresh),
                 label: const Text('Générer'),
               ),
-              const SizedBox(height: 8),
-              ElevatedButton.icon(
-                onPressed: password.isEmpty ? null : _addToVault,
-                icon:  const FaIcon(FontAwesomeIcons.vault),
-                label: const Text('Ajouter au coffre'),
-              ),
+              if (password.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                GeneratedPasswordDisplay(
+                  password:           password,
+                  showPassword:       showPassword,
+                  onToggleVisibility: () => setState(() => showPassword = !showPassword),
+                  onCopy:             _copyPassword,
+                ),
+                const SizedBox(height: 8),
+                PasswordStrengthBar(password: password),
+                const SizedBox(height: 12),
+                VaultSaveForm(
+                  labelController: _labelCtrl,
+                  loginController: _loginCtrl,
+                  notesController: _notesCtrl,
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton.icon(
+                  onPressed: _addToVault,
+                  icon:  const FaIcon(FontAwesomeIcons.vault),
+                  label: const Text('Ajouter au coffre'),
+                ),
+              ],
             ],
       ),
     );

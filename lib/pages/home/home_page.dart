@@ -105,6 +105,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
+          automaticallyImplyLeading: false,
           title: NeonText(
             text: _titles[_index], fontSize: 22, color: accent, glow: true),
           actions: [

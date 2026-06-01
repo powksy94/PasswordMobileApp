@@ -7,6 +7,7 @@ import '../../services/role_provider.dart';
 import '../../utils/api_error.dart';
 import '../../widgets/auth/login_form.dart';
 import '../../widgets/auth/master_password_dialog.dart';
+import '../../services/ad_service.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -85,6 +86,9 @@ class _LoginPageState extends State<LoginPage>
     if (!mounted) return;
     _applyRole(roleStr);
     FcmService.initialize();
+    await AdService.load();
+    await AdService.showIfReady();
+    if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/home');
   }
 
@@ -119,6 +123,9 @@ class _LoginPageState extends State<LoginPage>
       if (!mounted) return;
       _applyRole(roleStr);
       FcmService.initialize();
+      await AdService.load();
+      await AdService.showIfReady();
+      if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
       if (mounted) _snack(apiErrorMessage(e));

@@ -74,6 +74,37 @@
   "snackItemDeleted": "Item deleted",
   "snackCopied": "Copied — cleared in 30 s",
 
+  "tooltipEdit": "Edit",
+  "tooltipDelete": "Delete",
+  "tooltipShow": "Show",
+  "tooltipHide": "Hide",
+  "tooltipCopy": "Copy",
+  "tooltipCopyPassword": "Copy password",
+
+  "snackPasswordAdded": "Password added to vault!",
+  "errorBiometricKey": "Biometric key not found — enter your master password",
+  "errorWrongMasterPassword": "Wrong master password",
+  "btnGenerate": "Generate",
+  "errorLabelMissing": "Please enter a label for the password.",
+  "vaultEmptyExport": "Empty vault — nothing to export",
+  "btnAlreadyAccount": "Already have an account? Log in",
+
+  "titleChangePassword": "Change login password",
+  "labelCurrentPassword": "Current password",
+  "labelNewPassword": "New password",
+  "labelConfirmNewPassword": "Confirm new password",
+  "btnChangePassword": "Change password",
+  "titleDangerZone": "Danger zone",
+  "btnDeleteAccount": "Delete my account",
+
+  "passwordEmpty": "Empty password",
+  "signupTitle": "Create an account",
+
+  "errorBiometricFailed": "Fingerprint not recognized — retry or use the form",
+  "labelConfirmPassword": "Confirm password",
+  "labelConfirmMasterPassword": "Confirm master password",
+  "validatorMinCharsUnit": "characters minimum",
+
   "deleteAccountTitle": "Delete account",
   "deleteAccountContent": "This action is irreversible.\n\nAll your encrypted passwords will be permanently deleted.",
   "btnDeleteConfirm": "Delete permanently",

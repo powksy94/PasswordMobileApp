@@ -179,48 +179,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorPasswordRequired => 'Password is required';
 
   @override
-  String get deleteAccountTitle => 'Delete account';
-
-  @override
-  String get deleteAccountContent =>
-      'This action is irreversible.\n\nAll your encrypted passwords will be permanently deleted.';
-
-  @override
-  String get btnDeleteConfirm => 'Delete permanently';
-
-  @override
-  String get loginTitle => 'Login';
-
-  @override
-  String get btnLoginWithBiometric => 'Log in with fingerprint';
-
-  @override
-  String get orDivider => 'or';
-
-  @override
-  String get btnSignup => 'Create an account';
-
-  @override
-  String get validatorMinChars => '6 characters minimum';
-
-  @override
-  String get sessionExpiredInfo => 'Session expired due to inactivity.';
-
-  @override
-  String get masterPasswordDialogContent =>
-      'Enter your master password to decrypt your vault.';
-
-  @override
-  String get masterPasswordDialogHint =>
-      'This password is different from your login password.';
-
-  @override
-  String get biometricUnlock => 'Unlock with biometrics';
-
-  @override
-  String get lockScreenOrPassword => 'or enter your master password';
-
-  @override
   String get dialogDeleteTitle => 'Delete';
 
   @override
@@ -314,4 +272,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validatorMinCharsUnit => 'characters minimum';
+
+  @override
+  String get deleteAccountTitle => 'Delete account';
+
+  @override
+  String get deleteAccountContent =>
+      'This action is irreversible.\n\nAll your encrypted passwords will be permanently deleted.';
+
+  @override
+  String get btnDeleteConfirm => 'Delete permanently';
+
+  @override
+  String get loginTitle => 'Login';
+
+  @override
+  String get btnLoginWithBiometric => 'Log in with fingerprint';
+
+  @override
+  String get orDivider => 'or';
+
+  @override
+  String get btnSignup => 'Create an account';
+
+  @override
+  String get validatorMinChars => '6 characters minimum';
+
+  @override
+  String get sessionExpiredInfo => 'Session expired due to inactivity.';
+
+  @override
+  String get masterPasswordDialogContent =>
+      'Enter your master password to decrypt your vault.';
+
+  @override
+  String get masterPasswordDialogHint =>
+      'This password is different from your login password.';
+
+  @override
+  String get biometricUnlock => 'Unlock with biometrics';
+
+  @override
+  String get lockScreenOrPassword => 'or enter your master password';
 }

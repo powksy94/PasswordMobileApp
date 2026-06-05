@@ -74,6 +74,37 @@
   "snackItemDeleted": "Elemento eliminado",
   "snackCopied": "Copiado — eliminado en 30 s",
 
+  "tooltipEdit": "Editar",
+  "tooltipDelete": "Eliminar",
+  "tooltipShow": "Mostrar",
+  "tooltipHide": "Ocultar",
+  "tooltipCopy": "Copiar",
+  "tooltipCopyPassword": "Copiar contraseña",
+
+  "snackPasswordAdded": "¡Contraseña añadida al cofre!",
+  "errorBiometricKey": "Clave biométrica no encontrada — ingresa tu contraseña maestra",
+  "errorWrongMasterPassword": "Contraseña maestra incorrecta",
+  "btnGenerate": "Generar",
+  "errorLabelMissing": "Por favor ingresa una etiqueta para la contraseña.",
+  "vaultEmptyExport": "Cofre vacío — nada que exportar",
+  "btnAlreadyAccount": "¿Ya tienes cuenta? Iniciar sesión",
+
+  "titleChangePassword": "Cambiar contraseña de sesión",
+  "labelCurrentPassword": "Contraseña actual",
+  "labelNewPassword": "Nueva contraseña",
+  "labelConfirmNewPassword": "Confirmar nueva contraseña",
+  "btnChangePassword": "Cambiar contraseña",
+  "titleDangerZone": "Zona peligrosa",
+  "btnDeleteAccount": "Eliminar mi cuenta",
+
+  "passwordEmpty": "Contraseña vacía",
+  "signupTitle": "Crear una cuenta",
+
+  "errorBiometricFailed": "Huella no reconocida — reintenta o usa el formulario",
+  "labelConfirmPassword": "Confirmar contraseña",
+  "labelConfirmMasterPassword": "Confirmar contraseña maestra",
+  "validatorMinCharsUnit": "caracteres mínimo",
+
   "deleteAccountTitle": "Eliminar cuenta",
   "deleteAccountContent": "Esta acción es irreversible.\n\nTodas tus contraseñas cifradas serán eliminadas permanentemente.",
   "btnDeleteConfirm": "Eliminar permanentemente",

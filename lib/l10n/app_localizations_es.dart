@@ -180,48 +180,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorPasswordRequired => 'La contraseña es obligatoria';
 
   @override
-  String get deleteAccountTitle => 'Eliminar cuenta';
-
-  @override
-  String get deleteAccountContent =>
-      'Esta acción es irreversible.\n\nTodas tus contraseñas cifradas serán eliminadas permanentemente.';
-
-  @override
-  String get btnDeleteConfirm => 'Eliminar permanentemente';
-
-  @override
-  String get loginTitle => 'Inicio de sesión';
-
-  @override
-  String get btnLoginWithBiometric => 'Iniciar sesión con huella';
-
-  @override
-  String get orDivider => 'o';
-
-  @override
-  String get btnSignup => 'Crear una cuenta';
-
-  @override
-  String get validatorMinChars => '6 caracteres mínimo';
-
-  @override
-  String get sessionExpiredInfo => 'Sesión expirada por inactividad.';
-
-  @override
-  String get masterPasswordDialogContent =>
-      'Ingresa tu contraseña maestra para descifrar tu cofre.';
-
-  @override
-  String get masterPasswordDialogHint =>
-      'Esta contraseña es diferente de tu contraseña de inicio de sesión.';
-
-  @override
-  String get biometricUnlock => 'Desbloquear con biometría';
-
-  @override
-  String get lockScreenOrPassword => 'o ingresa tu contraseña maestra';
-
-  @override
   String get dialogDeleteTitle => 'Eliminar';
 
   @override
@@ -268,7 +226,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get btnGenerate => 'Generar';
 
   @override
-  String get errorLabelMissing => 'Por favor ingresa una etiqueta para la contraseña.';
+  String get errorLabelMissing =>
+      'Por favor ingresa una etiqueta para la contraseña.';
 
   @override
   String get vaultEmptyExport => 'Cofre vacío — nada que exportar';
@@ -315,4 +274,46 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get validatorMinCharsUnit => 'caracteres mínimo';
+
+  @override
+  String get deleteAccountTitle => 'Eliminar cuenta';
+
+  @override
+  String get deleteAccountContent =>
+      'Esta acción es irreversible.\n\nTodas tus contraseñas cifradas serán eliminadas permanentemente.';
+
+  @override
+  String get btnDeleteConfirm => 'Eliminar permanentemente';
+
+  @override
+  String get loginTitle => 'Inicio de sesión';
+
+  @override
+  String get btnLoginWithBiometric => 'Iniciar sesión con huella';
+
+  @override
+  String get orDivider => 'o';
+
+  @override
+  String get btnSignup => 'Crear una cuenta';
+
+  @override
+  String get validatorMinChars => '6 caracteres mínimo';
+
+  @override
+  String get sessionExpiredInfo => 'Sesión expirada por inactividad.';
+
+  @override
+  String get masterPasswordDialogContent =>
+      'Ingresa tu contraseña maestra para descifrar tu cofre.';
+
+  @override
+  String get masterPasswordDialogHint =>
+      'Esta contraseña es diferente de tu contraseña de inicio de sesión.';
+
+  @override
+  String get biometricUnlock => 'Desbloquear con biometría';
+
+  @override
+  String get lockScreenOrPassword => 'o ingresa tu contraseña maestra';
 }

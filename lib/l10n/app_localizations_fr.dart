@@ -181,48 +181,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorPasswordRequired => 'Le mot de passe est requis';
 
   @override
-  String get deleteAccountTitle => 'Supprimer le compte';
-
-  @override
-  String get deleteAccountContent =>
-      'Cette action est irréversible.\n\nTous vos mots de passe chiffrés seront définitivement supprimés.';
-
-  @override
-  String get btnDeleteConfirm => 'Supprimer définitivement';
-
-  @override
-  String get loginTitle => 'Connexion';
-
-  @override
-  String get btnLoginWithBiometric => 'Se connecter avec l\'empreinte';
-
-  @override
-  String get orDivider => 'ou';
-
-  @override
-  String get btnSignup => 'Créer un compte';
-
-  @override
-  String get validatorMinChars => '6 caractères minimum';
-
-  @override
-  String get sessionExpiredInfo => 'Session expirée après inactivité.';
-
-  @override
-  String get masterPasswordDialogContent =>
-      'Entrez votre mot de passe maître pour déchiffrer votre coffre.';
-
-  @override
-  String get masterPasswordDialogHint =>
-      'Ce mot de passe est différent de votre mot de passe de connexion.';
-
-  @override
-  String get biometricUnlock => 'Déverrouiller avec biométrie';
-
-  @override
-  String get lockScreenOrPassword => 'ou entrez votre mot de passe maître';
-
-  @override
   String get dialogDeleteTitle => 'Supprimer';
 
   @override
@@ -269,7 +227,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get btnGenerate => 'Générer';
 
   @override
-  String get errorLabelMissing => 'Veuillez entrer un label pour le mot de passe.';
+  String get errorLabelMissing =>
+      'Veuillez entrer un label pour le mot de passe.';
 
   @override
   String get vaultEmptyExport => 'Coffre vide — rien à exporter';
@@ -316,4 +275,46 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get validatorMinCharsUnit => 'caractères minimum';
+
+  @override
+  String get deleteAccountTitle => 'Supprimer le compte';
+
+  @override
+  String get deleteAccountContent =>
+      'Cette action est irréversible.\n\nTous vos mots de passe chiffrés seront définitivement supprimés.';
+
+  @override
+  String get btnDeleteConfirm => 'Supprimer définitivement';
+
+  @override
+  String get loginTitle => 'Connexion';
+
+  @override
+  String get btnLoginWithBiometric => 'Se connecter avec l\'empreinte';
+
+  @override
+  String get orDivider => 'ou';
+
+  @override
+  String get btnSignup => 'Créer un compte';
+
+  @override
+  String get validatorMinChars => '6 caractères minimum';
+
+  @override
+  String get sessionExpiredInfo => 'Session expirée après inactivité.';
+
+  @override
+  String get masterPasswordDialogContent =>
+      'Entrez votre mot de passe maître pour déchiffrer votre coffre.';
+
+  @override
+  String get masterPasswordDialogHint =>
+      'Ce mot de passe est différent de votre mot de passe de connexion.';
+
+  @override
+  String get biometricUnlock => 'Déverrouiller avec biométrie';
+
+  @override
+  String get lockScreenOrPassword => 'ou entrez votre mot de passe maître';
 }

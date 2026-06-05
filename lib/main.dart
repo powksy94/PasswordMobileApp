@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -26,6 +27,7 @@ import 'services/autofill_cache_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
   await MobileAds.instance.initialize();
   runApp(

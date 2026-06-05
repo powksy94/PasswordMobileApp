@@ -74,6 +74,37 @@
   "snackItemDeleted": "Élément supprimé",
   "snackCopied": "Copié — effacé dans 30 s",
 
+  "tooltipEdit": "Modifier",
+  "tooltipDelete": "Supprimer",
+  "tooltipShow": "Afficher",
+  "tooltipHide": "Masquer",
+  "tooltipCopy": "Copier",
+  "tooltipCopyPassword": "Copier le mot de passe",
+
+  "snackPasswordAdded": "Mot de passe ajouté au coffre !",
+  "errorBiometricKey": "Clé biométrique introuvable — entrez le mot de passe maître",
+  "errorWrongMasterPassword": "Mot de passe maître incorrect",
+  "btnGenerate": "Générer",
+  "errorLabelMissing": "Veuillez entrer un label pour le mot de passe.",
+  "vaultEmptyExport": "Coffre vide — rien à exporter",
+  "btnAlreadyAccount": "Déjà un compte ? Se connecter",
+
+  "titleChangePassword": "Changer le mot de passe de connexion",
+  "labelCurrentPassword": "Mot de passe actuel",
+  "labelNewPassword": "Nouveau mot de passe",
+  "labelConfirmNewPassword": "Confirmer le nouveau mot de passe",
+  "btnChangePassword": "Modifier le mot de passe",
+  "titleDangerZone": "Zone dangereuse",
+  "btnDeleteAccount": "Supprimer mon compte",
+
+  "passwordEmpty": "Mot de passe vide",
+  "signupTitle": "Créer un compte",
+
+  "errorBiometricFailed": "Empreinte non reconnue — réessayez ou utilisez le formulaire",
+  "labelConfirmPassword": "Confirmer le mot de passe",
+  "labelConfirmMasterPassword": "Confirmer le mot de passe maître",
+  "validatorMinCharsUnit": "caractères minimum",
+
   "deleteAccountTitle": "Supprimer le compte",
   "deleteAccountContent": "Cette action est irréversible.\n\nTous vos mots de passe chiffrés seront définitivement supprimés.",
   "btnDeleteConfirm": "Supprimer définitivement",

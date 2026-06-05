@@ -436,6 +436,192 @@ abstract class AppLocalizations {
   /// **'Password is required'**
   String get errorPasswordRequired;
 
+  /// No description provided for @dialogDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get dialogDeleteTitle;
+
+  /// No description provided for @dialogDeleteContent.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this item permanently?'**
+  String get dialogDeleteContent;
+
+  /// No description provided for @btnDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get btnDelete;
+
+  /// No description provided for @snackItemDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Item deleted'**
+  String get snackItemDeleted;
+
+  /// No description provided for @snackCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Copied — cleared in 30 s'**
+  String get snackCopied;
+
+  /// No description provided for @tooltipEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get tooltipEdit;
+
+  /// No description provided for @tooltipDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get tooltipDelete;
+
+  /// No description provided for @tooltipShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show'**
+  String get tooltipShow;
+
+  /// No description provided for @tooltipHide.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide'**
+  String get tooltipHide;
+
+  /// No description provided for @tooltipCopy.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy'**
+  String get tooltipCopy;
+
+  /// No description provided for @tooltipCopyPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy password'**
+  String get tooltipCopyPassword;
+
+  /// No description provided for @snackPasswordAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Password added to vault!'**
+  String get snackPasswordAdded;
+
+  /// No description provided for @errorBiometricKey.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric key not found — enter your master password'**
+  String get errorBiometricKey;
+
+  /// No description provided for @errorWrongMasterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong master password'**
+  String get errorWrongMasterPassword;
+
+  /// No description provided for @btnGenerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate'**
+  String get btnGenerate;
+
+  /// No description provided for @errorLabelMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a label for the password.'**
+  String get errorLabelMissing;
+
+  /// No description provided for @vaultEmptyExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty vault — nothing to export'**
+  String get vaultEmptyExport;
+
+  /// No description provided for @btnAlreadyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? Log in'**
+  String get btnAlreadyAccount;
+
+  /// No description provided for @titleChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change login password'**
+  String get titleChangePassword;
+
+  /// No description provided for @labelCurrentPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get labelCurrentPassword;
+
+  /// No description provided for @labelNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get labelNewPassword;
+
+  /// No description provided for @labelConfirmNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get labelConfirmNewPassword;
+
+  /// No description provided for @btnChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change password'**
+  String get btnChangePassword;
+
+  /// No description provided for @titleDangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger zone'**
+  String get titleDangerZone;
+
+  /// No description provided for @btnDeleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get btnDeleteAccount;
+
+  /// No description provided for @passwordEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty password'**
+  String get passwordEmpty;
+
+  /// No description provided for @signupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account'**
+  String get signupTitle;
+
+  /// No description provided for @errorBiometricFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint not recognized — retry or use the form'**
+  String get errorBiometricFailed;
+
+  /// No description provided for @labelConfirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get labelConfirmPassword;
+
+  /// No description provided for @labelConfirmMasterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm master password'**
+  String get labelConfirmMasterPassword;
+
+  /// No description provided for @validatorMinCharsUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'characters minimum'**
+  String get validatorMinCharsUnit;
+
   /// No description provided for @deleteAccountTitle.
   ///
   /// In en, this message translates to:
@@ -513,43 +699,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'or enter your master password'**
   String get lockScreenOrPassword;
-
-  String get dialogDeleteTitle;
-  String get dialogDeleteContent;
-  String get btnDelete;
-  String get snackItemDeleted;
-  String get snackCopied;
-
-  String get tooltipEdit;
-  String get tooltipDelete;
-  String get tooltipShow;
-  String get tooltipHide;
-  String get tooltipCopy;
-  String get tooltipCopyPassword;
-
-  String get snackPasswordAdded;
-  String get errorBiometricKey;
-  String get errorWrongMasterPassword;
-  String get btnGenerate;
-  String get errorLabelMissing;
-  String get vaultEmptyExport;
-  String get btnAlreadyAccount;
-
-  String get titleChangePassword;
-  String get labelCurrentPassword;
-  String get labelNewPassword;
-  String get labelConfirmNewPassword;
-  String get btnChangePassword;
-  String get titleDangerZone;
-  String get btnDeleteAccount;
-
-  String get passwordEmpty;
-  String get signupTitle;
-
-  String get errorBiometricFailed;
-  String get labelConfirmPassword;
-  String get labelConfirmMasterPassword;
-  String get validatorMinCharsUnit;
 }
 
 class _AppLocalizationsDelegate

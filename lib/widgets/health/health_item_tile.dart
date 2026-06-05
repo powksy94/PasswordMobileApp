@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../models/vault_item.dart';
 import '../../services/vault_service.dart';
 import '../../utils/password_score.dart';
+import '../../l10n/app_localizations.dart';
 
 class HealthItemTile extends StatelessWidget {
   final VaultItem    item;
@@ -15,6 +16,7 @@ class HealthItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l      = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final s      = PasswordScore.compute(item.password);
 
@@ -39,7 +41,7 @@ class HealthItemTile extends StatelessWidget {
           color: isDark ? Colors.cyanAccent : Colors.blueAccent,
           size:  18,
         ),
-        tooltip:   'Modifier',
+        tooltip:   l.tooltipEdit,
         onPressed: onEdit,
       ),
     );

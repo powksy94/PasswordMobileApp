@@ -1,0 +1,91 @@
+{
+  "@@locale": "fr",
+
+  "navGenerator": "Générateur",
+  "navVault": "Coffre",
+  "navHealth": "Santé",
+
+  "tooltipImport": "Importer un coffre",
+  "tooltipExport": "Exporter le coffre",
+  "tooltipAddPassword": "Ajouter un mot de passe",
+  "tooltipRefresh": "Actualiser",
+  "menuAccountSettings": "Paramètres du compte",
+  "menuLogout": "Déconnexion",
+
+  "dialogLogoutTitle": "Déconnexion",
+  "dialogLogoutContent": "Voulez-vous vraiment vous déconnecter ?",
+  "btnCancel": "Annuler",
+  "btnLogout": "Déconnecter",
+  "sessionExpired": "🔒 Session expirée",
+
+  "lockScreenTitle": "Coffre verrouillé",
+  "btnUnlock": "Déverrouiller",
+  "btnUnlockVault": "Déverrouiller le coffre",
+
+  "labelEmail": "Email",
+  "labelPassword": "Mot de passe",
+  "labelMasterPassword": "Mot de passe maître",
+  "labelAccountPassword": "Mot de passe du compte",
+  "btnLogin": "Se connecter",
+  "biometricReason": "Connectez-vous à votre coffre",
+
+  "signupStep1Title": "Votre compte",
+  "signupStep2Title": "Votre coffre-fort personnel",
+  "btnNext": "Suivant",
+  "btnCreateAccount": "Créer mon compte",
+  "btnBack": "← Retour",
+  "tutorialDismiss": "J'ai compris →",
+  "tutorialStep1Body": "Cet email et ce mot de passe vous serviront à vous connecter à l'application.\n\nIls sont vérifiés par notre serveur à chaque connexion.",
+  "tutorialStep2Body": "Le mot de passe maître chiffre tous vos mots de passe directement sur votre téléphone.\n\n⚠️ Nous ne le connaissons pas. Si vous l'oubliez, votre coffre sera définitivement irrécupérable.\n\nNotez-le dans un endroit sûr.",
+  "validatorEmailInvalid": "Email invalide",
+  "validatorPasswordMismatch": "Les mots de passe ne correspondent pas",
+  "validatorMasterPasswordMismatch": "Les mots de passe maîtres ne correspondent pas",
+  "warningMasterPassword": "Ne peut pas être récupéré si oublié.",
+
+  "vaultEmpty": "Coffre vide",
+  "vaultNoResults": "Aucun résultat",
+
+  "itemLabel": "Label *",
+  "itemLogin": "Login / Email",
+  "itemPassword": "Mot de passe *",
+  "itemWebsite": "Site web",
+  "itemWebsiteHint": "ex: amazon.fr",
+  "itemNotes": "Notes",
+  "itemIcon": "Icône",
+
+  "titleAdd": "Ajouter",
+  "titleEdit": "Modifier",
+  "titleSettings": "Paramètres du compte",
+  "titleMasterPassword": "Mot de passe maître",
+
+  "btnSave": "Enregistrer",
+  "btnSaving": "Sauvegarde…",
+  "btnAddToVault": "Ajouter au coffre",
+  "btnAdding": "Enregistrement…",
+
+  "successAdded": "Ajouté avec succès",
+  "successModified": "Modifié avec succès",
+  "errorLabelRequired": "Le label est requis",
+  "errorPasswordRequired": "Le mot de passe est requis",
+
+  "dialogDeleteTitle": "Supprimer",
+  "dialogDeleteContent": "Supprimer cet élément définitivement ?",
+  "btnDelete": "Supprimer",
+  "snackItemDeleted": "Élément supprimé",
+  "snackCopied": "Copié — effacé dans 30 s",
+
+  "deleteAccountTitle": "Supprimer le compte",
+  "deleteAccountContent": "Cette action est irréversible.\n\nTous vos mots de passe chiffrés seront définitivement supprimés.",
+  "btnDeleteConfirm": "Supprimer définitivement",
+
+  "loginTitle": "Connexion",
+  "btnLoginWithBiometric": "Se connecter avec l'empreinte",
+  "orDivider": "ou",
+  "btnSignup": "Créer un compte",
+  "validatorMinChars": "6 caractères minimum",
+  "sessionExpiredInfo": "Session expirée après inactivité.",
+  "masterPasswordDialogContent": "Entrez votre mot de passe maître pour déchiffrer votre coffre.",
+  "masterPasswordDialogHint": "Ce mot de passe est différent de votre mot de passe de connexion.",
+  "biometricUnlock": "Déverrouiller avec biométrie",
+  "lockScreenOrPassword": "ou entrez votre mot de passe maître"
+}

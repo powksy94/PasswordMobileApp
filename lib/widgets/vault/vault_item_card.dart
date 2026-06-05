@@ -3,6 +3,7 @@ import '../../models/vault_item.dart';
 import '../../services/vault_service.dart';
 import '../common/glass_panel.dart';
 import '../common/neon_text.dart';
+import '../../l10n/app_localizations.dart';
 
 class VaultItemCard extends StatelessWidget {
   final VaultItem item;
@@ -24,6 +25,7 @@ class VaultItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l         = AppLocalizations.of(context)!;
     final isDark    = Theme.of(context).brightness == Brightness.dark;
     final accent    = isDark ? Colors.cyanAccent : Colors.blueAccent;
     final textColor = isDark ? Colors.white70 : Colors.black87;
@@ -52,20 +54,21 @@ class VaultItemCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                _iconBtn(Icons.edit_outlined,  accent,           'Modifier',  onEdit),
+                _iconBtn(Icons.edit_outlined,  accent,           l.tooltipEdit,   onEdit),
                 const SizedBox(width: 4),
-                _iconBtn(Icons.delete_outline, Colors.redAccent, 'Supprimer', onDelete),
+                _iconBtn(Icons.delete_outline, Colors.redAccent, l.tooltipDelete, onDelete),
               ],
             ),
 
             if (item.login.isNotEmpty) ...[
               const SizedBox(height: 10),
               _fieldRow(
-                icon:      Icons.person_outline,
-                text:      item.login,
-                textColor: textColor,
-                subColor:  subColor,
-                onCopy:    () => onCopy(item.login, 'Login'),
+                icon:        Icons.person_outline,
+                text:        item.login,
+                textColor:   textColor,
+                subColor:    subColor,
+                copyTooltip: l.tooltipCopy,
+                onCopy:      () => onCopy(item.login, 'Login'),
               ),
             ],
 
@@ -87,7 +90,7 @@ class VaultItemCard extends StatelessWidget {
                 _iconBtn(
                   showPassword ? Icons.visibility_off : Icons.visibility,
                   Colors.orangeAccent,
-                  showPassword ? 'Masquer' : 'Afficher',
+                  showPassword ? l.tooltipHide : l.tooltipShow,
                   onTogglePassword,
                   size: 18,
                 ),
@@ -95,8 +98,8 @@ class VaultItemCard extends StatelessWidget {
                 _iconBtn(
                   Icons.copy,
                   Colors.greenAccent,
-                  'Copier le mot de passe',
-                  () => onCopy(item.password, 'Mot de passe'),
+                  l.tooltipCopyPassword,
+                  () => onCopy(item.password, l.labelPassword),
                   size: 18,
                 ),
               ],
@@ -117,6 +120,7 @@ class VaultItemCard extends StatelessWidget {
     required String       text,
     required Color        textColor,
     required Color        subColor,
+    required String       copyTooltip,
     required VoidCallback onCopy,
   }) {
     return Row(
@@ -126,7 +130,7 @@ class VaultItemCard extends StatelessWidget {
         Expanded(
           child: Text(text, style: TextStyle(color: textColor, fontSize: 14)),
         ),
-        _iconBtn(Icons.copy, Colors.greenAccent, 'Copier', onCopy, size: 18),
+        _iconBtn(Icons.copy, Colors.greenAccent, copyTooltip, onCopy, size: 18),
       ],
     );
   }

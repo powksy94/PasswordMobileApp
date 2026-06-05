@@ -1,26 +1,55 @@
+import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import '../../models/vault_item.dart';
 import '../../services/vault_import_service.dart';
 import '../../widgets/common/glass_panel.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Orchestre le flux d'import : sélection fichier → aperçu → confirmation → import.
 Future<bool> showVaultImportDialog(BuildContext context) async {
-  // 1. Sélection du fichier
+  // 1. Sélection du fichier (withData pour Android scoped storage)
   final result = await FilePicker.platform.pickFiles(
     type:              FileType.custom,
     allowedExtensions: ['enc', 'json', 'csv'],
     dialogTitle:       'Sélectionner un fichier vault (.enc, .json, .csv)',
+    withData:          true,
   );
-  if (result == null || result.files.single.path == null) return false;
-  final path = result.files.single.path!;
+  if (result == null) return false;
+
+  final file = result.files.single;
+  final String fileName = file.name.toLowerCase();
+
+  // Lecture du contenu : path d'abord, bytes en fallback
+  String content;
+  try {
+    if (file.path != null) {
+      content = await VaultImportService.readPath(file.path!);
+    } else if (file.bytes != null) {
+      content = utf8.decode(file.bytes!);
+    } else {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Impossible de lire le fichier.')),
+        );
+      }
+      return false;
+    }
+  } catch (e) {
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lecture échouée : $e')),
+      );
+    }
+    return false;
+  }
 
   if (!context.mounted) return false;
 
-  // 2. Lecture et déchiffrement
+  // 2. Parsing et déchiffrement
   List<VaultItem> items;
   try {
-    items = await VaultImportService.parseFile(path);
+    items = await VaultImportService.parseContent(content, fileName);
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -130,7 +159,7 @@ class _ImportPreviewDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Annuler'),
+          child: Text(AppLocalizations.of(context)!.btnCancel),
         ),
         ElevatedButton(
           onPressed: () => Navigator.pop(context, true),

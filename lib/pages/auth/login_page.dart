@@ -8,6 +8,7 @@ import '../../utils/api_error.dart';
 import '../../widgets/auth/login_form.dart';
 import '../../widgets/auth/master_password_dialog.dart';
 import '../../services/ad_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -55,19 +56,18 @@ class _LoginPageState extends State<LoginPage>
     if (mounted) setState(() => _showBiometric = bioAvailable);
   }
 
-  // ── Connexion biométrique ─────────────────────────────────────────────────
-
   Future<void> _loginWithBiometric() async {
+    final l = AppLocalizations.of(context)!;
     setState(() => _loading = true);
 
     final authenticated = await BiometricService.authenticate(
-      reason: 'Connectez-vous à votre vault',
+      reason: l.biometricReason,
     );
     if (!mounted) return;
 
     if (!authenticated) {
       setState(() => _loading = false);
-      _snack('Empreinte non reconnue — réessayez ou utilisez le formulaire');
+      _snack(l.errorBiometricFailed);
       return;
     }
 
@@ -76,7 +76,7 @@ class _LoginPageState extends State<LoginPage>
     setState(() => _loading = false);
 
     if (!success) {
-      _snack('Session expirée — veuillez vous reconnecter');
+      _snack(l.sessionExpired);
       setState(() => _showBiometric = false);
       return;
     }
@@ -91,8 +91,6 @@ class _LoginPageState extends State<LoginPage>
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/home');
   }
-
-  // ── Login utilisateur (2 étapes) ──────────────────────────────────────────
 
   Future<void> _submitUser() async {
     if (!_formKey.currentState!.validate()) return;
@@ -145,8 +143,6 @@ class _LoginPageState extends State<LoginPage>
 
   void _snack(String msg) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
-
-  // ── Build ─────────────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {

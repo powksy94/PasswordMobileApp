@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
+import '../../services/autofill_cache_service.dart';
 import '../../services/api_service.dart';
 import '../../services/role_provider.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../widgets/settings/change_password_panel.dart';
 import '../../widgets/settings/danger_zone_panel.dart';
+import '../../l10n/app_localizations.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({super.key});
@@ -29,50 +31,49 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
   }
 
   Future<void> _changePassword() async {
+    final l = AppLocalizations.of(context)!;
     if (_newPwCtrl.text != _confirmPwCtrl.text) {
-      _snack('Les nouveaux mots de passe ne correspondent pas');
+      _snack(l.validatorPasswordMismatch);
       return;
     }
     if (_newPwCtrl.text.length < 6) {
-      _snack('Le nouveau mot de passe doit faire au moins 6 caractères');
+      _snack(l.validatorMinChars);
       return;
     }
     setState(() => _changingPw = true);
     try {
       final token = await AuthService.getToken();
-      if (token == null) throw Exception('Non authentifié');
+      if (token == null) throw Exception('Not authenticated');
       await ApiService().changePassword(
           token, _currentPwCtrl.text, _newPwCtrl.text);
       if (!mounted) return;
       _currentPwCtrl.clear();
       _newPwCtrl.clear();
       _confirmPwCtrl.clear();
-      _snack('Mot de passe modifié avec succès');
+      _snack(l.successModified);
     } catch (e) {
-      if (mounted) _snack('Erreur : $e');
+      if (mounted) _snack('$e');
     } finally {
       if (mounted) setState(() => _changingPw = false);
     }
   }
 
   Future<void> _deleteAccount() async {
+    final l = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title:   const Text('Supprimer le compte'),
-        content: const Text(
-          'Cette action est irréversible.\n\n'
-          'Tous vos mots de passe chiffrés seront définitivement supprimés.',
-        ),
+        title:   Text(l.deleteAccountTitle),
+        content: Text(l.deleteAccountContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annuler'),
+            child: Text(l.btnCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
-            child: const Text('Supprimer définitivement'),
+            child: Text(l.btnDeleteConfirm),
           ),
         ],
       ),
@@ -81,16 +82,17 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) throw Exception('Non authentifié');
+      if (token == null) throw Exception('Not authenticated');
       await ApiService().deleteAccount(token);
       if (!mounted) return;
       await _logoutAndRedirect();
     } catch (e) {
-      if (mounted) _snack('Erreur : $e');
+      if (mounted) _snack('$e');
     }
   }
 
   Future<void> _logoutAndRedirect() async {
+    await AutofillCacheService.clear();
     await AuthService.fullLogout();
     if (!mounted) return;
     Provider.of<RoleProvider>(context, listen: false).deactivate();
@@ -102,13 +104,14 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l      = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
     return Scaffold(
       appBar: AppBar(
         title: NeonText(
-            text: 'Paramètres du compte', fontSize: 20, color: accent, glow: true),
+            text: l.titleSettings, fontSize: 20, color: accent, glow: true),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),

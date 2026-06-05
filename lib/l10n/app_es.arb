@@ -1,0 +1,91 @@
+{
+  "@@locale": "es",
+
+  "navGenerator": "Generador",
+  "navVault": "Cofre",
+  "navHealth": "Salud",
+
+  "tooltipImport": "Importar cofre",
+  "tooltipExport": "Exportar cofre",
+  "tooltipAddPassword": "Añadir contraseña",
+  "tooltipRefresh": "Actualizar",
+  "menuAccountSettings": "Configuración de cuenta",
+  "menuLogout": "Cerrar sesión",
+
+  "dialogLogoutTitle": "Cerrar sesión",
+  "dialogLogoutContent": "¿Seguro que quieres cerrar sesión?",
+  "btnCancel": "Cancelar",
+  "btnLogout": "Desconectar",
+  "sessionExpired": "🔒 Sesión expirada",
+
+  "lockScreenTitle": "Cofre bloqueado",
+  "btnUnlock": "Desbloquear",
+  "btnUnlockVault": "Desbloquear cofre",
+
+  "labelEmail": "Email",
+  "labelPassword": "Contraseña",
+  "labelMasterPassword": "Contraseña maestra",
+  "labelAccountPassword": "Contraseña de cuenta",
+  "btnLogin": "Iniciar sesión",
+  "biometricReason": "Inicia sesión en tu cofre",
+
+  "signupStep1Title": "Tu cuenta",
+  "signupStep2Title": "Tu cofre personal",
+  "btnNext": "Siguiente",
+  "btnCreateAccount": "Crear mi cuenta",
+  "btnBack": "← Atrás",
+  "tutorialDismiss": "Entendido →",
+  "tutorialStep1Body": "Este email y contraseña te servirán para iniciar sesión en la aplicación.\n\nSon verificados por nuestro servidor en cada inicio de sesión.",
+  "tutorialStep2Body": "La contraseña maestra cifra todas tus contraseñas directamente en tu teléfono.\n\n⚠️ No la conocemos. Si la olvidas, tu cofre será permanentemente irrecuperable.\n\nAnótala en un lugar seguro.",
+  "validatorEmailInvalid": "Email inválido",
+  "validatorPasswordMismatch": "Las contraseñas no coinciden",
+  "validatorMasterPasswordMismatch": "Las contraseñas maestras no coinciden",
+  "warningMasterPassword": "No se puede recuperar si se olvida.",
+
+  "vaultEmpty": "Cofre vacío",
+  "vaultNoResults": "Sin resultados",
+
+  "itemLabel": "Etiqueta *",
+  "itemLogin": "Inicio de sesión / Email",
+  "itemPassword": "Contraseña *",
+  "itemWebsite": "Sitio web",
+  "itemWebsiteHint": "p. ej.: amazon.es",
+  "itemNotes": "Notas",
+  "itemIcon": "Icono",
+
+  "titleAdd": "Añadir",
+  "titleEdit": "Editar",
+  "titleSettings": "Configuración de cuenta",
+  "titleMasterPassword": "Contraseña maestra",
+
+  "btnSave": "Guardar",
+  "btnSaving": "Guardando…",
+  "btnAddToVault": "Añadir al cofre",
+  "btnAdding": "Guardando…",
+
+  "successAdded": "Añadido con éxito",
+  "successModified": "Modificado con éxito",
+  "errorLabelRequired": "La etiqueta es obligatoria",
+  "errorPasswordRequired": "La contraseña es obligatoria",
+
+  "dialogDeleteTitle": "Eliminar",
+  "dialogDeleteContent": "¿Eliminar este elemento definitivamente?",
+  "btnDelete": "Eliminar",
+  "snackItemDeleted": "Elemento eliminado",
+  "snackCopied": "Copiado — eliminado en 30 s",
+
+  "deleteAccountTitle": "Eliminar cuenta",
+  "deleteAccountContent": "Esta acción es irreversible.\n\nTodas tus contraseñas cifradas serán eliminadas permanentemente.",
+  "btnDeleteConfirm": "Eliminar permanentemente",
+
+  "loginTitle": "Inicio de sesión",
+  "btnLoginWithBiometric": "Iniciar sesión con huella",
+  "orDivider": "o",
+  "btnSignup": "Crear una cuenta",
+  "validatorMinChars": "6 caracteres mínimo",
+  "sessionExpiredInfo": "Sesión expirada por inactividad.",
+  "masterPasswordDialogContent": "Ingresa tu contraseña maestra para descifrar tu cofre.",
+  "masterPasswordDialogHint": "Esta contraseña es diferente de tu contraseña de inicio de sesión.",
+  "biometricUnlock": "Desbloquear con biometría",
+  "lockScreenOrPassword": "o ingresa tu contraseña maestra"
+}

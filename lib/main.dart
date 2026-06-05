@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -20,6 +22,7 @@ import 'widgets/auth/splash_auth_gate.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'services/role_provider.dart';
 import 'services/auth_service.dart';
+import 'services/autofill_cache_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -70,6 +73,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         final elapsed = DateTime.now().difference(paused);
         if (elapsed > _lockTimeout) {
           AuthService.clearMasterKey();
+          AutofillCacheService.clear().ignore();
           _navigatorKey.currentState
               ?.pushNamedAndRemoveUntil('/lock', (r) => false);
         }
@@ -89,6 +93,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       darkTheme:                 AppTheme.darkTheme,
       themeMode:                 themeMode,
       navigatorKey:              _navigatorKey,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('fr'),
+        Locale('es'),
+      ],
       initialRoute: '/splash',
       routes: {
         '/splash':    (_) => const SplashAuthGate(),

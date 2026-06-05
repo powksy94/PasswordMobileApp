@@ -7,6 +7,7 @@ import '../../widgets/common/password_strength_bar.dart';
 import '../../widgets/generator/generated_password_display.dart';
 import '../../widgets/generator/generator_controls.dart';
 import '../../widgets/generator/vault_save_form.dart';
+import '../../l10n/app_localizations.dart';
 
 class PasswordGeneratorPage extends StatefulWidget {
   final VoidCallback? onVaultUpdated;
@@ -35,6 +36,7 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
   final _labelCtrl    = TextEditingController();
   final _loginCtrl    = TextEditingController();
   final _notesCtrl    = TextEditingController();
+  final _urlCtrl      = TextEditingController();
   final _scrollCtrl   = ScrollController();
 
   @override
@@ -42,6 +44,7 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
     _labelCtrl.dispose();
     _loginCtrl.dispose();
     _notesCtrl.dispose();
+    _urlCtrl.dispose();
     _scrollCtrl.dispose();
     super.dispose();
   }
@@ -71,9 +74,10 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
   }
 
   Future<void> _addToVault() async {
+    final l = AppLocalizations.of(context)!;
     if (_labelCtrl.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Veuillez entrer un label pour le mot de passe.')),
+        SnackBar(content: Text(l.errorLabelMissing)),
       );
       return;
     }
@@ -84,10 +88,11 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
         password: password,
         notes:    _notesCtrl.text,
         icon:     'lock',
+        url:      _urlCtrl.text,
       );
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mot de passe ajouté au coffre !')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.snackPasswordAdded)),
       );
       widget.onVaultUpdated?.call();
       setState(() {
@@ -97,10 +102,11 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
       _labelCtrl.clear();
       _loginCtrl.clear();
       _notesCtrl.clear();
+      _urlCtrl.clear();
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Erreur lors de l'ajout : $e")),
+        SnackBar(content: Text('$e')),
       );
     }
   }
@@ -110,7 +116,7 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
     final copied = password;
     Clipboard.setData(ClipboardData(text: copied));
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Mot de passe copié — effacé dans 30 s')),
+      SnackBar(content: Text(AppLocalizations.of(context)!.snackCopied)),
     );
     Future.delayed(const Duration(seconds: 30), () async {
       final data = await Clipboard.getData('text/plain');
@@ -145,7 +151,7 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
               ElevatedButton.icon(
                 onPressed: _generate,
                 icon:  const Icon(Icons.refresh),
-                label: const Text('Générer'),
+                label: Text(AppLocalizations.of(context)!.btnGenerate),
               ),
               if (password.isNotEmpty) ...[
                 const SizedBox(height: 12),
@@ -162,12 +168,13 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
                   labelController: _labelCtrl,
                   loginController: _loginCtrl,
                   notesController: _notesCtrl,
+                  urlController:   _urlCtrl,
                 ),
                 const SizedBox(height: 12),
                 ElevatedButton.icon(
                   onPressed: _addToVault,
                   icon:  const FaIcon(FontAwesomeIcons.vault),
-                  label: const Text('Ajouter au coffre'),
+                  label: Text(AppLocalizations.of(context)!.btnAddToVault),
                 ),
               ],
             ],

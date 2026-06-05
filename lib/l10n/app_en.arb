@@ -1,0 +1,91 @@
+{
+  "@@locale": "en",
+
+  "navGenerator": "Generator",
+  "navVault": "Vault",
+  "navHealth": "Health",
+
+  "tooltipImport": "Import vault",
+  "tooltipExport": "Export vault",
+  "tooltipAddPassword": "Add a password",
+  "tooltipRefresh": "Refresh",
+  "menuAccountSettings": "Account settings",
+  "menuLogout": "Logout",
+
+  "dialogLogoutTitle": "Logout",
+  "dialogLogoutContent": "Are you sure you want to log out?",
+  "btnCancel": "Cancel",
+  "btnLogout": "Log out",
+  "sessionExpired": "🔒 Session expired",
+
+  "lockScreenTitle": "Locked vault",
+  "btnUnlock": "Unlock",
+  "btnUnlockVault": "Unlock vault",
+
+  "labelEmail": "Email",
+  "labelPassword": "Password",
+  "labelMasterPassword": "Master password",
+  "labelAccountPassword": "Account password",
+  "btnLogin": "Log in",
+  "biometricReason": "Log in to your vault",
+
+  "signupStep1Title": "Your account",
+  "signupStep2Title": "Your personal vault",
+  "btnNext": "Next",
+  "btnCreateAccount": "Create my account",
+  "btnBack": "← Back",
+  "tutorialDismiss": "Got it →",
+  "tutorialStep1Body": "This email and password are used to log in to the app.\n\nThey are verified by our server at each login.",
+  "tutorialStep2Body": "The master password encrypts all your passwords directly on your phone.\n\n⚠️ We do not know it. If you forget it, your vault will be permanently unrecoverable.\n\nWrite it down in a safe place.",
+  "validatorEmailInvalid": "Invalid email",
+  "validatorPasswordMismatch": "Passwords do not match",
+  "validatorMasterPasswordMismatch": "Master passwords do not match",
+  "warningMasterPassword": "Cannot be recovered if forgotten.",
+
+  "vaultEmpty": "Empty vault",
+  "vaultNoResults": "No results",
+
+  "itemLabel": "Label *",
+  "itemLogin": "Login / Email",
+  "itemPassword": "Password *",
+  "itemWebsite": "Website",
+  "itemWebsiteHint": "e.g.: amazon.com",
+  "itemNotes": "Notes",
+  "itemIcon": "Icon",
+
+  "titleAdd": "Add",
+  "titleEdit": "Edit",
+  "titleSettings": "Account settings",
+  "titleMasterPassword": "Master password",
+
+  "btnSave": "Save",
+  "btnSaving": "Saving…",
+  "btnAddToVault": "Add to vault",
+  "btnAdding": "Saving…",
+
+  "successAdded": "Added successfully",
+  "successModified": "Modified successfully",
+  "errorLabelRequired": "Label is required",
+  "errorPasswordRequired": "Password is required",
+
+  "dialogDeleteTitle": "Delete",
+  "dialogDeleteContent": "Delete this item permanently?",
+  "btnDelete": "Delete",
+  "snackItemDeleted": "Item deleted",
+  "snackCopied": "Copied — cleared in 30 s",
+
+  "deleteAccountTitle": "Delete account",
+  "deleteAccountContent": "This action is irreversible.\n\nAll your encrypted passwords will be permanently deleted.",
+  "btnDeleteConfirm": "Delete permanently",
+
+  "loginTitle": "Login",
+  "btnLoginWithBiometric": "Log in with fingerprint",
+  "orDivider": "or",
+  "btnSignup": "Create an account",
+  "validatorMinChars": "6 characters minimum",
+  "sessionExpiredInfo": "Session expired due to inactivity.",
+  "masterPasswordDialogContent": "Enter your master password to decrypt your vault.",
+  "masterPasswordDialogHint": "This password is different from your login password.",
+  "biometricUnlock": "Unlock with biometrics",
+  "lockScreenOrPassword": "or enter your master password"
+}

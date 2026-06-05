@@ -12,16 +12,17 @@ class VaultImportService {
 
   // ── Lecture et déchiffrement ──────────────────────────────────────────────
 
-  /// Lit un fichier .enc, .json ou .csv et retourne la liste des items.
-  static Future<List<VaultItem>> parseFile(String filePath) async {
-    final content = await File(filePath).readAsString();
-    final lower   = filePath.toLowerCase();
+  /// Lit un fichier depuis son chemin (fallback pour les anciens appels).
+  static Future<String> readPath(String filePath) =>
+      File(filePath).readAsString();
 
-    if (lower.endsWith('.json')) return _parseJson(content);
-    if (lower.endsWith('.csv'))  return _parseCsv(content);
+  /// Parse le contenu d'un fichier déjà lu, selon son nom (extension).
+  static Future<List<VaultItem>> parseContent(
+      String content, String fileName) async {
+    if (fileName.endsWith('.json')) return _parseJson(content);
+    if (fileName.endsWith('.csv'))  return _parseCsv(content);
 
-    if (lower.endsWith('.enc')) {
-      // Tentative 1 : clé portable (master key en mémoire, silencieux)
+    if (fileName.endsWith('.enc')) {
       final masterKey = AuthService.getMasterKey();
       if (masterKey != null) {
         try {
@@ -29,7 +30,6 @@ class VaultImportService {
         } catch (_) {}
       }
 
-      // Tentative 2 : clé biométrique (déclenche la dialog d'empreinte)
       final bioKey = await BiometricExportService.getKeyForDecrypt();
       if (bioKey != null) {
         try {
@@ -59,6 +59,7 @@ class VaultImportService {
         password: item.password,
         notes:    item.notes,
         icon:     item.icon,
+        url:      item.url,
       );
       count++;
     }
@@ -78,6 +79,7 @@ class VaultImportService {
         password: m['password'] as String? ?? '',
         notes:    m['notes']    as String? ?? '',
         icon:     m['icon']     as String? ?? 'lock',
+        url:      m['url']      as String? ?? '',
       );
     }).toList();
   }
@@ -120,17 +122,13 @@ class VaultImportService {
       final pw = _cell(cells, passwordIdx);
       if (pw.isEmpty) continue; // ignore les lignes sans mot de passe
 
-      // Le label : nom du service, sinon l'URL, sinon "Import N"
-      String label = nameIdx >= 0 ? _cell(cells, nameIdx) : '';
-      if (label.isEmpty && urlIdx >= 0) label = _cell(cells, urlIdx);
-      if (label.isEmpty) label = 'Import $i';
+      final url   = urlIdx   >= 0 ? _cell(cells, urlIdx)   : '';
+      final notes = notesIdx >= 0 ? _cell(cells, notesIdx) : '';
 
-      // Les notes : notes + URL (si URL non utilisée comme label)
-      String notes = notesIdx >= 0 ? _cell(cells, notesIdx) : '';
-      if (urlIdx >= 0 && nameIdx >= 0) {
-        final url = _cell(cells, urlIdx);
-        if (url.isNotEmpty) notes = notes.isEmpty ? url : '$url\n$notes';
-      }
+      // Label : nom du service, sinon l'URL, sinon "Import N"
+      String label = nameIdx >= 0 ? _cell(cells, nameIdx) : '';
+      if (label.isEmpty && url.isNotEmpty) label = url;
+      if (label.isEmpty) label = 'Import $i';
 
       items.add(VaultItem(
         id:       _uuid.v4(),
@@ -139,6 +137,7 @@ class VaultImportService {
         password: pw,
         notes:    notes,
         icon:     'lock',
+        url:      url,
       ));
     }
 

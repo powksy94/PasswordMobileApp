@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../common/glass_panel.dart';
 import '../common/neon_text.dart';
+import '../../l10n/app_localizations.dart';
 
-/// Formulaire de connexion — étape 1 (email + mot de passe de connexion).
-/// Le mot de passe maître est demandé dans une dialog séparée après succès.
 class LoginForm extends StatelessWidget {
   final GlobalKey<FormState>   formKey;
   final TextEditingController  emailCtrl;
@@ -30,6 +29,7 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l          = AppLocalizations.of(context)!;
     final isDark     = Theme.of(context).brightness == Brightness.dark;
     final accent     = isDark ? Colors.cyanAccent : Colors.blueAccent;
     final fill       = isDark ? Colors.white10 : Colors.black12;
@@ -43,10 +43,9 @@ class LoginForm extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            NeonText(text: 'Connexion', fontSize: 26, color: accent, glow: true),
+            NeonText(text: l.loginTitle, fontSize: 26, color: accent, glow: true),
             const SizedBox(height: 16),
 
-            // ── Biométrie ────────────────────────────────────────────────
             if (showBiometric) ...[
               SizedBox(
                 width: double.infinity,
@@ -54,7 +53,7 @@ class LoginForm extends StatelessWidget {
                   onPressed: onBiometricTap,
                   icon:  Icon(Icons.fingerprint, color: accent, size: 22),
                   label: Text(
-                    'Se connecter avec l\'empreinte',
+                    l.btnLoginWithBiometric,
                     style: TextStyle(color: accent, fontSize: 13),
                   ),
                   style: OutlinedButton.styleFrom(
@@ -70,7 +69,7 @@ class LoginForm extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     child: Text(
-                      'ou',
+                      l.orDivider,
                       style: TextStyle(
                         color:    isDark ? Colors.white38 : Colors.black38,
                         fontSize: 12,
@@ -83,14 +82,13 @@ class LoginForm extends StatelessWidget {
               const SizedBox(height: 12),
             ],
 
-            // ── Email ────────────────────────────────────────────────────
             TextFormField(
               controller:   emailCtrl,
               keyboardType: TextInputType.emailAddress,
               validator: (v) =>
-                  v != null && v.contains('@') ? null : 'Email invalide',
+                  v != null && v.contains('@') ? null : l.validatorEmailInvalid,
               decoration: InputDecoration(
-                labelText:  'Email',
+                labelText:  l.labelEmail,
                 prefixIcon: const Icon(Icons.email_outlined),
                 filled:     true,
                 fillColor:  fill,
@@ -98,15 +96,14 @@ class LoginForm extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // ── Mot de passe de connexion ────────────────────────────────
             TextFormField(
               controller:  passwordCtrl,
               obscureText: true,
               validator: (v) => v != null && v.length >= 6
                   ? null
-                  : '6 caractères minimum',
+                  : l.validatorMinChars,
               decoration: InputDecoration(
-                labelText:  'Mot de passe',
+                labelText:  l.labelPassword,
                 prefixIcon: const Icon(Icons.lock_outline),
                 filled:     true,
                 fillColor:  fill,
@@ -123,7 +120,7 @@ class LoginForm extends StatelessWidget {
                         height: 18, width: 18,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : const Text('Se connecter'),
+                    : Text(l.btnLogin),
               ),
             ),
             const SizedBox(height: 10),
@@ -137,7 +134,7 @@ class LoginForm extends StatelessWidget {
             TextButton(
               onPressed: onSignup,
               child: Text(
-                'Créer un compte',
+                l.btnSignup,
                 style: TextStyle(color: accent, fontWeight: FontWeight.bold),
               ),
             ),

@@ -8,6 +8,7 @@ import '../../widgets/health/health_score_card.dart';
 import '../../widgets/health/health_section_header.dart';
 import '../../widgets/health/health_item_tile.dart';
 import 'edit_vault_item_page.dart';
+import '../../l10n/app_localizations.dart';
 
 class PasswordHealthPage extends StatefulWidget {
   const PasswordHealthPage({super.key});
@@ -105,7 +106,7 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
       child: _items.isEmpty
           ? Center(
               child: NeonText(
-                  text: 'Coffre vide', fontSize: 20, color: accent, glow: true))
+                  text: AppLocalizations.of(context)!.vaultEmpty, fontSize: 20, color: accent, glow: true))
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [

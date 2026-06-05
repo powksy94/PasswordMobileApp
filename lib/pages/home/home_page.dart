@@ -6,7 +6,9 @@ import '../generator/password_generator_page.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../services/role_provider.dart';
 import '../../services/auth_service.dart';
+import '../../services/autofill_cache_service.dart';
 import '../../services/fcm_service.dart';
+import '../../l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   final void Function(bool) onThemeToggle;
@@ -34,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   VoidCallback?     _roleListener;
   bool _listenerAdded = false;
 
-  static const _titles = ['Générateur', 'Vault', 'Santé'];
+  List<String> _pageTitles(AppLocalizations l) => [l.navGenerator, l.navVault, l.navHealth];
 
   @override
   void didChangeDependencies() {
@@ -51,7 +53,7 @@ class _HomePageState extends State<HomePage> {
         final current = _roleProvider.role;
         if (_prevRole != UserRole.user && current == UserRole.user) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('🔒 Session expirée')),
+            SnackBar(content: Text(AppLocalizations.of(context)!.sessionExpired)),
           );
         }
         _prevRole = current;
@@ -71,23 +73,27 @@ class _HomePageState extends State<HomePage> {
   Future<void> _logout() async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (_) => AlertDialog(
-        title:   const Text('Déconnexion'),
-        content: const Text('Voulez-vous vraiment vous déconnecter ?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annuler'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Déconnecter'),
-          ),
-        ],
-      ),
+      builder: (_) {
+        final l = AppLocalizations.of(context)!;
+        return AlertDialog(
+          title:   Text(l.dialogLogoutTitle),
+          content: Text(l.dialogLogoutContent),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: Text(l.btnCancel),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: Text(l.btnLogout),
+            ),
+          ],
+        );
+      },
     );
     if (confirmed != true || !mounted) return;
 
+    await AutofillCacheService.clear();
     await AuthService.logout();
     if (!mounted) return;
     Provider.of<RoleProvider>(context, listen: false).deactivate();
@@ -99,6 +105,9 @@ class _HomePageState extends State<HomePage> {
     final isDark = widget.currentThemeMode == ThemeMode.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
+    final l      = AppLocalizations.of(context)!;
+    final titles = _pageTitles(l);
+
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -107,31 +116,31 @@ class _HomePageState extends State<HomePage> {
           elevation: 0,
           automaticallyImplyLeading: false,
           title: NeonText(
-            text: _titles[_index], fontSize: 22, color: accent, glow: true),
+            text: titles[_index], fontSize: 22, color: accent, glow: true),
           actions: [
 
             // ── Actions spécifiques à chaque onglet ───────────────────────
             if (_index == 1) ...[
               IconButton(
                 icon:    const Icon(Icons.download_rounded),
-                tooltip: 'Importer un vault',
+                tooltip: l.tooltipImport,
                 onPressed: () => _vaultKey.currentState?.openImport(),
               ),
               IconButton(
                 icon:    const Icon(Icons.upload_file),
-                tooltip: 'Exporter le vault',
+                tooltip: l.tooltipExport,
                 onPressed: () => _vaultKey.currentState?.openExport(),
               ),
               IconButton(
                 icon:    const Icon(Icons.add),
-                tooltip: 'Ajouter un mot de passe',
+                tooltip: l.tooltipAddPassword,
                 onPressed: () => _vaultKey.currentState?.openAddPassword(),
               ),
             ],
             if (_index == 2)
               IconButton(
                 icon:    Icon(Icons.refresh, color: accent),
-                tooltip: 'Actualiser',
+                tooltip: l.tooltipRefresh,
                 onPressed: () => _healthKey.currentState?.refresh(),
               ),
 
@@ -156,23 +165,23 @@ class _HomePageState extends State<HomePage> {
                 if (v == 'settings') Navigator.pushNamed(context, '/settings');
                 if (v == 'logout')   _logout();
               },
-              itemBuilder: (_) => const [
+              itemBuilder: (_) => [
                 PopupMenuItem(
                   value: 'settings',
                   child: Row(children: [
-                    Icon(Icons.manage_accounts, size: 20),
-                    SizedBox(width: 10),
-                    Text('Paramètres du compte'),
+                    const Icon(Icons.manage_accounts, size: 20),
+                    const SizedBox(width: 10),
+                    Text(l.menuAccountSettings),
                   ]),
                 ),
-                PopupMenuDivider(),
+                const PopupMenuDivider(),
                 PopupMenuItem(
                   value: 'logout',
                   child: Row(children: [
-                    Icon(Icons.logout, size: 20, color: Colors.redAccent),
-                    SizedBox(width: 10),
-                    Text('Déconnexion',
-                        style: TextStyle(color: Colors.redAccent)),
+                    const Icon(Icons.logout, size: 20, color: Colors.redAccent),
+                    const SizedBox(width: 10),
+                    Text(l.menuLogout,
+                        style: const TextStyle(color: Colors.redAccent)),
                   ]),
                 ),
               ],
@@ -199,12 +208,13 @@ class _HomePageState extends State<HomePage> {
           unselectedItemColor: isDark ? Colors.white54 : Colors.black45,
           type: BottomNavigationBarType.fixed,
           onTap: (i) => setState(() => _index = i),
-          items: const [
+          items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.password), label: 'Générateur'),
-            BottomNavigationBarItem(icon: Icon(Icons.lock), label: 'Vault'),
+                icon: const Icon(Icons.password), label: l.navGenerator),
             BottomNavigationBarItem(
-                icon: Icon(Icons.health_and_safety), label: 'Santé'),
+                icon: const Icon(Icons.lock), label: l.navVault),
+            BottomNavigationBarItem(
+                icon: const Icon(Icons.health_and_safety), label: l.navHealth),
           ],
         ),
       ),

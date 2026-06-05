@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import '../../models/vault_item.dart';
 import '../../services/vault_export_service.dart';
 import '../../services/biometric_export_service.dart';
-
-/// Affiche le dialogue de choix du format d'export et orchestre les actions.
+import '../../l10n/app_localizations.dart';
 
 Future<void> showVaultExportDialog(
   BuildContext context,
   List<VaultItem> items,
 ) async {
+  final l = AppLocalizations.of(context)!;
+
   if (items.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Coffre vide — rien à exporter')),
+      SnackBar(content: Text(l.vaultEmptyExport)),
     );
     return;
   }
@@ -19,13 +20,13 @@ Future<void> showVaultExportDialog(
   await showDialog<void>(
     context: context,
     builder: (_) => SimpleDialog(
-      title: const Text('Exporter le vault'),
+      title: const Text('Export'),
       children: [
         _ExportOption(
           icon:     Icons.fingerprint,
           color:    Colors.cyanAccent,
-          title:    'Chiffré — biométrie',
-          subtitle: 'Uniquement sur cet appareil.\nRequiert empreinte ou PIN.',
+          title:    'Encrypted — biometric',
+          subtitle: 'This device only. Requires fingerprint or PIN.',
           onTap: () {
             Navigator.pop(context);
             exportVaultBiometric(context, items);
@@ -34,8 +35,8 @@ Future<void> showVaultExportDialog(
         _ExportOption(
           icon:     Icons.vpn_key,
           color:    Colors.greenAccent,
-          title:    'Chiffré — portable',
-          subtitle: 'Tout appareil avec votre mot de passe maître.',
+          title:    'Encrypted — portable',
+          subtitle: 'Any device with your master password.',
           onTap: () {
             Navigator.pop(context);
             exportVaultPortable(context, items);
@@ -44,8 +45,8 @@ Future<void> showVaultExportDialog(
         _ExportOption(
           icon:     Icons.description,
           color:    Colors.orangeAccent,
-          title:    'JSON — texte clair',
-          subtitle: '⚠️ Mots de passe lisibles par tous.',
+          title:    'JSON — plaintext',
+          subtitle: '⚠️ Passwords readable by anyone.',
           onTap: () {
             Navigator.pop(context);
             exportVaultJson(context, items);
@@ -53,26 +54,22 @@ Future<void> showVaultExportDialog(
         ),
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('Annuler'),
+          child: Text(l.btnCancel),
         ),
       ],
     ),
   );
 }
 
-// ── Snackbar de confirmation ──────────────────────────────────────────────────
-
 void _snackSuccess(BuildContext context, String path) {
   final filename = path.split('/').last;
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
-      content:  Text('✅ Enregistré dans Téléchargements : $filename'),
+      content:  Text('✅ $filename'),
       duration: const Duration(seconds: 5),
     ),
   );
 }
-
-// ── Actions d'export ──────────────────────────────────────────────────────────
 
 Future<void> exportVaultBiometric(
   BuildContext context,
@@ -83,8 +80,7 @@ Future<void> exportVaultBiometric(
 
   if (!available) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-          content: Text('Biométrie non disponible — utilisez l\'export portable')),
+      const SnackBar(content: Text('Biometrics unavailable — use portable export')),
     );
     return;
   }
@@ -97,7 +93,7 @@ Future<void> exportVaultBiometric(
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Erreur export : $e')));
+          .showSnackBar(SnackBar(content: Text('$e')));
     }
   }
 }
@@ -106,22 +102,23 @@ Future<void> exportVaultPortable(
   BuildContext context,
   List<VaultItem> items,
 ) async {
+  final l = AppLocalizations.of(context)!;
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (_) => AlertDialog(
-      title:   const Text('Export portable'),
+      title:   const Text('Portable export'),
       content: const Text(
-        'Le fichier sera chiffré avec votre mot de passe maître.\n\n'
-        'Il sera enregistré dans votre dossier Téléchargements.',
+        'The file will be encrypted with your master password.\n\n'
+        'It will be saved to your Downloads folder.',
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Annuler'),
+          child: Text(l.btnCancel),
         ),
         ElevatedButton(
           onPressed: () => Navigator.pop(context, true),
-          child: const Text('Exporter'),
+          child: const Text('Export'),
         ),
       ],
     ),
@@ -135,7 +132,7 @@ Future<void> exportVaultPortable(
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Erreur export : $e')));
+          .showSnackBar(SnackBar(content: Text('$e')));
     }
   }
 }
@@ -144,22 +141,23 @@ Future<void> exportVaultJson(
   BuildContext context,
   List<VaultItem> items,
 ) async {
+  final l = AppLocalizations.of(context)!;
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (_) => AlertDialog(
-      title:   const Text('Export JSON'),
+      title:   const Text('JSON export'),
       content: const Text(
-        '⚠️ Ce fichier contiendra vos mots de passe en clair.\n\n'
-        'Il sera enregistré dans votre dossier Téléchargements.',
+        '⚠️ This file will contain your passwords in plaintext.\n\n'
+        'It will be saved to your Downloads folder.',
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context, false),
-          child: const Text('Annuler'),
+          child: Text(l.btnCancel),
         ),
         ElevatedButton(
           onPressed: () => Navigator.pop(context, true),
-          child: const Text('Exporter'),
+          child: const Text('Export'),
         ),
       ],
     ),
@@ -169,22 +167,14 @@ Future<void> exportVaultJson(
   try {
     final path = await VaultExportService.exportToJson(items);
     if (!context.mounted) return;
-    final filename = path.split('/').last;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content:  Text('✅ Enregistré dans Téléchargements : $filename'),
-        duration: const Duration(seconds: 5),
-      ),
-    );
+    _snackSuccess(context, path);
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Erreur export : $e')));
+          .showSnackBar(SnackBar(content: Text('$e')));
     }
   }
 }
-
-// ── Widget interne ────────────────────────────────────────────────────────────
 
 class _ExportOption extends StatelessWidget {
   final IconData     icon;
@@ -213,8 +203,7 @@ class _ExportOption extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,

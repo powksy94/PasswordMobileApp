@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../common/password_strength_bar.dart';
+import '../../l10n/app_localizations.dart';
 
 class PasswordSection extends StatefulWidget {
   final String                      label;
@@ -32,9 +33,15 @@ class _PasswordSectionState extends State<PasswordSection> {
 
   @override
   Widget build(BuildContext context) {
+    final l      = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final fill   = isDark ? Colors.white10 : Colors.black12;
     final sub    = isDark ? Colors.white54 : Colors.black45;
+
+    final fieldLabel   = widget.withInfoIcon ? l.labelMasterPassword : l.labelPassword;
+    final confirmLabel = widget.withInfoIcon
+        ? l.labelConfirmMasterPassword
+        : l.labelConfirmPassword;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,9 +91,9 @@ class _PasswordSectionState extends State<PasswordSection> {
           onChanged:   (_) => setState(() {}),
           validator: (v) => v != null && v.length >= widget.minLength
               ? null
-              : '${widget.minLength} caractères minimum',
+              : '${widget.minLength} ${l.validatorMinCharsUnit}',
           decoration: InputDecoration(
-            labelText:  widget.withInfoIcon ? 'Mot de passe maître' : 'Mot de passe',
+            labelText:  fieldLabel,
             prefixIcon: Icon(
               widget.withInfoIcon ? Icons.vpn_key_outlined : Icons.lock_outline,
             ),
@@ -112,9 +119,7 @@ class _PasswordSectionState extends State<PasswordSection> {
           obscureText: true,
           validator:   widget.confirmValidator,
           decoration: InputDecoration(
-            labelText:  widget.withInfoIcon
-                ? 'Confirmer le mot de passe maître'
-                : 'Confirmer le mot de passe',
+            labelText:  confirmLabel,
             prefixIcon: Icon(
               widget.withInfoIcon ? Icons.vpn_key_outlined : Icons.lock_outline,
             ),

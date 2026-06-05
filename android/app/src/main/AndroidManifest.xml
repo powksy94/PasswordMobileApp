@@ -36,6 +36,19 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9495964118235971~3858568117"/>
+
+        <service
+            android:name=".VaultAutofillService"
+            android:exported="true"
+            android:label="Password Mobile App Autofill"
+            android:permission="android.permission.BIND_AUTOFILL_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.autofill.AutofillService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.autofill"
+                android:resource="@xml/autofill_service" />
+        </service>
     </application>
 
     <queries>

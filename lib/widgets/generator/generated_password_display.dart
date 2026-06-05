@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../common/glass_panel.dart';
+import '../../l10n/app_localizations.dart';
 
-/// Affiche le mot de passe généré avec les boutons visibilité et copie.
-/// La logique de toggle et de copie est déléguée aux callbacks.
 class GeneratedPasswordDisplay extends StatelessWidget {
   final String       password;
   final bool         showPassword;
@@ -19,6 +18,7 @@ class GeneratedPasswordDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l      = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
@@ -30,7 +30,7 @@ class GeneratedPasswordDisplay extends StatelessWidget {
           Expanded(
             child: SelectableText(
               password.isEmpty
-                  ? 'Mot de passe vide'
+                  ? l.passwordEmpty
                   : (showPassword ? password : '●●●●●●●●'),
               style: TextStyle(fontSize: 20, color: accent),
             ),

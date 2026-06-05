@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'password_section.dart';
 import 'tutorial_bubble.dart';
+import '../../l10n/app_localizations.dart';
 
 class SignupStep1 extends StatelessWidget {
   final GlobalKey<FormState>  formKey;
@@ -24,6 +25,7 @@ class SignupStep1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l    = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final fill   = isDark ? Colors.white10 : Colors.black12;
 
@@ -34,9 +36,8 @@ class SignupStep1 extends StatelessWidget {
         children: [
           TutorialBubble(
             icon:      Icons.person_outline,
-            title:     'Votre compte',
-            body:      'Cet email et ce mot de passe vous serviront à vous connecter à l\'application.\n\n'
-                       'Ils sont vérifiés par notre serveur à chaque connexion.',
+            title:     l.signupStep1Title,
+            body:      l.tutorialStep1Body,
             visible:   showTutorial,
             onDismiss: onDismissTutorial,
           ),
@@ -50,10 +51,11 @@ class SignupStep1 extends StatelessWidget {
                       TextFormField(
                         controller:   emailCtrl,
                         keyboardType: TextInputType.emailAddress,
-                        validator: (v) =>
-                            v != null && v.contains('@') ? null : 'Email invalide',
+                        validator: (v) => v != null && v.contains('@')
+                            ? null
+                            : l.validatorEmailInvalid,
                         decoration: InputDecoration(
-                          labelText:  'Email',
+                          labelText:  l.labelEmail,
                           prefixIcon: const Icon(Icons.email_outlined),
                           filled:     true,
                           fillColor:  fill,
@@ -61,13 +63,13 @@ class SignupStep1 extends StatelessWidget {
                       ),
                       const SizedBox(height: 12),
                       PasswordSection(
-                        label:             'Mot de passe du compte',
+                        label:             l.labelAccountPassword,
                         controller:        passwordCtrl,
                         confirmController: confirmPasswordCtrl,
                         minLength:         6,
                         confirmValidator:  (v) => v == passwordCtrl.text
                             ? null
-                            : 'Les mots de passe ne correspondent pas',
+                            : l.validatorPasswordMismatch,
                       ),
                       const SizedBox(height: 20),
                       SizedBox(
@@ -75,7 +77,7 @@ class SignupStep1 extends StatelessWidget {
                         child: ElevatedButton.icon(
                           onPressed: onNext,
                           icon:  const Icon(Icons.arrow_forward),
-                          label: const Text('Suivant'),
+                          label: Text(l.btnNext),
                         ),
                       ),
                     ],

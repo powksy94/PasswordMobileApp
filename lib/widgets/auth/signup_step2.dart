@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'password_section.dart';
 import 'tutorial_bubble.dart';
+import '../../l10n/app_localizations.dart';
 
 class SignupStep2 extends StatelessWidget {
   final GlobalKey<FormState>  formKey;
@@ -26,6 +27,8 @@ class SignupStep2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return Form(
       key: formKey,
       child: Column(
@@ -33,10 +36,8 @@ class SignupStep2 extends StatelessWidget {
         children: [
           TutorialBubble(
             icon:      Icons.lock_outline,
-            title:     'Votre coffre-fort personnel',
-            body:      'Le mot de passe maître chiffre tous vos mots de passe directement sur votre téléphone.\n\n'
-                       '⚠️ Nous ne le connaissons pas. Si vous l\'oubliez, votre coffre sera définitivement irrécupérable.\n\n'
-                       'Notez-le dans un endroit sûr.',
+            title:     l.signupStep2Title,
+            body:      l.tutorialStep2Body,
             visible:   showTutorial,
             onDismiss: onDismissTutorial,
           ),
@@ -48,16 +49,16 @@ class SignupStep2 extends StatelessWidget {
                     key: const ValueKey('step2-form'),
                     children: [
                       PasswordSection(
-                        label:             'Mot de passe maître',
+                        label:             l.labelMasterPassword,
                         controller:        masterPwCtrl,
                         confirmController: confirmMasterPwCtrl,
                         minLength:         8,
                         showToggle:        true,
                         withInfoIcon:      true,
-                        warningText:       'Ne peut pas être récupéré si oublié.',
+                        warningText:       l.warningMasterPassword,
                         confirmValidator:  (v) => v == masterPwCtrl.text
                             ? null
-                            : 'Les mots de passe maîtres ne correspondent pas',
+                            : l.validatorMasterPasswordMismatch,
                       ),
                       const SizedBox(height: 20),
                       SizedBox(
@@ -68,13 +69,13 @@ class SignupStep2 extends StatelessWidget {
                               ? const SizedBox(
                                   height: 18, width: 18,
                                   child: CircularProgressIndicator(strokeWidth: 2))
-                              : const Text('Créer mon compte'),
+                              : Text(l.btnCreateAccount),
                         ),
                       ),
                       const SizedBox(height: 4),
                       TextButton(
                         onPressed: onBack,
-                        child:     const Text('← Retour'),
+                        child:     Text(l.btnBack),
                       ),
                     ],
                   ),

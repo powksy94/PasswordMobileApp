@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../common/glass_panel.dart';
+import '../../l10n/app_localizations.dart';
 
 class DangerZonePanel extends StatelessWidget {
   final VoidCallback onDelete;
@@ -8,14 +9,16 @@ class DangerZonePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return GlassPanel(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Zone dangereuse',
-            style: TextStyle(
+          Text(
+            l.titleDangerZone,
+            style: const TextStyle(
               fontSize:   16,
               fontWeight: FontWeight.bold,
               color:      Colors.redAccent,
@@ -27,9 +30,9 @@ class DangerZonePanel extends StatelessWidget {
             child: OutlinedButton.icon(
               onPressed: onDelete,
               icon:  const Icon(Icons.delete_forever, color: Colors.redAccent),
-              label: const Text(
-                'Supprimer mon compte',
-                style: TextStyle(color: Colors.redAccent),
+              label: Text(
+                l.btnDeleteAccount,
+                style: const TextStyle(color: Colors.redAccent),
               ),
               style: OutlinedButton.styleFrom(
                 side:    const BorderSide(color: Colors.redAccent),

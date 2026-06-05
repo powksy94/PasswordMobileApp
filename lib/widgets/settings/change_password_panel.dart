@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../common/glass_panel.dart';
+import '../../l10n/app_localizations.dart';
 
 class ChangePasswordPanel extends StatelessWidget {
   final TextEditingController currentCtrl;
@@ -19,6 +20,7 @@ class ChangePasswordPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l      = AppLocalizations.of(context)!;
     final accent = Theme.of(context).brightness == Brightness.dark
         ? Colors.cyanAccent
         : Colors.blueAccent;
@@ -29,7 +31,7 @@ class ChangePasswordPanel extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Changer le mot de passe de connexion',
+            l.titleChangePassword,
             style: TextStyle(
               fontSize:   16,
               fontWeight: FontWeight.bold,
@@ -40,27 +42,27 @@ class ChangePasswordPanel extends StatelessWidget {
           TextField(
             controller:  currentCtrl,
             obscureText: true,
-            decoration:  const InputDecoration(
-              labelText:  'Mot de passe actuel',
-              prefixIcon: Icon(Icons.lock_outline),
+            decoration: InputDecoration(
+              labelText:  l.labelCurrentPassword,
+              prefixIcon: const Icon(Icons.lock_outline),
             ),
           ),
           const SizedBox(height: 10),
           TextField(
             controller:  newCtrl,
             obscureText: true,
-            decoration:  const InputDecoration(
-              labelText:  'Nouveau mot de passe',
-              prefixIcon: Icon(Icons.lock_reset),
+            decoration: InputDecoration(
+              labelText:  l.labelNewPassword,
+              prefixIcon: const Icon(Icons.lock_reset),
             ),
           ),
           const SizedBox(height: 10),
           TextField(
             controller:  confirmCtrl,
             obscureText: true,
-            decoration:  const InputDecoration(
-              labelText:  'Confirmer le nouveau mot de passe',
-              prefixIcon: Icon(Icons.lock_reset),
+            decoration: InputDecoration(
+              labelText:  l.labelConfirmNewPassword,
+              prefixIcon: const Icon(Icons.lock_reset),
             ),
           ),
           const SizedBox(height: 16),
@@ -72,7 +74,7 @@ class ChangePasswordPanel extends StatelessWidget {
                   ? const SizedBox(
                       height: 18, width: 18,
                       child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Text('Modifier le mot de passe'),
+                  : Text(l.btnChangePassword),
             ),
           ),
         ],

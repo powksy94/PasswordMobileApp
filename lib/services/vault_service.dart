@@ -7,6 +7,7 @@ import 'api_service.dart';
 import 'crypto_service.dart';
 import '../models/vault_item.dart';
 import 'auth_service.dart';
+import 'autofill_cache_service.dart';
 import 'package:uuid/uuid.dart';
 
 class VaultService {
@@ -49,6 +50,10 @@ class VaultService {
         final notes    = (rawNotes is String && rawNotes.isNotEmpty)
             ? CryptoService.decryptText(rawNotes, key)
             : '';
+        final rawUrl = r['url'];
+        final url    = (rawUrl is String && rawUrl.isNotEmpty)
+            ? CryptoService.decryptText(rawUrl, key)
+            : '';
         out.add(VaultItem(
           id:       r['id'] as String,
           label:    title,
@@ -56,6 +61,7 @@ class VaultService {
           password: password,
           notes:    notes,
           icon:     r['icon'] as String? ?? 'lock',
+          url:      url,
         ));
       } catch (e) {
         debugPrint('Erreur decrypt item ${r['id']}: $e');
@@ -74,9 +80,11 @@ class VaultService {
     if (key == null) throw Exception('Master key absente — déverrouillez le vault');
 
     try {
-      final raw = await _api.getVault(token);
+      final raw   = await _api.getVault(token);
       await _saveCache(raw);
-      return (items: _decryptRaw(raw, key), fromCache: false);
+      final items = _decryptRaw(raw, key);
+      AutofillCacheService.update(items).ignore();
+      return (items: items, fromCache: false);
     } catch (_) {
       final cached = await _loadCache();
       if (cached == null) rethrow;
@@ -92,6 +100,7 @@ class VaultService {
     String login = '',
     String notes = '',
     String icon  = 'lock',
+    String url   = '',
   }) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
@@ -105,6 +114,7 @@ class VaultService {
       'password': CryptoService.encryptText(password, key),
       'notes':    notes.isNotEmpty ? CryptoService.encryptText(notes, key) : '',
       'icon':     icon,
+      'url':      url.isNotEmpty ? CryptoService.encryptText(url, key) : '',
     });
   }
 
@@ -115,6 +125,7 @@ class VaultService {
     String login = '',
     String notes = '',
     String icon  = 'lock',
+    String url   = '',
   }) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
@@ -127,6 +138,7 @@ class VaultService {
       'password': CryptoService.encryptText(password, key),
       'notes':    notes.isNotEmpty ? CryptoService.encryptText(notes, key) : '',
       'icon':     icon,
+      'url':      url.isNotEmpty ? CryptoService.encryptText(url, key) : '',
     });
   }
 

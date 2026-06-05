@@ -5,6 +5,7 @@ import '../../widgets/auth/signup_step1.dart';
 import '../../widgets/auth/signup_step2.dart';
 import '../../services/auth_service.dart';
 import '../../utils/api_error.dart';
+import '../../l10n/app_localizations.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -79,7 +80,7 @@ class _SignupPageState extends State<SignupPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                NeonText(text: 'Créer un compte', fontSize: 26, color: accent, glow: true),
+                NeonText(text: AppLocalizations.of(context)!.signupTitle, fontSize: 26, color: accent, glow: true),
                 const SizedBox(height: 16),
 
                 // Barre de progression
@@ -136,7 +137,7 @@ class _SignupPageState extends State<SignupPage> {
                 const SizedBox(height: 8),
                 TextButton(
                   onPressed: () => Navigator.pushReplacementNamed(context, '/login'),
-                  child:     const Text('Déjà un compte ? Se connecter'),
+                  child:     Text(AppLocalizations.of(context)!.btnAlreadyAccount),
                 ),
               ],
             ),

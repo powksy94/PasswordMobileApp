@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-/// Champs label, login et notes pour enregistrer un mot de passe dans le coffre.
 class VaultSaveForm extends StatelessWidget {
   final TextEditingController labelController;
   final TextEditingController loginController;
   final TextEditingController notesController;
+  final TextEditingController urlController;
 
   const VaultSaveForm({
     super.key,
     required this.labelController,
     required this.loginController,
     required this.notesController,
+    required this.urlController,
   });
 
   @override
@@ -30,6 +31,16 @@ class VaultSaveForm extends StatelessWidget {
           decoration: const InputDecoration(
             labelText:  'Login / Email (optionnel)',
             prefixIcon: Icon(Icons.person_outline),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          controller: urlController,
+          keyboardType: TextInputType.url,
+          decoration: const InputDecoration(
+            labelText:  'Site web (optionnel)',
+            hintText:   'ex: amazon.fr',
+            prefixIcon: Icon(Icons.language),
           ),
         ),
         const SizedBox(height: 8),

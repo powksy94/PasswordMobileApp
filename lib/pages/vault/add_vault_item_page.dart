@@ -1,40 +1,27 @@
 import 'package:flutter/material.dart';
 import '../../services/vault_service.dart';
-import '../../models/vault_item.dart';
 import '../../widgets/common/glass_panel.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../widgets/common/password_strength_bar.dart';
 import '../../widgets/vault/icon_selector.dart';
 import '../../l10n/app_localizations.dart';
 
-class EditVaultItemPage extends StatefulWidget {
-  final VaultItem item;
-  const EditVaultItemPage({super.key, required this.item});
+class AddVaultItemPage extends StatefulWidget {
+  const AddVaultItemPage({super.key});
 
   @override
-  State<EditVaultItemPage> createState() => _EditVaultItemPageState();
+  State<AddVaultItemPage> createState() => _AddVaultItemPageState();
 }
 
-class _EditVaultItemPageState extends State<EditVaultItemPage> {
-  late final TextEditingController _labelCtrl;
-  late final TextEditingController _loginCtrl;
-  late final TextEditingController _passwordCtrl;
-  late final TextEditingController _notesCtrl;
-  late final TextEditingController _urlCtrl;
-  late String _selectedIcon;
-  bool _showPassword = false;
-  bool _saving       = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _labelCtrl    = TextEditingController(text: widget.item.label);
-    _loginCtrl    = TextEditingController(text: widget.item.login);
-    _passwordCtrl = TextEditingController(text: widget.item.password);
-    _notesCtrl    = TextEditingController(text: widget.item.notes);
-    _urlCtrl      = TextEditingController(text: widget.item.url);
-    _selectedIcon = widget.item.icon;
-  }
+class _AddVaultItemPageState extends State<AddVaultItemPage> {
+  final _labelCtrl    = TextEditingController();
+  final _loginCtrl    = TextEditingController();
+  final _passwordCtrl = TextEditingController();
+  final _notesCtrl    = TextEditingController();
+  final _urlCtrl      = TextEditingController();
+  String _selectedIcon = 'lock';
+  bool _showPassword   = false;
+  bool _saving         = false;
 
   @override
   void dispose() {
@@ -59,8 +46,7 @@ class _EditVaultItemPageState extends State<EditVaultItemPage> {
 
     setState(() => _saving = true);
     try {
-      await VaultService.updateOnServer(
-        id:       widget.item.id,
+      await VaultService.addToServer(
         label:    _labelCtrl.text.trim(),
         login:    _loginCtrl.text.trim(),
         password: _passwordCtrl.text,
@@ -69,8 +55,8 @@ class _EditVaultItemPageState extends State<EditVaultItemPage> {
         url:      _urlCtrl.text.trim(),
       );
       if (!mounted) return;
-      _snack(l.successModified);
-      Navigator.pop(context);
+      _snack(l.successAdded);
+      Navigator.pop(context, true);
     } catch (e) {
       if (mounted) _snack('$e');
     } finally {
@@ -89,7 +75,7 @@ class _EditVaultItemPageState extends State<EditVaultItemPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: NeonText(text: l.titleEdit, fontSize: 20, color: accent, glow: true),
+        title: NeonText(text: l.titleAdd, fontSize: 20, color: accent, glow: true),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -189,8 +175,8 @@ class _EditVaultItemPageState extends State<EditVaultItemPage> {
                       width: 18, height: 18,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Icon(Icons.save),
-              label: Text(_saving ? l.btnSaving : l.btnSave),
+                  : const Icon(Icons.add),
+              label: Text(_saving ? l.btnAdding : l.btnAddToVault),
             ),
           ],
         ),

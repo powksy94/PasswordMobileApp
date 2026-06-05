@@ -3,6 +3,7 @@ import '../../services/auth_service.dart';
 import '../../services/biometric_service.dart';
 import '../../services/fcm_service.dart';
 import '../../widgets/auth/lock_screen_panel.dart';
+import '../../l10n/app_localizations.dart';
 
 class LockScreen extends StatefulWidget {
   const LockScreen({super.key});
@@ -48,8 +49,7 @@ class _LockScreenState extends State<LockScreen> {
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Clé biométrique introuvable — entrez le mot de passe maître')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.errorBiometricKey)),
       );
     }
   }
@@ -69,7 +69,7 @@ class _LockScreenState extends State<LockScreen> {
     } else {
       _passwordCtrl.clear();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mot de passe maître incorrect')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.errorWrongMasterPassword)),
       );
     }
   }

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../generator/password_generator_page.dart';
 import '../../services/vault_service.dart';
 import '../../models/vault_item.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../widgets/vault/vault_item_card.dart';
 import '../../widgets/vault/offline_banner.dart';
 import '../../widgets/vault/vault_search_bar.dart';
+import '../../l10n/app_localizations.dart';
+import 'add_vault_item_page.dart';
 import 'edit_vault_item_page.dart';
 import 'vault_export_handler.dart';
 import 'vault_import_handler.dart';
@@ -18,7 +19,6 @@ class VaultPage extends StatefulWidget {
   State<VaultPage> createState() => VaultPageState();
 }
 
-// State public → accessible via GlobalKey depuis HomePage
 class VaultPageState extends State<VaultPage> {
   List<VaultItem> _items     = [];
   bool            _fromCache = false;
@@ -65,7 +65,7 @@ class VaultPageState extends State<VaultPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erreur chargement : $e')),
+          SnackBar(content: Text('$e')),
         );
       }
     }
@@ -83,45 +83,31 @@ class VaultPageState extends State<VaultPage> {
 
   Future<void> openAddPassword() async {
     if (!mounted) return;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
-    await Navigator.push(
+    final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(
-        builder: (_) => Scaffold(
-          appBar: AppBar(
-            title: NeonText(
-              text: 'Ajouter un mot de passe',
-              fontSize: 18,
-              color: accent,
-              glow: true,
-            ),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-          ),
-          body: PasswordGeneratorPage(onVaultUpdated: loadVault),
-        ),
-      ),
+      MaterialPageRoute(builder: (_) => const AddVaultItemPage()),
     );
+    if (result == true) await loadVault();
   }
 
   // ── Actions internes ──────────────────────────────────────────────────────
 
   Future<void> _deleteItem(String id) async {
+    final l = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
-        title:   const Text('Supprimer'),
-        content: const Text('Supprimer cet élément définitivement ?'),
+        title:   Text(l.dialogDeleteTitle),
+        content: Text(l.dialogDeleteContent),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Annuler'),
+            child: Text(l.btnCancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
-            child: const Text('Supprimer'),
+            child: Text(l.btnDelete),
           ),
         ],
       ),
@@ -132,13 +118,14 @@ class VaultPageState extends State<VaultPage> {
       await VaultService.deleteFromServer(id);
       await loadVault();
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Item supprimé')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.snackItemDeleted)),
+        );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Erreur suppression : $e')));
+            .showSnackBar(SnackBar(content: Text('$e')));
       }
     }
   }
@@ -146,8 +133,9 @@ class VaultPageState extends State<VaultPage> {
   void _copyToClipboard(String text, String label) async {
     await Clipboard.setData(ClipboardData(text: text));
     if (!mounted) return;
+    final l = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$label copié — effacé dans 30 s')),
+      SnackBar(content: Text('$label — ${l.snackCopied}')),
     );
     Future.delayed(const Duration(seconds: 30), () async {
       final data = await Clipboard.getData('text/plain');
@@ -169,6 +157,7 @@ class VaultPageState extends State<VaultPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l      = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
@@ -198,7 +187,9 @@ class VaultPageState extends State<VaultPage> {
             child: _filtered.isEmpty
                 ? Center(
                     child: NeonText(
-                      text:     _searchQuery.isEmpty ? 'Coffre vide' : 'Aucun résultat',
+                      text:     _searchQuery.isEmpty
+                          ? l.vaultEmpty
+                          : l.vaultNoResults,
                       fontSize: 20,
                       color:    accent,
                       glow:     true,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../common/glass_panel.dart';
 import '../common/neon_text.dart';
+import '../../l10n/app_localizations.dart';
 
 class LockScreenPanel extends StatelessWidget {
   final bool                  biometricAvailable;
@@ -44,10 +45,10 @@ class LockScreenPanel extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           NeonText(
-            text: 'Vault verrouillé', fontSize: 24, color: accent, glow: true),
+            text: AppLocalizations.of(context)!.lockScreenTitle, fontSize: 24, color: accent, glow: true),
           const SizedBox(height: 8),
           Text(
-            'Session expirée après inactivité.',
+            AppLocalizations.of(context)!.sessionExpiredInfo,
             style: TextStyle(
               color:    isDark ? Colors.white54 : Colors.black45,
               fontSize: 13,
@@ -63,7 +64,7 @@ class LockScreenPanel extends StatelessWidget {
                 onPressed: onBiometric,
                 icon:  Icon(Icons.fingerprint, color: accent),
                 label: Text(
-                  'Déverrouiller avec biométrie',
+                  AppLocalizations.of(context)!.biometricUnlock,
                   style: TextStyle(color: accent),
                 ),
                 style: OutlinedButton.styleFrom(
@@ -74,7 +75,7 @@ class LockScreenPanel extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              'ou entrez votre mot de passe maître',
+              AppLocalizations.of(context)!.lockScreenOrPassword,
               style: TextStyle(
                 color:    isDark ? Colors.white38 : Colors.black38,
                 fontSize: 12,
@@ -88,7 +89,7 @@ class LockScreenPanel extends StatelessWidget {
             obscureText: !showPassword,
             onSubmitted: (_) => onUnlock(),
             decoration: InputDecoration(
-              labelText:  'Mot de passe maître',
+              labelText:  AppLocalizations.of(context)!.labelMasterPassword,
               prefixIcon: const Icon(Icons.vpn_key_outlined),
               suffixIcon: IconButton(
                 icon: Icon(
@@ -111,14 +112,14 @@ class LockScreenPanel extends StatelessWidget {
                       width:  18,
                       child:  CircularProgressIndicator(strokeWidth: 2),
                     )
-                  : const Text('Déverrouiller'),
+                  : Text(AppLocalizations.of(context)!.btnUnlock),
             ),
           ),
           const SizedBox(height: 12),
           TextButton(
             onPressed: onLogout,
             child: Text(
-              'Se déconnecter',
+              AppLocalizations.of(context)!.btnLogout,
               style: TextStyle(
                 color:    isDark ? Colors.white38 : Colors.black38,
                 fontSize: 12,

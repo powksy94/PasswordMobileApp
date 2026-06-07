@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/auth_service.dart';
 import '../../services/biometric_service.dart';
+import '../../services/settings_service.dart';
 import '../../services/fcm_service.dart';
 import '../../services/role_provider.dart';
 import '../../utils/api_error.dart';
@@ -51,8 +52,9 @@ class _LoginPageState extends State<LoginPage>
   }
 
   Future<void> _checkBiometricAvailability() async {
+    final enabled      = await SettingsService.getBiometricEnabled();
     final hasSession   = await AuthService.hasLoggedOutSession();
-    final bioAvailable = hasSession && await BiometricService.isAvailable();
+    final bioAvailable = enabled && hasSession && await BiometricService.isAvailable();
     if (mounted) setState(() => _showBiometric = bioAvailable);
   }
 

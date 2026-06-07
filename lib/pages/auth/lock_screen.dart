@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../services/auth_service.dart';
 import '../../services/biometric_service.dart';
+import '../../services/settings_service.dart';
 import '../../services/fcm_service.dart';
 import '../../widgets/auth/lock_screen_panel.dart';
 import '../../l10n/app_localizations.dart';
@@ -31,7 +32,8 @@ class _LockScreenState extends State<LockScreen> {
   }
 
   Future<void> _initBiometric() async {
-    final available = await BiometricService.isAvailable();
+    final enabled   = await SettingsService.getBiometricEnabled();
+    final available = enabled && await BiometricService.isAvailable();
     if (!mounted) return;
     setState(() => _biometricAvailable = available);
     if (available) _unlockBiometric();

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter/services.dart';
 import '../../services/password_generator.dart';
 import '../../services/vault_service.dart';
+import '../../services/clipboard_service.dart';
 import '../../widgets/common/password_strength_bar.dart';
 import '../../widgets/generator/generated_password_display.dart';
 import '../../widgets/generator/generator_controls.dart';
@@ -111,19 +111,13 @@ class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
     }
   }
 
-  void _copyPassword() {
+  void _copyPassword() async {
     if (password.isEmpty) return;
-    final copied = password;
-    Clipboard.setData(ClipboardData(text: copied));
+    await ClipboardService.copyAndScheduleClear(password);
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(AppLocalizations.of(context)!.snackCopied)),
     );
-    Future.delayed(const Duration(seconds: 30), () async {
-      final data = await Clipboard.getData('text/plain');
-      if (data?.text == copied) {
-        await Clipboard.setData(const ClipboardData(text: ''));
-      }
-    });
   }
 
   // ── Build — pas de Scaffold (géré par HomePage) ──────────────────────────

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../services/vault_service.dart';
 import '../../models/vault_item.dart';
-import '../../widgets/common/glass_panel.dart';
 import '../../widgets/common/neon_text.dart';
-import '../../widgets/common/password_strength_bar.dart';
-import '../../widgets/vault/icon_selector.dart';
+import '../../widgets/vault/vault_item_form.dart';
 import '../../l10n/app_localizations.dart';
 
 class EditVaultItemPage extends StatefulWidget {
@@ -106,80 +104,18 @@ class _EditVaultItemPageState extends State<EditVaultItemPage> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            GlassPanel(
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: _labelCtrl,
-                    decoration: InputDecoration(
-                      labelText:  l.itemLabel,
-                      prefixIcon: const Icon(Icons.label_outline),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _loginCtrl,
-                    decoration: InputDecoration(
-                      labelText:  l.itemLogin,
-                      prefixIcon: const Icon(Icons.person_outline),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller:  _passwordCtrl,
-                    obscureText: !_showPassword,
-                    onChanged:   (_) => setState(() {}),
-                    decoration: InputDecoration(
-                      labelText:  l.itemPassword,
-                      prefixIcon: const Icon(Icons.lock_outline),
-                      suffixIcon: IconButton(
-                        icon: Icon(_showPassword
-                            ? Icons.visibility_off
-                            : Icons.visibility),
-                        onPressed: () =>
-                            setState(() => _showPassword = !_showPassword),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  PasswordStrengthBar(password: _passwordCtrl.text),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller:   _urlCtrl,
-                    keyboardType: TextInputType.url,
-                    decoration: InputDecoration(
-                      labelText:  l.itemWebsite,
-                      hintText:   l.itemWebsiteHint,
-                      prefixIcon: const Icon(Icons.language),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _notesCtrl,
-                    maxLines:   3,
-                    decoration: InputDecoration(
-                      labelText:          l.itemNotes,
-                      prefixIcon:         const Icon(Icons.notes),
-                      alignLabelWithHint: true,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    l.itemIcon,
-                    style: TextStyle(
-                      color:    isDark ? Colors.white70 : Colors.black54,
-                      fontSize: 13,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  IconSelector(
-                    selected:  _selectedIcon,
-                    onChanged: (v) => setState(() => _selectedIcon = v),
-                  ),
-                ],
-              ),
+            VaultItemForm(
+              labelCtrl:    _labelCtrl,
+              loginCtrl:    _loginCtrl,
+              passwordCtrl: _passwordCtrl,
+              urlCtrl:      _urlCtrl,
+              notesCtrl:    _notesCtrl,
+              selectedIcon: _selectedIcon,
+              onIconChanged: (v) => setState(() => _selectedIcon = v),
+              showPassword:  _showPassword,
+              onTogglePasswordVisibility: () =>
+                  setState(() => _showPassword = !_showPassword),
+              onPasswordChanged: () => setState(() {}),
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(

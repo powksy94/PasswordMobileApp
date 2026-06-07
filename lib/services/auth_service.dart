@@ -182,6 +182,19 @@ class AuthService {
     return true;
   }
 
+  /// Active [key] comme nouvelle master key et la persiste (changement de mot de passe maître).
+  static Future<void> commitNewMasterKey(Uint8List key) async {
+    _masterKey = key;
+    await _persistKeyArtifacts(key);
+  }
+
+  /// Dérive la clé qu'aurait [password] avec le sel du compte courant (sans l'activer).
+  static Future<Uint8List?> deriveKeyFromMasterPassword(String password) async {
+    final saltBase64 = await _storage.read(key: _keySalt);
+    if (saltBase64 == null) return null;
+    return CryptoService.deriveKey(password, saltBase64);
+  }
+
   // ── Helpers ───────────────────────────────────────────────────────────────────
 
   static Future<String?> getToken()          => _storage.read(key: _keyToken);

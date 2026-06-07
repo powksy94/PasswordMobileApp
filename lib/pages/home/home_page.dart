@@ -5,8 +5,7 @@ import '../vault/password_health_page.dart';
 import '../generator/password_generator_page.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../services/role_provider.dart';
-import '../../services/auth_service.dart';
-import '../../services/autofill_cache_service.dart';
+import '../../services/logout_service.dart';
 import '../../services/fcm_service.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -70,36 +69,6 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  Future<void> _logout() async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (_) {
-        final l = AppLocalizations.of(context)!;
-        return AlertDialog(
-          title:   Text(l.dialogLogoutTitle),
-          content: Text(l.dialogLogoutContent),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context, false),
-              child: Text(l.btnCancel),
-            ),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context, true),
-              child: Text(l.btnLogout),
-            ),
-          ],
-        );
-      },
-    );
-    if (confirmed != true || !mounted) return;
-
-    await AutofillCacheService.clear();
-    await AuthService.logout();
-    if (!mounted) return;
-    Provider.of<RoleProvider>(context, listen: false).deactivate();
-    Navigator.pushReplacementNamed(context, '/login');
-  }
-
   @override
   Widget build(BuildContext context) {
     final isDark = widget.currentThemeMode == ThemeMode.dark;
@@ -120,23 +89,12 @@ class _HomePageState extends State<HomePage> {
           actions: [
 
             // ── Actions spécifiques à chaque onglet ───────────────────────
-            if (_index == 1) ...[
-              IconButton(
-                icon:    const Icon(Icons.download_rounded),
-                tooltip: l.tooltipImport,
-                onPressed: () => _vaultKey.currentState?.openImport(),
-              ),
-              IconButton(
-                icon:    const Icon(Icons.upload_file),
-                tooltip: l.tooltipExport,
-                onPressed: () => _vaultKey.currentState?.openExport(),
-              ),
+            if (_index == 1)
               IconButton(
                 icon:    const Icon(Icons.add),
                 tooltip: l.tooltipAddPassword,
                 onPressed: () => _vaultKey.currentState?.openAddPassword(),
               ),
-            ],
             if (_index == 2)
               IconButton(
                 icon:    Icon(Icons.refresh, color: accent),
@@ -163,7 +121,7 @@ class _HomePageState extends State<HomePage> {
               icon: Icon(Icons.more_vert, color: accent),
               onSelected: (v) {
                 if (v == 'settings') Navigator.pushNamed(context, '/settings');
-                if (v == 'logout')   _logout();
+                if (v == 'logout')   LogoutService.confirmAndLogout(context);
               },
               itemBuilder: (_) => [
                 PopupMenuItem(

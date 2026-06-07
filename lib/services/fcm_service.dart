@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'api_service.dart';
 import 'auth_service.dart';
-import 'biometric_service.dart';
+import '../widgets/notifications/approval_dialog.dart';
 
 /// Gère Firebase Cloud Messaging :
 /// - Enregistrement du token FCM
@@ -93,107 +93,18 @@ class FcmService {
 
     switch (type) {
       case 'admin_approval_request':
-        _showDialog(context, sessionId, _DialogType.adminLogin);
+        _showDialog(context, sessionId, ApprovalDialogType.adminLogin);
       case 'admin_vault_auth':
-        _showDialog(context, sessionId, _DialogType.vaultAccess);
+        _showDialog(context, sessionId, ApprovalDialogType.vaultAccess);
     }
   }
 
   static void _showDialog(
-      BuildContext context, String sessionId, _DialogType type) {
+      BuildContext context, String sessionId, ApprovalDialogType type) {
     showDialog(
       context:            context,
       barrierDismissible: false,
-      builder: (_) => _ApprovalDialog(sessionId: sessionId, type: type),
-    );
-  }
-}
-
-// ── Type de dialog ────────────────────────────────────────────────────────────
-
-enum _DialogType { adminLogin, vaultAccess }
-
-// ── Widget dialog générique ───────────────────────────────────────────────────
-
-class _ApprovalDialog extends StatefulWidget {
-  final String      sessionId;
-  final _DialogType type;
-  const _ApprovalDialog({required this.sessionId, required this.type});
-
-  @override
-  State<_ApprovalDialog> createState() => _ApprovalDialogState();
-}
-
-class _ApprovalDialogState extends State<_ApprovalDialog> {
-  bool _loading = false;
-
-  bool get _isVault => widget.type == _DialogType.vaultAccess;
-
-  Future<void> _respond(bool approved) async {
-    if (approved) {
-      final reason = _isVault
-          ? 'Confirmez votre identité pour accéder au vault admin'
-          : 'Confirmez votre identité pour approuver la connexion admin';
-
-      final ok = await BiometricService.authenticate(reason: reason);
-      if (!ok) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Empreinte non reconnue — approbation annulée')),
-          );
-        }
-        return;
-      }
-    }
-
-    setState(() => _loading = true);
-    try {
-      final token = await AuthService.getToken();
-      if (token == null) return;
-      if (_isVault) {
-        await ApiService().respondVaultAuth(token, widget.sessionId, approved);
-      } else {
-        await ApiService().respondAdminSession(token, widget.sessionId, approved);
-      }
-    } catch (_) {}
-    if (mounted) Navigator.pop(context);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Row(
-        children: [
-          Icon(
-            _isVault ? Icons.lock_open_rounded : Icons.admin_panel_settings,
-            color: _isVault ? Colors.cyanAccent : Colors.orangeAccent,
-          ),
-          const SizedBox(width: 10),
-          Text(_isVault ? 'Accès vault admin' : 'Connexion admin'),
-        ],
-      ),
-      content: Text(
-        _isVault
-            ? 'Une demande d\'accès au vault admin vient d\'être effectuée.\n\n'
-              'Approuvez pour déverrouiller le vault.'
-            : 'Une tentative de connexion au panneau d\'administration vient d\'être effectuée.\n\n'
-              'Êtes-vous à l\'origine de cette connexion ?',
-      ),
-      actions: [
-        TextButton(
-          onPressed: _loading ? null : () => _respond(false),
-          child: const Text('Refuser', style: TextStyle(color: Colors.redAccent)),
-        ),
-        ElevatedButton(
-          onPressed: _loading ? null : () => _respond(true),
-          child: _loading
-              ? const SizedBox(
-                  height: 16, width: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Approuver'),
-        ),
-      ],
+      builder: (_) => ApprovalDialog(sessionId: sessionId, type: type),
     );
   }
 }

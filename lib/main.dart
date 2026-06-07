@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:screen_protector/screen_protector.dart';
 
 // Pages
 import 'pages/auth/login_page.dart';
@@ -24,6 +25,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'services/role_provider.dart';
 import 'services/auth_service.dart';
 import 'services/autofill_cache_service.dart';
+import 'services/settings_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,15 +50,32 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   ThemeMode themeMode = ThemeMode.dark;
   DateTime? _pausedAt;
-
-  static const _lockTimeout = Duration(minutes: 5);
+  Duration? _lockTimeout;
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _loadTimeout();
+    _applyMaskInBackground();
   }
+
+  Future<void> _loadTimeout() async {
+    final minutes = await SettingsService.getLockTimeout();
+    if (mounted) setState(() => _lockTimeout = SettingsService.toDuration(minutes));
+  }
+
+  Future<void> _applyMaskInBackground() async {
+    final enabled = await SettingsService.getMaskInBackground();
+    if (enabled) {
+      await ScreenProtector.protectDataLeakageOn();
+    } else {
+      await ScreenProtector.protectDataLeakageOff();
+    }
+  }
+
+  void reloadTimeout() => _loadTimeout();
 
   @override
   void dispose() {
@@ -71,9 +90,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     } else if (state == AppLifecycleState.resumed) {
       final paused = _pausedAt;
       _pausedAt = null;
-      if (paused != null && AuthService.getMasterKey() != null) {
+      _loadTimeout();
+      final timeout = _lockTimeout;
+      if (paused != null && timeout != null && AuthService.getMasterKey() != null) {
         final elapsed = DateTime.now().difference(paused);
-        if (elapsed > _lockTimeout) {
+        if (elapsed > timeout) {
           AuthService.clearMasterKey();
           AutofillCacheService.clear().ignore();
           _navigatorKey.currentState

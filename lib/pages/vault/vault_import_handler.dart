@@ -3,16 +3,18 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import '../../models/vault_item.dart';
 import '../../services/vault_import_service.dart';
-import '../../widgets/common/glass_panel.dart';
+import '../../widgets/vault/import_preview_dialog.dart';
 import '../../l10n/app_localizations.dart';
 
 /// Orchestre le flux d'import : sélection fichier → aperçu → confirmation → import.
 Future<bool> showVaultImportDialog(BuildContext context) async {
+  final l = AppLocalizations.of(context)!;
+
   // 1. Sélection du fichier (withData pour Android scoped storage)
   final result = await FilePicker.platform.pickFiles(
     type:              FileType.custom,
     allowedExtensions: ['enc', 'json', 'csv'],
-    dialogTitle:       'Sélectionner un fichier vault (.enc, .json, .csv)',
+    dialogTitle:       l.dialogTitleSelectVaultFile,
     withData:          true,
   );
   if (result == null) return false;
@@ -30,7 +32,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
     } else {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Impossible de lire le fichier.')),
+          SnackBar(content: Text(l.errorCannotReadFile)),
         );
       }
       return false;
@@ -38,7 +40,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lecture échouée : $e')),
+        SnackBar(content: Text('${l.errorFileReadFailed}: $e')),
       );
     }
     return false;
@@ -49,11 +51,15 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
   // 2. Parsing et déchiffrement
   List<VaultItem> items;
   try {
-    items = await VaultImportService.parseContent(content, fileName);
+    items = await VaultImportService.parseContent(
+      content,
+      fileName,
+      csvFallbackLabelPrefix: l.labelImportFallbackPrefix,
+    );
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString()), duration: const Duration(seconds: 6)),
+        SnackBar(content: Text(_importErrorMessage(l, e)), duration: const Duration(seconds: 6)),
       );
     }
     return false;
@@ -62,7 +68,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
   if (!context.mounted) return false;
   if (items.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Le fichier ne contient aucun item.')),
+      SnackBar(content: Text(l.errorImportFileEmpty)),
     );
     return false;
   }
@@ -70,7 +76,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
   // 3. Aperçu et confirmation
   final confirmed = await showDialog<bool>(
     context: context,
-    builder: (_) => _ImportPreviewDialog(items: items),
+    builder: (_) => ImportPreviewDialog(items: items),
   );
   if (confirmed != true || !context.mounted) return false;
 
@@ -79,93 +85,28 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
     final count = await VaultImportService.importItems(items);
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('✅ $count mot(s) de passe importé(s)')),
+        SnackBar(content: Text('✅ $count ${l.labelPasswordsImported}')),
       );
     }
     return true;
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erreur import : $e')),
+        SnackBar(content: Text('${l.errorImportFailed}: $e')),
       );
     }
     return false;
   }
 }
 
-// ── Dialog d'aperçu ────────────────────────────────────────────────────────────
-
-class _ImportPreviewDialog extends StatelessWidget {
-  final List<VaultItem> items;
-  const _ImportPreviewDialog({required this.items});
-
-  static const _previewMax = 5;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark   = Theme.of(context).brightness == Brightness.dark;
-    final accent   = isDark ? Colors.cyanAccent : Colors.blueAccent;
-    final preview  = items.take(_previewMax).toList();
-    final overflow = items.length - _previewMax;
-
-    return AlertDialog(
-      title: Text('${items.length} mot(s) de passe trouvé(s)'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Les items suivants seront ajoutés à votre vault. '
-            'Les éventuels doublons seront conservés.',
-            style: TextStyle(
-              fontSize: 13,
-              color: isDark ? Colors.white54 : Colors.black54,
-            ),
-          ),
-          const SizedBox(height: 12),
-          GlassPanel(
-            width:   double.infinity,
-            padding: EdgeInsets.zero,
-            child: Column(
-              children: [
-                ...preview.map((i) => ListTile(
-                      dense:       true,
-                      leading:     Icon(Icons.lock_outline, color: accent, size: 18),
-                      title:       Text(i.label,
-                          style: TextStyle(
-                            color: isDark ? Colors.white : Colors.black87,
-                          )),
-                      subtitle: i.login.isNotEmpty
-                          ? Text(i.login,
-                              style: const TextStyle(fontSize: 11))
-                          : null,
-                    )),
-                if (overflow > 0)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 10),
-                    child: Text(
-                      '… et $overflow autre(s)',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: isDark ? Colors.white38 : Colors.black38,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: Text(AppLocalizations.of(context)!.btnCancel),
-        ),
-        ElevatedButton(
-          onPressed: () => Navigator.pop(context, true),
-          child: const Text('Importer'),
-        ),
-      ],
-    );
+/// Traduit une exception de [VaultImportService.parseContent] en message localisé.
+String _importErrorMessage(AppLocalizations l, Object e) {
+  if (e is UnsupportedImportFormatException) return l.errorUnsupportedImportFormat;
+  if (e is ImportDecryptionFailedException)  return l.errorImportDecryptionFailed;
+  if (e is InvalidCsvFileException)          return l.errorInvalidCsvFile;
+  if (e is CsvPasswordColumnMissingException) {
+    return '${l.errorCsvPasswordColumnMissing}\n${l.labelDetectedColumns}: ${e.headers.join(', ')}';
   }
+  if (e is EmptyCsvImportException) return l.errorEmptyCsvImport;
+  return e.toString();
 }

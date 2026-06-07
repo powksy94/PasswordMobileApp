@@ -39,6 +39,17 @@ class ApiService {
     );
   }
 
+  /// Remplace en une seule transaction tout-ou-rien le contenu chiffré de tous
+  /// les items listés (changement du mot de passe maître). [items] doit contenir,
+  /// pour chaque entrée, au minimum `id`, `title` et `password` déjà chiffrés
+  /// avec la nouvelle clé.
+  Future<void> reencryptVault(String token, List<Map<String, dynamic>> items) async {
+    await _dio.put('/vault/reencrypt-all',
+      data: {'items': items},
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
   Future<void> deleteItem(String token, String id) async {
     await _dio.delete('/vault/$id',
       options: Options(headers: {'Authorization': 'Bearer $token'}),

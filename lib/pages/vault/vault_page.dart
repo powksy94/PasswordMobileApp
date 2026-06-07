@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../services/vault_service.dart';
+import '../../services/clipboard_service.dart';
 import '../../models/vault_item.dart';
 import '../../widgets/common/neon_text.dart';
 import '../../widgets/vault/vault_item_card.dart';
@@ -9,8 +9,6 @@ import '../../widgets/vault/vault_search_bar.dart';
 import '../../l10n/app_localizations.dart';
 import 'add_vault_item_page.dart';
 import 'edit_vault_item_page.dart';
-import 'vault_export_handler.dart';
-import 'vault_import_handler.dart';
 
 class VaultPage extends StatefulWidget {
   const VaultPage({super.key});
@@ -30,13 +28,17 @@ class VaultPageState extends State<VaultPage> {
   void initState() {
     super.initState();
     loadVault();
+    VaultService.vaultVersion.addListener(_onVaultVersionChanged);
   }
 
   @override
   void dispose() {
+    VaultService.vaultVersion.removeListener(_onVaultVersionChanged);
     _searchController.dispose();
     super.dispose();
   }
+
+  void _onVaultVersionChanged() => loadVault();
 
   List<VaultItem> get _filtered {
     if (_searchQuery.isEmpty) return _items;
@@ -69,16 +71,6 @@ class VaultPageState extends State<VaultPage> {
         );
       }
     }
-  }
-
-  void openExport() {
-    if (mounted) showVaultExportDialog(context, _items);
-  }
-
-  Future<void> openImport() async {
-    if (!mounted) return;
-    final imported = await showVaultImportDialog(context);
-    if (imported) await loadVault();
   }
 
   Future<void> openAddPassword() async {
@@ -131,18 +123,12 @@ class VaultPageState extends State<VaultPage> {
   }
 
   void _copyToClipboard(String text, String label) async {
-    await Clipboard.setData(ClipboardData(text: text));
+    await ClipboardService.copyAndScheduleClear(text);
     if (!mounted) return;
     final l = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('$label — ${l.snackCopied}')),
     );
-    Future.delayed(const Duration(seconds: 30), () async {
-      final data = await Clipboard.getData('text/plain');
-      if (data?.text == text) {
-        await Clipboard.setData(const ClipboardData(text: ''));
-      }
-    });
   }
 
   Future<void> _openEdit(VaultItem item) async {

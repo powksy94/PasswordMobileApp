@@ -317,4 +317,264 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get lockScreenOrPassword => 'ou entrez votre mot de passe maître';
+
+  @override
+  String get titleLockTimeout => 'Verrouillage automatique';
+
+  @override
+  String get subtitleLockTimeout => 'Verrouiller le coffre après';
+
+  @override
+  String get lockTimeoutNever => 'Jamais';
+
+  @override
+  String get lockTimeout1min => '1 minute';
+
+  @override
+  String get lockTimeout5min => '5 minutes';
+
+  @override
+  String get lockTimeout15min => '15 minutes';
+
+  @override
+  String get lockTimeout30min => '30 minutes';
+
+  @override
+  String get lockTimeout1h => '1 heure';
+
+  @override
+  String get titleVaultData => 'Données du coffre';
+
+  @override
+  String get titlePrivacy => 'Confidentialité';
+
+  @override
+  String get titleClipboardClear => 'Effacement du presse-papiers';
+
+  @override
+  String get subtitleClipboardClear => 'Effacer le mot de passe copié après';
+
+  @override
+  String get clipboardClear10s => '10 secondes';
+
+  @override
+  String get clipboardClear30s => '30 secondes';
+
+  @override
+  String get clipboardClear1min => '1 minute';
+
+  @override
+  String get clipboardClear2min => '2 minutes';
+
+  @override
+  String get titleBiometricToggle => 'Authentification biométrique';
+
+  @override
+  String get subtitleBiometricToggle =>
+      'Utiliser l\'empreinte digitale ou la reconnaissance faciale pour déverrouiller';
+
+  @override
+  String get titleScreenMasking => 'Masquage anti-capture d\'écran';
+
+  @override
+  String get subtitleScreenMasking =>
+      'Masquer le contenu de l\'application dans le multitâche et empêcher les captures d\'écran';
+
+  @override
+  String get titleChangeMasterPassword => 'Changer le mot de passe maître';
+
+  @override
+  String get warningChangeMasterPasswordTitle =>
+      'Action critique et irréversible';
+
+  @override
+  String get warningChangeMasterPasswordBody =>
+      'Cette opération re-chiffre l\'intégralité de votre coffre avec un nouveau mot de passe maître.\n\n⚠️ Si vous oubliez ce nouveau mot de passe, votre coffre sera définitivement irrécupérable — nous ne pouvons pas le réinitialiser.\n\nNotez-le dans un endroit sûr avant de continuer.';
+
+  @override
+  String get checkboxUnderstandRisks =>
+      'Je comprends les risques et je souhaite continuer';
+
+  @override
+  String get labelCurrentMasterPassword => 'Mot de passe maître actuel';
+
+  @override
+  String get labelNewMasterPassword => 'Nouveau mot de passe maître';
+
+  @override
+  String get labelConfirmNewMasterPassword =>
+      'Confirmer le nouveau mot de passe maître';
+
+  @override
+  String get btnChangeMasterPassword => 'Changer le mot de passe maître';
+
+  @override
+  String get progressReencrypting => 'Re-chiffrement du coffre…';
+
+  @override
+  String get successMasterPasswordChanged =>
+      'Mot de passe maître changé avec succès';
+
+  @override
+  String get errorMasterPasswordChangeFailed =>
+      'Échec du changement — votre coffre n\'a pas été modifié';
+
+  @override
+  String get titleExportDialog => 'Exporter';
+
+  @override
+  String get exportOptionBiometricTitle => 'Chiffré — biométrique';
+
+  @override
+  String get exportOptionBiometricSubtitle =>
+      'Cet appareil uniquement. Empreinte digitale ou code requis.';
+
+  @override
+  String get exportOptionPortableTitle => 'Chiffré — portable';
+
+  @override
+  String get exportOptionPortableSubtitle =>
+      'N\'importe quel appareil avec votre mot de passe maître.';
+
+  @override
+  String get exportOptionJsonTitle => 'JSON — texte brut';
+
+  @override
+  String get exportOptionJsonSubtitle =>
+      '⚠️ Mots de passe lisibles par n\'importe qui.';
+
+  @override
+  String get errorBiometricExportUnavailable =>
+      'Biométrie indisponible — utilisez l\'export portable';
+
+  @override
+  String get titlePortableExport => 'Export portable';
+
+  @override
+  String get bodyPortableExport =>
+      'Le fichier sera chiffré avec votre mot de passe maître.\n\nIl sera enregistré dans votre dossier Téléchargements.';
+
+  @override
+  String get btnExport => 'Exporter';
+
+  @override
+  String get titleJsonExport => 'Export JSON';
+
+  @override
+  String get bodyJsonExport =>
+      '⚠️ Ce fichier contiendra vos mots de passe en texte brut.\n\nIl sera enregistré dans votre dossier Téléchargements.';
+
+  @override
+  String get dialogTitleSelectVaultFile =>
+      'Sélectionner un fichier vault (.enc, .json, .csv)';
+
+  @override
+  String get errorCannotReadFile => 'Impossible de lire le fichier.';
+
+  @override
+  String get errorFileReadFailed => 'Lecture échouée';
+
+  @override
+  String get errorImportFileEmpty => 'Le fichier ne contient aucun item.';
+
+  @override
+  String get labelPasswordsImported => 'mot(s) de passe importé(s)';
+
+  @override
+  String get errorImportFailed => 'Erreur import';
+
+  @override
+  String get labelPasswordsFound => 'mot(s) de passe trouvé(s)';
+
+  @override
+  String get bodyImportPreview =>
+      'Les items suivants seront ajoutés à votre vault. Les éventuels doublons seront conservés.';
+
+  @override
+  String get labelAndMore => 'autre(s)';
+
+  @override
+  String get btnImport => 'Importer';
+
+  @override
+  String get errorUnsupportedImportFormat =>
+      'Format non supporté. Sélectionnez un fichier .enc, .json ou .csv.';
+
+  @override
+  String get errorImportDecryptionFailed =>
+      'Impossible de déchiffrer ce fichier.\n\n• Vérifiez que vous êtes connecté avec le bon compte\n• Ou que vous utilisez l\'empreinte de l\'appareil d\'origine';
+
+  @override
+  String get errorInvalidCsvFile => 'Le fichier CSV est vide ou invalide.';
+
+  @override
+  String get errorCsvPasswordColumnMissing =>
+      'Colonne \"password\" introuvable.';
+
+  @override
+  String get labelDetectedColumns => 'Colonnes détectées';
+
+  @override
+  String get errorEmptyCsvImport =>
+      'Aucun mot de passe trouvé dans le fichier CSV.';
+
+  @override
+  String get labelImportFallbackPrefix => 'Import';
+
+  @override
+  String get reasonApproveVaultAccess =>
+      'Confirmez votre identité pour accéder au vault admin';
+
+  @override
+  String get reasonApproveAdminLogin =>
+      'Confirmez votre identité pour approuver la connexion admin';
+
+  @override
+  String get errorApprovalCancelled =>
+      'Empreinte non reconnue — approbation annulée';
+
+  @override
+  String get titleVaultAdminAccess => 'Accès vault admin';
+
+  @override
+  String get titleAdminLogin => 'Connexion admin';
+
+  @override
+  String get bodyVaultAdminAccessRequest =>
+      'Une demande d\'accès au vault admin vient d\'être effectuée.\n\nApprouvez pour déverrouiller le vault.';
+
+  @override
+  String get bodyAdminLoginRequest =>
+      'Une tentative de connexion au panneau d\'administration vient d\'être effectuée.\n\nÊtes-vous à l\'origine de cette connexion ?';
+
+  @override
+  String get btnDeny => 'Refuser';
+
+  @override
+  String get btnApprove => 'Approuver';
+
+  @override
+  String get errorPrefix => 'Erreur';
+
+  @override
+  String get labelWeakPasswords => 'Mots de passe faibles';
+
+  @override
+  String get subtitleWeakPasswords => 'Score < 60 — à remplacer en priorité';
+
+  @override
+  String get labelReusedPasswords => 'Mots de passe réutilisés';
+
+  @override
+  String get labelGroupsCount => 'groupe(s)';
+
+  @override
+  String get subtitleReusedPasswords =>
+      'Le même mot de passe est utilisé sur plusieurs services';
+
+  @override
+  String get labelSameServicesPassword => 'services — même mot de passe';
+
+  @override
+  String get labelAllGood => 'Excellent ! Aucun problème détecté.';
 }

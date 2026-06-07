@@ -314,4 +314,260 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get lockScreenOrPassword => 'or enter your master password';
+
+  @override
+  String get titleLockTimeout => 'Auto-lock';
+
+  @override
+  String get subtitleLockTimeout => 'Lock vault after';
+
+  @override
+  String get lockTimeoutNever => 'Never';
+
+  @override
+  String get lockTimeout1min => '1 minute';
+
+  @override
+  String get lockTimeout5min => '5 minutes';
+
+  @override
+  String get lockTimeout15min => '15 minutes';
+
+  @override
+  String get lockTimeout30min => '30 minutes';
+
+  @override
+  String get lockTimeout1h => '1 hour';
+
+  @override
+  String get titleVaultData => 'Vault data';
+
+  @override
+  String get titlePrivacy => 'Privacy';
+
+  @override
+  String get titleClipboardClear => 'Clipboard clearing';
+
+  @override
+  String get subtitleClipboardClear => 'Clear copied password after';
+
+  @override
+  String get clipboardClear10s => '10 seconds';
+
+  @override
+  String get clipboardClear30s => '30 seconds';
+
+  @override
+  String get clipboardClear1min => '1 minute';
+
+  @override
+  String get clipboardClear2min => '2 minutes';
+
+  @override
+  String get titleBiometricToggle => 'Biometric authentication';
+
+  @override
+  String get subtitleBiometricToggle =>
+      'Use fingerprint or face recognition to unlock';
+
+  @override
+  String get titleScreenMasking => 'Screenshot protection';
+
+  @override
+  String get subtitleScreenMasking =>
+      'Hide app content in the recent apps view and prevent screenshots';
+
+  @override
+  String get titleChangeMasterPassword => 'Change master password';
+
+  @override
+  String get warningChangeMasterPasswordTitle =>
+      'Critical, irreversible action';
+
+  @override
+  String get warningChangeMasterPasswordBody =>
+      'This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable — we cannot reset it.\n\nWrite it down in a safe place before continuing.';
+
+  @override
+  String get checkboxUnderstandRisks =>
+      'I understand the risks and want to continue';
+
+  @override
+  String get labelCurrentMasterPassword => 'Current master password';
+
+  @override
+  String get labelNewMasterPassword => 'New master password';
+
+  @override
+  String get labelConfirmNewMasterPassword => 'Confirm new master password';
+
+  @override
+  String get btnChangeMasterPassword => 'Change master password';
+
+  @override
+  String get progressReencrypting => 'Re-encrypting vault…';
+
+  @override
+  String get successMasterPasswordChanged =>
+      'Master password changed successfully';
+
+  @override
+  String get errorMasterPasswordChangeFailed =>
+      'Change failed — your vault was not modified';
+
+  @override
+  String get titleExportDialog => 'Export';
+
+  @override
+  String get exportOptionBiometricTitle => 'Encrypted — biometric';
+
+  @override
+  String get exportOptionBiometricSubtitle =>
+      'This device only. Requires fingerprint or PIN.';
+
+  @override
+  String get exportOptionPortableTitle => 'Encrypted — portable';
+
+  @override
+  String get exportOptionPortableSubtitle =>
+      'Any device with your master password.';
+
+  @override
+  String get exportOptionJsonTitle => 'JSON — plaintext';
+
+  @override
+  String get exportOptionJsonSubtitle => '⚠️ Passwords readable by anyone.';
+
+  @override
+  String get errorBiometricExportUnavailable =>
+      'Biometrics unavailable — use portable export';
+
+  @override
+  String get titlePortableExport => 'Portable export';
+
+  @override
+  String get bodyPortableExport =>
+      'The file will be encrypted with your master password.\n\nIt will be saved to your Downloads folder.';
+
+  @override
+  String get btnExport => 'Export';
+
+  @override
+  String get titleJsonExport => 'JSON export';
+
+  @override
+  String get bodyJsonExport =>
+      '⚠️ This file will contain your passwords in plaintext.\n\nIt will be saved to your Downloads folder.';
+
+  @override
+  String get dialogTitleSelectVaultFile =>
+      'Select a vault file (.enc, .json, .csv)';
+
+  @override
+  String get errorCannotReadFile => 'Unable to read the file.';
+
+  @override
+  String get errorFileReadFailed => 'File read failed';
+
+  @override
+  String get errorImportFileEmpty => 'The file contains no items.';
+
+  @override
+  String get labelPasswordsImported => 'password(s) imported';
+
+  @override
+  String get errorImportFailed => 'Import error';
+
+  @override
+  String get labelPasswordsFound => 'password(s) found';
+
+  @override
+  String get bodyImportPreview =>
+      'The following items will be added to your vault. Any duplicates will be kept.';
+
+  @override
+  String get labelAndMore => 'more';
+
+  @override
+  String get btnImport => 'Import';
+
+  @override
+  String get errorUnsupportedImportFormat =>
+      'Unsupported format. Select a .enc, .json or .csv file.';
+
+  @override
+  String get errorImportDecryptionFailed =>
+      'Unable to decrypt this file.\n\n• Check that you\'re signed in with the right account\n• Or that you\'re using the original device\'s fingerprint';
+
+  @override
+  String get errorInvalidCsvFile => 'The CSV file is empty or invalid.';
+
+  @override
+  String get errorCsvPasswordColumnMissing => 'Column \"password\" not found.';
+
+  @override
+  String get labelDetectedColumns => 'Detected columns';
+
+  @override
+  String get errorEmptyCsvImport => 'No passwords found in the CSV file.';
+
+  @override
+  String get labelImportFallbackPrefix => 'Import';
+
+  @override
+  String get reasonApproveVaultAccess =>
+      'Confirm your identity to access the admin vault';
+
+  @override
+  String get reasonApproveAdminLogin =>
+      'Confirm your identity to approve the admin login';
+
+  @override
+  String get errorApprovalCancelled =>
+      'Fingerprint not recognized — approval cancelled';
+
+  @override
+  String get titleVaultAdminAccess => 'Admin vault access';
+
+  @override
+  String get titleAdminLogin => 'Admin login';
+
+  @override
+  String get bodyVaultAdminAccessRequest =>
+      'A request to access the admin vault has just been made.\n\nApprove to unlock the vault.';
+
+  @override
+  String get bodyAdminLoginRequest =>
+      'A login attempt to the admin panel has just been made.\n\nDid you initiate this login?';
+
+  @override
+  String get btnDeny => 'Deny';
+
+  @override
+  String get btnApprove => 'Approve';
+
+  @override
+  String get errorPrefix => 'Error';
+
+  @override
+  String get labelWeakPasswords => 'Weak passwords';
+
+  @override
+  String get subtitleWeakPasswords => 'Score < 60 — replace as a priority';
+
+  @override
+  String get labelReusedPasswords => 'Reused passwords';
+
+  @override
+  String get labelGroupsCount => 'group(s)';
+
+  @override
+  String get subtitleReusedPasswords =>
+      'The same password is used across multiple services';
+
+  @override
+  String get labelSameServicesPassword => 'services — same password';
+
+  @override
+  String get labelAllGood => 'Excellent! No issues detected.';
 }

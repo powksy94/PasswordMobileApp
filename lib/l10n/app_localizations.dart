@@ -699,6 +699,474 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'or enter your master password'**
   String get lockScreenOrPassword;
+
+  /// No description provided for @titleLockTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-lock'**
+  String get titleLockTimeout;
+
+  /// No description provided for @subtitleLockTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock vault after'**
+  String get subtitleLockTimeout;
+
+  /// No description provided for @lockTimeoutNever.
+  ///
+  /// In en, this message translates to:
+  /// **'Never'**
+  String get lockTimeoutNever;
+
+  /// No description provided for @lockTimeout1min.
+  ///
+  /// In en, this message translates to:
+  /// **'1 minute'**
+  String get lockTimeout1min;
+
+  /// No description provided for @lockTimeout5min.
+  ///
+  /// In en, this message translates to:
+  /// **'5 minutes'**
+  String get lockTimeout5min;
+
+  /// No description provided for @lockTimeout15min.
+  ///
+  /// In en, this message translates to:
+  /// **'15 minutes'**
+  String get lockTimeout15min;
+
+  /// No description provided for @lockTimeout30min.
+  ///
+  /// In en, this message translates to:
+  /// **'30 minutes'**
+  String get lockTimeout30min;
+
+  /// No description provided for @lockTimeout1h.
+  ///
+  /// In en, this message translates to:
+  /// **'1 hour'**
+  String get lockTimeout1h;
+
+  /// No description provided for @titleVaultData.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault data'**
+  String get titleVaultData;
+
+  /// No description provided for @titlePrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy'**
+  String get titlePrivacy;
+
+  /// No description provided for @titleClipboardClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clipboard clearing'**
+  String get titleClipboardClear;
+
+  /// No description provided for @subtitleClipboardClear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear copied password after'**
+  String get subtitleClipboardClear;
+
+  /// No description provided for @clipboardClear10s.
+  ///
+  /// In en, this message translates to:
+  /// **'10 seconds'**
+  String get clipboardClear10s;
+
+  /// No description provided for @clipboardClear30s.
+  ///
+  /// In en, this message translates to:
+  /// **'30 seconds'**
+  String get clipboardClear30s;
+
+  /// No description provided for @clipboardClear1min.
+  ///
+  /// In en, this message translates to:
+  /// **'1 minute'**
+  String get clipboardClear1min;
+
+  /// No description provided for @clipboardClear2min.
+  ///
+  /// In en, this message translates to:
+  /// **'2 minutes'**
+  String get clipboardClear2min;
+
+  /// No description provided for @titleBiometricToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometric authentication'**
+  String get titleBiometricToggle;
+
+  /// No description provided for @subtitleBiometricToggle.
+  ///
+  /// In en, this message translates to:
+  /// **'Use fingerprint or face recognition to unlock'**
+  String get subtitleBiometricToggle;
+
+  /// No description provided for @titleScreenMasking.
+  ///
+  /// In en, this message translates to:
+  /// **'Screenshot protection'**
+  String get titleScreenMasking;
+
+  /// No description provided for @subtitleScreenMasking.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide app content in the recent apps view and prevent screenshots'**
+  String get subtitleScreenMasking;
+
+  /// No description provided for @titleChangeMasterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change master password'**
+  String get titleChangeMasterPassword;
+
+  /// No description provided for @warningChangeMasterPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical, irreversible action'**
+  String get warningChangeMasterPasswordTitle;
+
+  /// No description provided for @warningChangeMasterPasswordBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable — we cannot reset it.\n\nWrite it down in a safe place before continuing.'**
+  String get warningChangeMasterPasswordBody;
+
+  /// No description provided for @checkboxUnderstandRisks.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand the risks and want to continue'**
+  String get checkboxUnderstandRisks;
+
+  /// No description provided for @labelCurrentMasterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current master password'**
+  String get labelCurrentMasterPassword;
+
+  /// No description provided for @labelNewMasterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New master password'**
+  String get labelNewMasterPassword;
+
+  /// No description provided for @labelConfirmNewMasterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new master password'**
+  String get labelConfirmNewMasterPassword;
+
+  /// No description provided for @btnChangeMasterPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change master password'**
+  String get btnChangeMasterPassword;
+
+  /// No description provided for @progressReencrypting.
+  ///
+  /// In en, this message translates to:
+  /// **'Re-encrypting vault…'**
+  String get progressReencrypting;
+
+  /// No description provided for @successMasterPasswordChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'Master password changed successfully'**
+  String get successMasterPasswordChanged;
+
+  /// No description provided for @errorMasterPasswordChangeFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Change failed — your vault was not modified'**
+  String get errorMasterPasswordChangeFailed;
+
+  /// No description provided for @titleExportDialog.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get titleExportDialog;
+
+  /// No description provided for @exportOptionBiometricTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted — biometric'**
+  String get exportOptionBiometricTitle;
+
+  /// No description provided for @exportOptionBiometricSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'This device only. Requires fingerprint or PIN.'**
+  String get exportOptionBiometricSubtitle;
+
+  /// No description provided for @exportOptionPortableTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Encrypted — portable'**
+  String get exportOptionPortableTitle;
+
+  /// No description provided for @exportOptionPortableSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Any device with your master password.'**
+  String get exportOptionPortableSubtitle;
+
+  /// No description provided for @exportOptionJsonTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON — plaintext'**
+  String get exportOptionJsonTitle;
+
+  /// No description provided for @exportOptionJsonSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ Passwords readable by anyone.'**
+  String get exportOptionJsonSubtitle;
+
+  /// No description provided for @errorBiometricExportUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Biometrics unavailable — use portable export'**
+  String get errorBiometricExportUnavailable;
+
+  /// No description provided for @titlePortableExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Portable export'**
+  String get titlePortableExport;
+
+  /// No description provided for @bodyPortableExport.
+  ///
+  /// In en, this message translates to:
+  /// **'The file will be encrypted with your master password.\n\nIt will be saved to your Downloads folder.'**
+  String get bodyPortableExport;
+
+  /// No description provided for @btnExport.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get btnExport;
+
+  /// No description provided for @titleJsonExport.
+  ///
+  /// In en, this message translates to:
+  /// **'JSON export'**
+  String get titleJsonExport;
+
+  /// No description provided for @bodyJsonExport.
+  ///
+  /// In en, this message translates to:
+  /// **'⚠️ This file will contain your passwords in plaintext.\n\nIt will be saved to your Downloads folder.'**
+  String get bodyJsonExport;
+
+  /// No description provided for @dialogTitleSelectVaultFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a vault file (.enc, .json, .csv)'**
+  String get dialogTitleSelectVaultFile;
+
+  /// No description provided for @errorCannotReadFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to read the file.'**
+  String get errorCannotReadFile;
+
+  /// No description provided for @errorFileReadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'File read failed'**
+  String get errorFileReadFailed;
+
+  /// No description provided for @errorImportFileEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'The file contains no items.'**
+  String get errorImportFileEmpty;
+
+  /// No description provided for @labelPasswordsImported.
+  ///
+  /// In en, this message translates to:
+  /// **'password(s) imported'**
+  String get labelPasswordsImported;
+
+  /// No description provided for @errorImportFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Import error'**
+  String get errorImportFailed;
+
+  /// No description provided for @labelPasswordsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'password(s) found'**
+  String get labelPasswordsFound;
+
+  /// No description provided for @bodyImportPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'The following items will be added to your vault. Any duplicates will be kept.'**
+  String get bodyImportPreview;
+
+  /// No description provided for @labelAndMore.
+  ///
+  /// In en, this message translates to:
+  /// **'more'**
+  String get labelAndMore;
+
+  /// No description provided for @btnImport.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get btnImport;
+
+  /// No description provided for @errorUnsupportedImportFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Unsupported format. Select a .enc, .json or .csv file.'**
+  String get errorUnsupportedImportFormat;
+
+  /// No description provided for @errorImportDecryptionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to decrypt this file.\n\n• Check that you\'re signed in with the right account\n• Or that you\'re using the original device\'s fingerprint'**
+  String get errorImportDecryptionFailed;
+
+  /// No description provided for @errorInvalidCsvFile.
+  ///
+  /// In en, this message translates to:
+  /// **'The CSV file is empty or invalid.'**
+  String get errorInvalidCsvFile;
+
+  /// No description provided for @errorCsvPasswordColumnMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Column \"password\" not found.'**
+  String get errorCsvPasswordColumnMissing;
+
+  /// No description provided for @labelDetectedColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Detected columns'**
+  String get labelDetectedColumns;
+
+  /// No description provided for @errorEmptyCsvImport.
+  ///
+  /// In en, this message translates to:
+  /// **'No passwords found in the CSV file.'**
+  String get errorEmptyCsvImport;
+
+  /// No description provided for @labelImportFallbackPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get labelImportFallbackPrefix;
+
+  /// No description provided for @reasonApproveVaultAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your identity to access the admin vault'**
+  String get reasonApproveVaultAccess;
+
+  /// No description provided for @reasonApproveAdminLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm your identity to approve the admin login'**
+  String get reasonApproveAdminLogin;
+
+  /// No description provided for @errorApprovalCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Fingerprint not recognized — approval cancelled'**
+  String get errorApprovalCancelled;
+
+  /// No description provided for @titleVaultAdminAccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin vault access'**
+  String get titleVaultAdminAccess;
+
+  /// No description provided for @titleAdminLogin.
+  ///
+  /// In en, this message translates to:
+  /// **'Admin login'**
+  String get titleAdminLogin;
+
+  /// No description provided for @bodyVaultAdminAccessRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'A request to access the admin vault has just been made.\n\nApprove to unlock the vault.'**
+  String get bodyVaultAdminAccessRequest;
+
+  /// No description provided for @bodyAdminLoginRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'A login attempt to the admin panel has just been made.\n\nDid you initiate this login?'**
+  String get bodyAdminLoginRequest;
+
+  /// No description provided for @btnDeny.
+  ///
+  /// In en, this message translates to:
+  /// **'Deny'**
+  String get btnDeny;
+
+  /// No description provided for @btnApprove.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get btnApprove;
+
+  /// No description provided for @errorPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get errorPrefix;
+
+  /// No description provided for @labelWeakPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak passwords'**
+  String get labelWeakPasswords;
+
+  /// No description provided for @subtitleWeakPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'Score < 60 — replace as a priority'**
+  String get subtitleWeakPasswords;
+
+  /// No description provided for @labelReusedPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'Reused passwords'**
+  String get labelReusedPasswords;
+
+  /// No description provided for @labelGroupsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'group(s)'**
+  String get labelGroupsCount;
+
+  /// No description provided for @subtitleReusedPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'The same password is used across multiple services'**
+  String get subtitleReusedPasswords;
+
+  /// No description provided for @labelSameServicesPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'services — same password'**
+  String get labelSameServicesPassword;
+
+  /// No description provided for @labelAllGood.
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent! No issues detected.'**
+  String get labelAllGood;
 }
 
 class _AppLocalizationsDelegate

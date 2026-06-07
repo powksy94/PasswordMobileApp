@@ -316,4 +316,266 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get lockScreenOrPassword => 'o ingresa tu contraseña maestra';
+
+  @override
+  String get titleLockTimeout => 'Bloqueo automático';
+
+  @override
+  String get subtitleLockTimeout => 'Bloquear cofre después de';
+
+  @override
+  String get lockTimeoutNever => 'Nunca';
+
+  @override
+  String get lockTimeout1min => '1 minuto';
+
+  @override
+  String get lockTimeout5min => '5 minutos';
+
+  @override
+  String get lockTimeout15min => '15 minutos';
+
+  @override
+  String get lockTimeout30min => '30 minutos';
+
+  @override
+  String get lockTimeout1h => '1 hora';
+
+  @override
+  String get titleVaultData => 'Datos del cofre';
+
+  @override
+  String get titlePrivacy => 'Privacidad';
+
+  @override
+  String get titleClipboardClear => 'Borrado del portapapeles';
+
+  @override
+  String get subtitleClipboardClear =>
+      'Borrar la contraseña copiada después de';
+
+  @override
+  String get clipboardClear10s => '10 segundos';
+
+  @override
+  String get clipboardClear30s => '30 segundos';
+
+  @override
+  String get clipboardClear1min => '1 minuto';
+
+  @override
+  String get clipboardClear2min => '2 minutos';
+
+  @override
+  String get titleBiometricToggle => 'Autenticación biométrica';
+
+  @override
+  String get subtitleBiometricToggle =>
+      'Usar huella digital o reconocimiento facial para desbloquear';
+
+  @override
+  String get titleScreenMasking => 'Protección contra capturas de pantalla';
+
+  @override
+  String get subtitleScreenMasking =>
+      'Ocultar el contenido de la app en el multitarea y evitar capturas de pantalla';
+
+  @override
+  String get titleChangeMasterPassword => 'Cambiar la contraseña maestra';
+
+  @override
+  String get warningChangeMasterPasswordTitle =>
+      'Acción crítica e irreversible';
+
+  @override
+  String get warningChangeMasterPasswordBody =>
+      'Esta operación vuelve a cifrar todo tu cofre con una nueva contraseña maestra.\n\n⚠️ Si olvidas esta nueva contraseña, tu cofre quedará permanentemente irrecuperable — no podemos restablecerla.\n\nAnótala en un lugar seguro antes de continuar.';
+
+  @override
+  String get checkboxUnderstandRisks =>
+      'Entiendo los riesgos y deseo continuar';
+
+  @override
+  String get labelCurrentMasterPassword => 'Contraseña maestra actual';
+
+  @override
+  String get labelNewMasterPassword => 'Nueva contraseña maestra';
+
+  @override
+  String get labelConfirmNewMasterPassword =>
+      'Confirmar la nueva contraseña maestra';
+
+  @override
+  String get btnChangeMasterPassword => 'Cambiar la contraseña maestra';
+
+  @override
+  String get progressReencrypting => 'Volviendo a cifrar el cofre…';
+
+  @override
+  String get successMasterPasswordChanged =>
+      'Contraseña maestra cambiada con éxito';
+
+  @override
+  String get errorMasterPasswordChangeFailed =>
+      'Error al cambiar — tu cofre no fue modificado';
+
+  @override
+  String get titleExportDialog => 'Exportar';
+
+  @override
+  String get exportOptionBiometricTitle => 'Cifrado — biométrico';
+
+  @override
+  String get exportOptionBiometricSubtitle =>
+      'Solo este dispositivo. Requiere huella digital o PIN.';
+
+  @override
+  String get exportOptionPortableTitle => 'Cifrado — portátil';
+
+  @override
+  String get exportOptionPortableSubtitle =>
+      'Cualquier dispositivo con tu contraseña maestra.';
+
+  @override
+  String get exportOptionJsonTitle => 'JSON — texto plano';
+
+  @override
+  String get exportOptionJsonSubtitle =>
+      '⚠️ Contraseñas legibles por cualquiera.';
+
+  @override
+  String get errorBiometricExportUnavailable =>
+      'Biometría no disponible — usa la exportación portátil';
+
+  @override
+  String get titlePortableExport => 'Exportación portátil';
+
+  @override
+  String get bodyPortableExport =>
+      'El archivo se cifrará con tu contraseña maestra.\n\nSe guardará en tu carpeta de Descargas.';
+
+  @override
+  String get btnExport => 'Exportar';
+
+  @override
+  String get titleJsonExport => 'Exportación JSON';
+
+  @override
+  String get bodyJsonExport =>
+      '⚠️ Este archivo contendrá tus contraseñas en texto plano.\n\nSe guardará en tu carpeta de Descargas.';
+
+  @override
+  String get dialogTitleSelectVaultFile =>
+      'Selecciona un archivo de cofre (.enc, .json, .csv)';
+
+  @override
+  String get errorCannotReadFile => 'No se pudo leer el archivo.';
+
+  @override
+  String get errorFileReadFailed => 'Error al leer el archivo';
+
+  @override
+  String get errorImportFileEmpty => 'El archivo no contiene ningún elemento.';
+
+  @override
+  String get labelPasswordsImported => 'contraseña(s) importada(s)';
+
+  @override
+  String get errorImportFailed => 'Error de importación';
+
+  @override
+  String get labelPasswordsFound => 'contraseña(s) encontrada(s)';
+
+  @override
+  String get bodyImportPreview =>
+      'Los siguientes elementos se añadirán a tu cofre. Los posibles duplicados se conservarán.';
+
+  @override
+  String get labelAndMore => 'más';
+
+  @override
+  String get btnImport => 'Importar';
+
+  @override
+  String get errorUnsupportedImportFormat =>
+      'Formato no compatible. Selecciona un archivo .enc, .json o .csv.';
+
+  @override
+  String get errorImportDecryptionFailed =>
+      'No se puede descifrar este archivo.\n\n• Comprueba que iniciaste sesión con la cuenta correcta\n• O que usas la huella del dispositivo original';
+
+  @override
+  String get errorInvalidCsvFile => 'El archivo CSV está vacío o no es válido.';
+
+  @override
+  String get errorCsvPasswordColumnMissing =>
+      'No se encontró la columna \"password\".';
+
+  @override
+  String get labelDetectedColumns => 'Columnas detectadas';
+
+  @override
+  String get errorEmptyCsvImport =>
+      'No se encontraron contraseñas en el archivo CSV.';
+
+  @override
+  String get labelImportFallbackPrefix => 'Importación';
+
+  @override
+  String get reasonApproveVaultAccess =>
+      'Confirma tu identidad para acceder al cofre de administración';
+
+  @override
+  String get reasonApproveAdminLogin =>
+      'Confirma tu identidad para aprobar el inicio de sesión de administrador';
+
+  @override
+  String get errorApprovalCancelled =>
+      'Huella no reconocida — aprobación cancelada';
+
+  @override
+  String get titleVaultAdminAccess => 'Acceso al cofre de administración';
+
+  @override
+  String get titleAdminLogin => 'Inicio de sesión de administrador';
+
+  @override
+  String get bodyVaultAdminAccessRequest =>
+      'Se acaba de realizar una solicitud de acceso al cofre de administración.\n\nApruébala para desbloquear el cofre.';
+
+  @override
+  String get bodyAdminLoginRequest =>
+      'Se acaba de realizar un intento de inicio de sesión en el panel de administración.\n\n¿Iniciaste tú esta sesión?';
+
+  @override
+  String get btnDeny => 'Rechazar';
+
+  @override
+  String get btnApprove => 'Aprobar';
+
+  @override
+  String get errorPrefix => 'Error';
+
+  @override
+  String get labelWeakPasswords => 'Contraseñas débiles';
+
+  @override
+  String get subtitleWeakPasswords =>
+      'Puntuación < 60 — reemplázalas cuanto antes';
+
+  @override
+  String get labelReusedPasswords => 'Contraseñas reutilizadas';
+
+  @override
+  String get labelGroupsCount => 'grupo(s)';
+
+  @override
+  String get subtitleReusedPasswords =>
+      'La misma contraseña se usa en varios servicios';
+
+  @override
+  String get labelSameServicesPassword => 'servicios — misma contraseña';
+
+  @override
+  String get labelAllGood => '¡Excelente! No se detectaron problemas.';
 }

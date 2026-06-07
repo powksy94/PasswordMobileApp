@@ -7,25 +7,25 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:screen_protector/screen_protector.dart';
 
 // Pages
-import 'pages/auth/login_page.dart';
-import 'pages/auth/signup_page.dart';
-import 'pages/auth/signup_success_page.dart';
-import 'pages/auth/lock_screen.dart';
-import 'pages/home/home_page.dart';
-import 'pages/vault/vault_page.dart';
-import 'pages/generator/password_generator_page.dart';
-import 'pages/settings/account_settings_page.dart';
+import 'features/auth/pages/login_page.dart';
+import 'features/auth/pages/signup_page.dart';
+import 'features/auth/pages/signup_success_page.dart';
+import 'features/auth/pages/lock_screen.dart';
+import 'features/home/pages/home_page.dart';
+import 'features/vault/pages/vault_page.dart';
+import 'features/generator/pages/password_generator_page.dart';
+import 'features/settings/pages/account_settings_page.dart';
 
 // Theme & widgets
 import 'theme/app_theme.dart';
-import 'widgets/auth/splash_auth_gate.dart';
+import 'features/auth/widgets/splash_auth_gate.dart';
 
 // Services
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'services/role_provider.dart';
-import 'services/auth_service.dart';
-import 'services/autofill_cache_service.dart';
-import 'services/settings_service.dart';
+import 'shared/services/role_provider.dart';
+import 'features/auth/services/auth_service.dart';
+import 'shared/services/autofill_cache_service.dart';
+import 'features/settings/services/settings_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

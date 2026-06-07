@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:password_mobile_app/services/crypto_service.dart';
+import 'package:password_mobile_app/shared/services/crypto_service.dart';
 
 Uint8List _key(int seed) =>
     Uint8List.fromList(List.generate(32, (i) => (i + seed) % 256));

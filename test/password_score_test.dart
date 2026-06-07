@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:password_mobile_app/utils/password_score.dart';
+import 'package:password_mobile_app/shared/utils/password_score.dart';
 
 void main() {
   group('PasswordScore.compute', () {

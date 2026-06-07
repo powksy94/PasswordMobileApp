@@ -5,9 +5,15 @@ import '../../services/autofill_cache_service.dart';
 import '../../services/api_service.dart';
 import '../../services/role_provider.dart';
 import '../../widgets/common/neon_text.dart';
-import '../../widgets/settings/change_password_panel.dart';
+import '../../widgets/common/glass_panel.dart';
 import '../../widgets/settings/danger_zone_panel.dart';
+import '../../widgets/settings/lock_timeout_panel.dart';
+import '../../widgets/settings/privacy_settings_panel.dart';
+import '../../widgets/settings/vault_data_panel.dart';
+import '../../widgets/settings/logout_panel.dart';
 import '../../l10n/app_localizations.dart';
+import 'change_password_page.dart';
+import 'change_master_password_page.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({super.key});
@@ -17,47 +23,6 @@ class AccountSettingsPage extends StatefulWidget {
 }
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
-  final _currentPwCtrl = TextEditingController();
-  final _newPwCtrl     = TextEditingController();
-  final _confirmPwCtrl = TextEditingController();
-  bool _changingPw = false;
-
-  @override
-  void dispose() {
-    _currentPwCtrl.dispose();
-    _newPwCtrl.dispose();
-    _confirmPwCtrl.dispose();
-    super.dispose();
-  }
-
-  Future<void> _changePassword() async {
-    final l = AppLocalizations.of(context)!;
-    if (_newPwCtrl.text != _confirmPwCtrl.text) {
-      _snack(l.validatorPasswordMismatch);
-      return;
-    }
-    if (_newPwCtrl.text.length < 6) {
-      _snack(l.validatorMinChars);
-      return;
-    }
-    setState(() => _changingPw = true);
-    try {
-      final token = await AuthService.getToken();
-      if (token == null) throw Exception('Not authenticated');
-      await ApiService().changePassword(
-          token, _currentPwCtrl.text, _newPwCtrl.text);
-      if (!mounted) return;
-      _currentPwCtrl.clear();
-      _newPwCtrl.clear();
-      _confirmPwCtrl.clear();
-      _snack(l.successModified);
-    } catch (e) {
-      if (mounted) _snack('$e');
-    } finally {
-      if (mounted) setState(() => _changingPw = false);
-    }
-  }
-
   Future<void> _deleteAccount() async {
     final l = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
@@ -125,19 +90,53 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
             end:   Alignment.bottomRight,
           ),
         ),
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            ChangePasswordPanel(
-              currentCtrl: _currentPwCtrl,
-              newCtrl:     _newPwCtrl,
-              confirmCtrl: _confirmPwCtrl,
-              loading:     _changingPw,
-              onSubmit:    _changePassword,
-            ),
-            const SizedBox(height: 20),
-            DangerZonePanel(onDelete: _deleteAccount),
-          ],
+        child: SafeArea(
+          bottom: true,
+          child: ListView(
+            padding: const EdgeInsets.all(16),
+            children: [
+              LockTimeoutPanel(),
+              const SizedBox(height: 20),
+              const PrivacySettingsPanel(),
+              const SizedBox(height: 20),
+              const VaultDataPanel(),
+              const SizedBox(height: 20),
+              GlassPanel(
+                width: double.infinity,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.password),
+                  title: Text(l.titleChangePassword),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ChangePasswordPage()),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              GlassPanel(
+                width: double.infinity,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.warning_amber_rounded, color: Colors.orangeAccent),
+                  title: Text(
+                    l.titleChangeMasterPassword,
+                    style: const TextStyle(color: Colors.orangeAccent, fontWeight: FontWeight.w600),
+                  ),
+                  trailing: const Icon(Icons.chevron_right, color: Colors.orangeAccent),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const ChangeMasterPasswordPage()),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const LogoutPanel(),
+              const SizedBox(height: 20),
+              DangerZonePanel(onDelete: _deleteAccount),
+            ],
+          ),
         ),
       ),
     );

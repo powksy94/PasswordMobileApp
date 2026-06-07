@@ -1,74 +1,23 @@
 // lib/services/vault_service.dart
-import 'dart:convert';
-import 'dart:typed_data';
-import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart';
 import 'api_service.dart';
-import 'crypto_service.dart';
 import '../models/vault_item.dart';
 import 'auth_service.dart';
 import 'autofill_cache_service.dart';
+import 'vault_cache.dart';
+import 'vault_codec.dart';
+import 'vault_exceptions.dart';
 import 'package:uuid/uuid.dart';
+
+export 'vault_exceptions.dart';
 
 class VaultService {
   static final _api  = ApiService();
   static final _uuid = Uuid();
-  static const _cacheKey = 'vault_cache_raw';
 
-  // ── Cache offline ─────────────────────────────────────────────────────────
-
-  static Future<void> _saveCache(List<dynamic> raw) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_cacheKey, jsonEncode(raw));
-  }
-
-  static Future<List<dynamic>?> _loadCache() async {
-    final prefs = await SharedPreferences.getInstance();
-    final s = prefs.getString(_cacheKey);
-    if (s == null) return null;
-    return jsonDecode(s) as List<dynamic>;
-  }
-
-  static Future<void> clearCache() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_cacheKey);
-  }
-
-  // ── Déchiffrement d'un payload brut serveur ───────────────────────────────
-
-  static List<VaultItem> _decryptRaw(List<dynamic> raw, Uint8List key) {
-    final out = <VaultItem>[];
-    for (final r in raw) {
-      try {
-        final title    = CryptoService.decryptText(r['title'] as String, key);
-        final rawLogin = r['login'];
-        final login    = (rawLogin is String && rawLogin.isNotEmpty)
-            ? CryptoService.decryptText(rawLogin, key)
-            : '';
-        final password = CryptoService.decryptText(r['password'] as String, key);
-        final rawNotes = r['notes'];
-        final notes    = (rawNotes is String && rawNotes.isNotEmpty)
-            ? CryptoService.decryptText(rawNotes, key)
-            : '';
-        final rawUrl = r['url'];
-        final url    = (rawUrl is String && rawUrl.isNotEmpty)
-            ? CryptoService.decryptText(rawUrl, key)
-            : '';
-        out.add(VaultItem(
-          id:       r['id'] as String,
-          label:    title,
-          login:    login,
-          password: password,
-          notes:    notes,
-          icon:     r['icon'] as String? ?? 'lock',
-          url:      url,
-        ));
-      } catch (e) {
-        debugPrint('Erreur decrypt item ${r['id']}: $e');
-      }
-    }
-    return out;
-  }
+  /// Incrémenté quand le coffre change depuis l'extérieur de [VaultPage]
+  /// (ex: import depuis les Paramètres) pour signaler un rechargement.
+  static final ValueNotifier<int> vaultVersion = ValueNotifier(0);
 
   // ── Chargement (réseau → cache en cas d'échec) ────────────────────────────
 
@@ -81,14 +30,14 @@ class VaultService {
 
     try {
       final raw   = await _api.getVault(token);
-      await _saveCache(raw);
-      final items = _decryptRaw(raw, key);
+      await VaultCache.save(raw);
+      final items = VaultCodec.decryptRaw(raw, key);
       AutofillCacheService.update(items).ignore();
       return (items: items, fromCache: false);
     } catch (_) {
-      final cached = await _loadCache();
+      final cached = await VaultCache.load();
       if (cached == null) rethrow;
-      return (items: _decryptRaw(cached, key), fromCache: true);
+      return (items: VaultCodec.decryptRaw(cached, key), fromCache: true);
     }
   }
 
@@ -107,15 +56,16 @@ class VaultService {
     final key = AuthService.getMasterKey();
     if (key == null) throw Exception('Master key absente');
 
-    await _api.addItem(token, {
-      'id':       _uuid.v4(),
-      'title':    CryptoService.encryptText(label, key),
-      'login':    login.isNotEmpty ? CryptoService.encryptText(login, key) : '',
-      'password': CryptoService.encryptText(password, key),
-      'notes':    notes.isNotEmpty ? CryptoService.encryptText(notes, key) : '',
-      'icon':     icon,
-      'url':      url.isNotEmpty ? CryptoService.encryptText(url, key) : '',
-    });
+    await _api.addItem(token, VaultCodec.encryptFields(
+      id:       _uuid.v4(),
+      label:    label,
+      login:    login,
+      password: password,
+      notes:    notes,
+      icon:     icon,
+      url:      url,
+      key:      key,
+    ));
   }
 
   static Future<void> updateOnServer({
@@ -132,35 +82,67 @@ class VaultService {
     final key = AuthService.getMasterKey();
     if (key == null) throw Exception('Master key absente');
 
-    await _api.updateItem(token, id, {
-      'title':    CryptoService.encryptText(label, key),
-      'login':    login.isNotEmpty ? CryptoService.encryptText(login, key) : '',
-      'password': CryptoService.encryptText(password, key),
-      'notes':    notes.isNotEmpty ? CryptoService.encryptText(notes, key) : '',
-      'icon':     icon,
-      'url':      url.isNotEmpty ? CryptoService.encryptText(url, key) : '',
-    });
+    await _api.updateItem(token, id, VaultCodec.encryptFields(
+      label:    label,
+      login:    login,
+      password: password,
+      notes:    notes,
+      icon:     icon,
+      url:      url,
+      key:      key,
+    ));
+  }
+
+  // ── Changement du mot de passe maître ─────────────────────────────────────
+
+  /// Déchiffre tout le coffre avec l'ancienne clé, le re-chiffre avec la
+  /// nouvelle, puis envoie le tout en une seule transaction atomique côté
+  /// serveur (`PUT /vault/reencrypt-all`). Si l'ancien mot de passe est
+  /// incorrect → [WrongMasterPasswordException]. Si l'envoi échoue → le serveur
+  /// annule toute la transaction (coffre intact) et [MasterPasswordChangeException]
+  /// est levée ; la nouvelle clé n'est jamais persistée dans ce cas.
+  static Future<void> changeMasterPassword({
+    required String oldMasterPassword,
+    required String newMasterPassword,
+  }) async {
+    final token = await AuthService.getToken();
+    if (token == null) throw Exception('Non authentifié');
+
+    final validOld = await AuthService.unlockWithMasterPassword(oldMasterPassword);
+    if (!validOld) throw WrongMasterPasswordException();
+
+    final newKey = await AuthService.deriveKeyFromMasterPassword(newMasterPassword);
+    if (newKey == null) throw Exception('Sel introuvable — compte invalide');
+
+    final result = await loadFromServer();
+    final items  = result.items;
+
+    if (items.isNotEmpty) {
+      final reencrypted = items.map((item) => VaultCodec.encryptFields(
+        id:       item.id,
+        label:    item.label,
+        login:    item.login,
+        password: item.password,
+        notes:    item.notes,
+        icon:     item.icon,
+        url:      item.url,
+        key:      newKey,
+      )).toList();
+
+      try {
+        await _api.reencryptVault(token, reencrypted);
+      } catch (e) {
+        throw MasterPasswordChangeException(e);
+      }
+    }
+
+    await AuthService.commitNewMasterKey(newKey);
+    vaultVersion.value++;
   }
 
   static Future<void> deleteFromServer(String id) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
     await _api.deleteItem(token, id);
-  }
-
-  // ── Icônes ────────────────────────────────────────────────────────────────
-
-  static IconData getVaultIcon(String iconName) {
-    switch (iconName) {
-      case 'email':       return Icons.email;
-      case 'wifi':        return Icons.wifi;
-      case 'credit_card': return Icons.credit_card;
-      case 'person':      return Icons.person;
-      case 'vpn_key':     return Icons.vpn_key;
-      case 'phone':       return Icons.phone;
-      case 'computer':    return Icons.computer;
-      case 'cloud':       return Icons.cloud;
-      default:            return Icons.lock;
-    }
   }
 }

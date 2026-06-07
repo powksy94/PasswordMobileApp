@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../models/vault_item.dart';
-import '../../services/vault_service.dart';
+import '../../utils/vault_icons.dart';
 import '../common/glass_panel.dart';
 import '../common/neon_text.dart';
 import '../../l10n/app_localizations.dart';
@@ -41,7 +41,7 @@ class VaultItemCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(VaultService.getVaultIcon(item.icon), color: accent, size: 26),
+                Icon(VaultIcons.forName(item.icon), color: accent, size: 26),
                 const SizedBox(width: 10),
                 Expanded(
                   child: NeonText(

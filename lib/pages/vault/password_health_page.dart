@@ -3,10 +3,10 @@ import '../../services/vault_service.dart';
 import '../../models/vault_item.dart';
 import '../../utils/password_score.dart';
 import '../../widgets/common/neon_text.dart';
-import '../../widgets/common/glass_panel.dart';
 import '../../widgets/health/health_score_card.dart';
-import '../../widgets/health/health_section_header.dart';
-import '../../widgets/health/health_item_tile.dart';
+import '../../widgets/health/weak_passwords_section.dart';
+import '../../widgets/health/reused_passwords_section.dart';
+import '../../widgets/health/health_all_good_panel.dart';
 import 'edit_vault_item_page.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -85,7 +85,7 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
     }
     if (_error != null) {
       return Center(
-        child: Text('Erreur : $_error',
+        child: Text('${AppLocalizations.of(context)!.errorPrefix}: $_error',
             style: const TextStyle(color: Colors.redAccent)),
       );
     }
@@ -122,80 +122,17 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
 
                 if (weak.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  HealthSectionHeader(
-                    icon:     Icons.warning_amber_rounded,
-                    title:    'Mots de passe faibles (${weak.length})',
-                    subtitle: 'Score < 60 — à remplacer en priorité',
-                    color:    Colors.redAccent,
-                  ),
-                  const SizedBox(height: 8),
-                  GlassPanel(
-                    width:   double.infinity,
-                    padding: EdgeInsets.zero,
-                    child: Column(
-                      children: weak
-                          .map((i) =>
-                              HealthItemTile(item: i, onEdit: () => _openEdit(i)))
-                          .toList(),
-                    ),
-                  ),
+                  WeakPasswordsSection(items: weak, onEdit: _openEdit),
                 ],
 
                 if (duplicates.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  HealthSectionHeader(
-                    icon:     Icons.copy_all,
-                    title:    'Mots de passe réutilisés (${duplicates.length} groupe(s))',
-                    subtitle: 'Le même mot de passe est utilisé sur plusieurs services',
-                    color:    Colors.orangeAccent,
-                  ),
-                  const SizedBox(height: 8),
-                  ...duplicates.map((group) => Padding(
-                        padding: const EdgeInsets.only(bottom: 8),
-                        child: GlassPanel(
-                          width:   double.infinity,
-                          padding: EdgeInsets.zero,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 10, 16, 4),
-                                child: Text(
-                                  '${group.length} services — même mot de passe',
-                                  style: const TextStyle(
-                                    color:      Colors.orangeAccent,
-                                    fontSize:   12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              ...group.map((i) =>
-                                  HealthItemTile(item: i, onEdit: () => _openEdit(i))),
-                            ],
-                          ),
-                        ),
-                      )),
+                  ReusedPasswordsSection(groups: duplicates, onEdit: _openEdit),
                 ],
 
                 if (weak.isEmpty && duplicates.isEmpty) ...[
                   const SizedBox(height: 20),
-                  GlassPanel(
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        const Icon(Icons.verified_rounded,
-                            color: Colors.cyanAccent, size: 48),
-                        const SizedBox(height: 8),
-                        Text(
-                          'Excellent ! Aucun problème détecté.',
-                          style: TextStyle(
-                            color:      isDark ? Colors.white : Colors.black87,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  const HealthAllGoodPanel(),
                 ],
 
                 const SizedBox(height: 24),

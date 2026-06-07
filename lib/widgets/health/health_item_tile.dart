@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../models/vault_item.dart';
-import '../../services/vault_service.dart';
 import '../../utils/password_score.dart';
+import '../../utils/vault_icons.dart';
 import '../../l10n/app_localizations.dart';
 
 class HealthItemTile extends StatelessWidget {
@@ -23,7 +23,7 @@ class HealthItemTile extends StatelessWidget {
     return ListTile(
       dense:   true,
       leading: Icon(
-        VaultService.getVaultIcon(item.icon),
+        VaultIcons.forName(item.icon),
         color: PasswordScore.color(s),
         size:  22,
       ),

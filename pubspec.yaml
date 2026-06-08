@@ -1,6 +1,6 @@
 name: password_mobile_app
 description: Password manager with AES-256 encrypted vault, biometric unlock and secure export.
-version: 1.1.0+4
+version: 1.1.1+5
 
 environment:
   sdk: ">=3.0.0 <4.0.0"

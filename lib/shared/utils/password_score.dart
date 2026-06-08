@@ -31,4 +31,13 @@ class PasswordScore {
     if (score < 80) return 'Fort';
     return 'Très fort';
   }
+
+  /// Catégorie technique à 3 niveaux ('weak' | 'medium' | 'strong'), seule
+  /// information envoyée au serveur pour les statistiques admin — distincte de
+  /// [label], qui reste un libellé d'affichage à 4 niveaux pour l'utilisateur.
+  static String category(int score) {
+    if (score < 30) return 'weak';
+    if (score < 60) return 'medium';
+    return 'strong';
+  }
 }

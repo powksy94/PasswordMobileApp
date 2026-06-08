@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../../../shared/services/crypto_service.dart';
+import '../../../shared/utils/password_score.dart';
 import '../models/vault_item.dart';
 
 /// Convertit les [VaultItem] vers/depuis leur représentation chiffrée
@@ -27,6 +28,7 @@ class VaultCodec {
       'notes':    notes.isNotEmpty ? CryptoService.encryptText(notes, key) : '',
       'icon':     icon,
       'url':      url.isNotEmpty ? CryptoService.encryptText(url, key) : '',
+      'strength': PasswordScore.category(PasswordScore.compute(password)),
     };
   }
 

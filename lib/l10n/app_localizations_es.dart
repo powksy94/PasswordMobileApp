@@ -384,6 +384,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get linkPrivacyPolicy => 'Política de privacidad';
 
   @override
+  String get linkTermsOfService => 'Condiciones de uso';
+
+  @override
   String get titleChangeMasterPassword => 'Cambiar la contraseña maestra';
 
   @override

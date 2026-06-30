@@ -143,6 +143,7 @@
   "titleScreenMasking": "Masquage anti-capture d'écran",
   "subtitleScreenMasking": "Masquer le contenu de l'application dans le multitâche et empêcher les captures d'écran",
   "linkPrivacyPolicy": "Politique de confidentialité",
+  "linkTermsOfService": "Conditions d'utilisation",
 
   "titleChangeMasterPassword": "Changer le mot de passe maître",
   "warningChangeMasterPasswordTitle": "Action critique et irréversible",

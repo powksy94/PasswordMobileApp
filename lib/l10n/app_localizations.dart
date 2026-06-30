@@ -826,6 +826,12 @@ abstract class AppLocalizations {
   /// **'Privacy policy'**
   String get linkPrivacyPolicy;
 
+  /// No description provided for @linkTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of service'**
+  String get linkTermsOfService;
+
   /// No description provided for @titleChangeMasterPassword.
   ///
   /// In en, this message translates to:

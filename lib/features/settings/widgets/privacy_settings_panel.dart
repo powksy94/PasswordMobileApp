@@ -133,6 +133,16 @@ class _PrivacySettingsPanelState extends State<PrivacySettingsPanel> {
                 mode: LaunchMode.externalApplication,
               ),
             ),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.gavel_outlined),
+              title: Text(l.linkTermsOfService),
+              trailing: const Icon(Icons.open_in_new, size: 18),
+              onTap: () => launchUrl(
+                Uri.parse(termsOfServiceUrl(context)),
+                mode: LaunchMode.externalApplication,
+              ),
+            ),
           ],
         ],
       ),

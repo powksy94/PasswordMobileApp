@@ -381,6 +381,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get linkPrivacyPolicy => 'Privacy policy';
 
   @override
+  String get linkTermsOfService => 'Terms of service';
+
+  @override
   String get titleChangeMasterPassword => 'Change master password';
 
   @override

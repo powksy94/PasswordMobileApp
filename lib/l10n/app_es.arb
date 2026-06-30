@@ -143,6 +143,7 @@
   "titleScreenMasking": "Protección contra capturas de pantalla",
   "subtitleScreenMasking": "Ocultar el contenido de la app en el multitarea y evitar capturas de pantalla",
   "linkPrivacyPolicy": "Política de privacidad",
+  "linkTermsOfService": "Condiciones de uso",
 
   "titleChangeMasterPassword": "Cambiar la contraseña maestra",
   "warningChangeMasterPasswordTitle": "Acción crítica e irreversible",

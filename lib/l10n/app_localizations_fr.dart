@@ -384,6 +384,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get linkPrivacyPolicy => 'Politique de confidentialité';
 
   @override
+  String get linkTermsOfService => 'Conditions d\'utilisation';
+
+  @override
   String get titleChangeMasterPassword => 'Changer le mot de passe maître';
 
   @override

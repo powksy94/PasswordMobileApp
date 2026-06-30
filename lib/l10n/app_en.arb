@@ -143,6 +143,7 @@
   "titleScreenMasking": "Screenshot protection",
   "subtitleScreenMasking": "Hide app content in the recent apps view and prevent screenshots",
   "linkPrivacyPolicy": "Privacy policy",
+  "linkTermsOfService": "Terms of service",
 
   "titleChangeMasterPassword": "Change master password",
   "warningChangeMasterPasswordTitle": "Critical, irreversible action",

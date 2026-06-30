@@ -378,6 +378,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Hide app content in the recent apps view and prevent screenshots';
 
   @override
+  String get linkPrivacyPolicy => 'Privacy policy';
+
+  @override
   String get titleChangeMasterPassword => 'Change master password';
 
   @override

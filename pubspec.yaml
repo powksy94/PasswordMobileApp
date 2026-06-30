@@ -1,6 +1,6 @@
 name: password_mobile_app
 description: Password manager with AES-256 encrypted vault, biometric unlock and secure export.
-version: 1.1.1+5
+version: 1.1.11+6
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -31,6 +31,7 @@ dependencies:
   file_picker: ^10.3.7
   google_mobile_ads: ^5.3.0
   screen_protector: ^1.5.2
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:

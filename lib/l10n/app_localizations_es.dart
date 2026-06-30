@@ -381,6 +381,9 @@ class AppLocalizationsEs extends AppLocalizations {
       'Ocultar el contenido de la app en el multitarea y evitar capturas de pantalla';
 
   @override
+  String get linkPrivacyPolicy => 'Política de privacidad';
+
+  @override
   String get titleChangeMasterPassword => 'Cambiar la contraseña maestra';
 
   @override

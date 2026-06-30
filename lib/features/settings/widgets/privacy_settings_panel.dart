@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:screen_protector/screen_protector.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
+import '../../../shared/utils/legal_urls.dart';
 import '../../../l10n/app_localizations.dart';
 import '../services/settings_service.dart';
 
@@ -119,6 +121,17 @@ class _PrivacySettingsPanelState extends State<PrivacySettingsPanel> {
               subtitle: Text(l.subtitleScreenMasking),
               value: _maskInBackground,
               onChanged: _setMaskInBackground,
+            ),
+            const Divider(),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.policy_outlined),
+              title: Text(l.linkPrivacyPolicy),
+              trailing: const Icon(Icons.open_in_new, size: 18),
+              onTap: () => launchUrl(
+                Uri.parse(privacyPolicyUrl(context)),
+                mode: LaunchMode.externalApplication,
+              ),
             ),
           ],
         ],

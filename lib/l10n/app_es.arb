@@ -142,6 +142,7 @@
   "subtitleBiometricToggle": "Usar huella digital o reconocimiento facial para desbloquear",
   "titleScreenMasking": "Protección contra capturas de pantalla",
   "subtitleScreenMasking": "Ocultar el contenido de la app en el multitarea y evitar capturas de pantalla",
+  "linkPrivacyPolicy": "Política de privacidad",
 
   "titleChangeMasterPassword": "Cambiar la contraseña maestra",
   "warningChangeMasterPasswordTitle": "Acción crítica e irreversible",

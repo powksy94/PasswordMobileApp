@@ -142,6 +142,7 @@
   "subtitleBiometricToggle": "Use fingerprint or face recognition to unlock",
   "titleScreenMasking": "Screenshot protection",
   "subtitleScreenMasking": "Hide app content in the recent apps view and prevent screenshots",
+  "linkPrivacyPolicy": "Privacy policy",
 
   "titleChangeMasterPassword": "Change master password",
   "warningChangeMasterPasswordTitle": "Critical, irreversible action",

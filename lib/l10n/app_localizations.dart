@@ -820,6 +820,12 @@ abstract class AppLocalizations {
   /// **'Hide app content in the recent apps view and prevent screenshots'**
   String get subtitleScreenMasking;
 
+  /// No description provided for @linkPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy policy'**
+  String get linkPrivacyPolicy;
+
   /// No description provided for @titleChangeMasterPassword.
   ///
   /// In en, this message translates to:

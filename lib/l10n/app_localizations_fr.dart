@@ -381,6 +381,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Masquer le contenu de l\'application dans le multitâche et empêcher les captures d\'écran';
 
   @override
+  String get linkPrivacyPolicy => 'Politique de confidentialité';
+
+  @override
   String get titleChangeMasterPassword => 'Changer le mot de passe maître';
 
   @override

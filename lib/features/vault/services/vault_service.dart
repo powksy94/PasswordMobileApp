@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../../shared/services/api_service.dart';
 import '../models/vault_item.dart';
 import '../../auth/services/auth_service.dart';
+import '../../auth/services/master_key_service.dart';
 import '../../../shared/services/autofill_cache_service.dart';
 import './vault_cache.dart';
 import './vault_codec.dart';
@@ -25,19 +26,26 @@ class VaultService {
   static Future<({List<VaultItem> items, bool fromCache})> loadFromServer() async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
-    final key = AuthService.getMasterKey();
+    final key = MasterKeyService.getMasterKey();
     if (key == null) throw Exception('Master key absente — déverrouillez le vault');
 
     try {
       final raw   = await _api.getVault(token);
       await VaultCache.save(raw);
       final items = VaultCodec.decryptRaw(raw, key);
+      if (raw.isNotEmpty && items.isEmpty) {
+        throw const VaultDecryptionException();
+      }
       AutofillCacheService.update(items).ignore();
       return (items: items, fromCache: false);
+    } on VaultDecryptionException {
+      rethrow;
     } catch (_) {
       final cached = await VaultCache.load();
       if (cached == null) rethrow;
-      return (items: VaultCodec.decryptRaw(cached, key), fromCache: true);
+      final items = VaultCodec.decryptRaw(cached, key);
+      if (cached.isNotEmpty && items.isEmpty) throw const VaultDecryptionException();
+      return (items: items, fromCache: true);
     }
   }
 
@@ -53,7 +61,7 @@ class VaultService {
   }) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
-    final key = AuthService.getMasterKey();
+    final key = MasterKeyService.getMasterKey();
     if (key == null) throw Exception('Master key absente');
 
     await _api.addItem(token, VaultCodec.encryptFields(
@@ -79,7 +87,7 @@ class VaultService {
   }) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
-    final key = AuthService.getMasterKey();
+    final key = MasterKeyService.getMasterKey();
     if (key == null) throw Exception('Master key absente');
 
     await _api.updateItem(token, id, VaultCodec.encryptFields(
@@ -108,10 +116,10 @@ class VaultService {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
 
-    final validOld = await AuthService.unlockWithMasterPassword(oldMasterPassword);
+    final validOld = await MasterKeyService.unlockWithMasterPassword(oldMasterPassword);
     if (!validOld) throw WrongMasterPasswordException();
 
-    final newKey = await AuthService.deriveKeyFromMasterPassword(newMasterPassword);
+    final newKey = await MasterKeyService.deriveKeyFromMasterPassword(newMasterPassword);
     if (newKey == null) throw Exception('Sel introuvable — compte invalide');
 
     final result = await loadFromServer();
@@ -136,7 +144,7 @@ class VaultService {
       }
     }
 
-    await AuthService.commitNewMasterKey(newKey);
+    await MasterKeyService.commitNewMasterKey(newKey);
     vaultVersion.value++;
   }
 
@@ -144,5 +152,13 @@ class VaultService {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
     await _api.deleteItem(token, id);
+  }
+
+  static Future<void> purgeAll() async {
+    final token = await AuthService.getToken();
+    if (token == null) throw Exception('Non authentifié');
+    await _api.purgeVault(token);
+    await VaultCache.save([]);
+    vaultVersion.value++;
   }
 }

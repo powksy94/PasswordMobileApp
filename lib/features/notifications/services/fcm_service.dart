@@ -87,15 +87,20 @@ class FcmService {
     });
   }
 
-  static void _handleMessage(BuildContext context, Map<String, dynamic> data) {
+  static Future<void> _handleMessage(BuildContext context, Map<String, dynamic> data) async {
     final type      = data['type'] as String?;
     final sessionId = data['sessionId'] as String? ?? '';
 
     switch (type) {
       case 'admin_approval_request':
-        _showDialog(context, sessionId, ApprovalDialogType.adminLogin);
+        final targetUserId = data['userId'] as String?;
+        if (targetUserId != null) {
+          final myId = await AuthService.getUserId();
+          if (myId != targetUserId) return;
+        }
+        if (context.mounted) _showDialog(context, sessionId, ApprovalDialogType.adminLogin);
       case 'admin_vault_auth':
-        _showDialog(context, sessionId, ApprovalDialogType.vaultAccess);
+        if (context.mounted) _showDialog(context, sessionId, ApprovalDialogType.vaultAccess);
     }
   }
 

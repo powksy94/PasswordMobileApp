@@ -64,6 +64,14 @@ class VaultPageState extends State<VaultPage> {
           _fromCache = result.fromCache;
         });
       }
+    } on VaultDecryptionException {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.errorVaultDecryptionFailed),
+          duration: const Duration(seconds: 6),
+          backgroundColor: Colors.redAccent,
+        ));
+      }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

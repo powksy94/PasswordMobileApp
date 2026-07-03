@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:uuid/uuid.dart';
 import '../models/vault_item.dart';
-import '../../auth/services/auth_service.dart';
+import '../../auth/services/master_key_service.dart';
 import './biometric_export_service.dart';
 import '../../../shared/services/crypto_service.dart';
 import './vault_csv_parser.dart';
@@ -34,7 +34,7 @@ class VaultImportService {
     }
 
     if (fileName.endsWith('.enc')) {
-      final masterKey = AuthService.getMasterKey();
+      final masterKey = MasterKeyService.getMasterKey();
       if (masterKey != null) {
         try {
           return _parseJson(CryptoService.decryptText(content, masterKey));

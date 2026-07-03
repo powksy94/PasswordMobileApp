@@ -23,7 +23,7 @@ import 'features/auth/widgets/splash_auth_gate.dart';
 // Services
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'shared/services/role_provider.dart';
-import 'features/auth/services/auth_service.dart';
+import 'features/auth/services/master_key_service.dart';
 import 'shared/services/autofill_cache_service.dart';
 import 'features/settings/services/settings_service.dart';
 
@@ -92,10 +92,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       _pausedAt = null;
       _loadTimeout();
       final timeout = _lockTimeout;
-      if (paused != null && timeout != null && AuthService.getMasterKey() != null) {
+      if (paused != null && timeout != null && MasterKeyService.getMasterKey() != null) {
         final elapsed = DateTime.now().difference(paused);
         if (elapsed > timeout) {
-          AuthService.clearMasterKey();
+          MasterKeyService.clearMasterKey();
           AutofillCacheService.clear().ignore();
           _navigatorKey.currentState
               ?.pushNamedAndRemoveUntil('/lock', (r) => false);

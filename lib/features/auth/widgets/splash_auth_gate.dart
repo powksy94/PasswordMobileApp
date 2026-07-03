@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../services/master_key_service.dart';
 import '../services/biometric_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
@@ -37,7 +38,7 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
         if (!mounted) return;
 
         if (ok) {
-          final success = await AuthService.unlockFromStorage();
+          final success = await MasterKeyService.unlockFromStorage();
           if (!mounted) return;
           if (success) {
             FcmService.initialize();

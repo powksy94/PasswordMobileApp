@@ -224,6 +224,10 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorWrongMasterPassword => 'Mot de passe maître incorrect';
 
   @override
+  String get errorVaultDecryptionFailed =>
+      'Impossible de déchiffrer le coffre — vérifiez votre mot de passe maître';
+
+  @override
   String get btnGenerate => 'Générer';
 
   @override
@@ -256,6 +260,36 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get btnDeleteAccount => 'Supprimer mon compte';
+
+  @override
+  String get btnDangerResetVault => 'Vider le coffre et réinitialiser la clé';
+
+  @override
+  String get titleResetVault => 'Réinitialiser le coffre';
+
+  @override
+  String get warningResetVaultTitle => 'Action critique et irréversible';
+
+  @override
+  String get warningResetVaultBody =>
+      'Cette opération va :\n\n• Supprimer définitivement tous vos mots de passe chiffrés\n• Vous permettre de définir un nouveau mot de passe maître\n\n⚠️ Vos données ne pourront pas être récupérées.';
+
+  @override
+  String get checkboxUnderstandVaultReset =>
+      'Je comprends que tous mes mots de passe seront supprimés définitivement';
+
+  @override
+  String get btnResetVault => 'Vider et réinitialiser';
+
+  @override
+  String get progressResettingVault => 'Réinitialisation du coffre…';
+
+  @override
+  String get successVaultReset => 'Coffre réinitialisé avec succès';
+
+  @override
+  String get errorVaultResetFailed =>
+      'Échec de la réinitialisation — réessayez';
 
   @override
   String get passwordEmpty => 'Mot de passe vide';

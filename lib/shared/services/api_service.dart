@@ -110,6 +110,13 @@ class ApiService {
     );
   }
 
+  Future<void> purgeVault(String token) async {
+    await _dio.delete(
+      '/vault/all',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
   Future<void> deleteAccount(String token) async {
     await _dio.delete(
       '/auth/account',

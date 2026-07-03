@@ -4,8 +4,13 @@ import '../../../l10n/app_localizations.dart';
 
 class DangerZonePanel extends StatelessWidget {
   final VoidCallback onDelete;
+  final VoidCallback onResetVault;
 
-  const DangerZonePanel({super.key, required this.onDelete});
+  const DangerZonePanel({
+    super.key,
+    required this.onDelete,
+    required this.onResetVault,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +30,22 @@ class DangerZonePanel extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 14),
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: onResetVault,
+              icon:  const Icon(Icons.delete_sweep, color: Colors.orangeAccent),
+              label: Text(
+                l.btnDangerResetVault,
+                style: const TextStyle(color: Colors.orangeAccent),
+              ),
+              style: OutlinedButton.styleFrom(
+                side:    const BorderSide(color: Colors.orangeAccent),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../services/master_key_service.dart';
 import '../services/biometric_service.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
@@ -43,7 +44,7 @@ class _LockScreenState extends State<LockScreen> {
     final authenticated = await BiometricService.authenticate();
     if (!authenticated || !mounted) return;
 
-    final success = await AuthService.unlockFromStorage();
+    final success = await MasterKeyService.unlockFromStorage();
     if (!mounted) return;
 
     if (success) {
@@ -61,7 +62,7 @@ class _LockScreenState extends State<LockScreen> {
     setState(() => _loading = true);
 
     final success =
-        await AuthService.unlockWithMasterPassword(_passwordCtrl.text);
+        await MasterKeyService.unlockWithMasterPassword(_passwordCtrl.text);
     if (!mounted) return;
     setState(() => _loading = false);
 

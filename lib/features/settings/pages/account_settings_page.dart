@@ -14,6 +14,7 @@ import '../widgets/logout_panel.dart';
 import '../../../l10n/app_localizations.dart';
 import './change_password_page.dart';
 import './change_master_password_page.dart';
+import './reset_vault_page.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({super.key});
@@ -23,6 +24,23 @@ class AccountSettingsPage extends StatefulWidget {
 }
 
 class _AccountSettingsPageState extends State<AccountSettingsPage> {
+  String? _email;
+
+  @override
+  void initState() {
+    super.initState();
+    AuthService.getEmail().then((e) {
+      if (mounted) setState(() => _email = e);
+    });
+  }
+
+  Future<void> _resetVault() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const ResetVaultPage()),
+    );
+  }
+
   Future<void> _deleteAccount() async {
     final l = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
@@ -95,6 +113,18 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
           child: ListView(
             padding: const EdgeInsets.all(16),
             children: [
+              GlassPanel(
+                width: double.infinity,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.account_circle_outlined),
+                  title: Text(
+                    _email ?? '…',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
               LockTimeoutPanel(),
               const SizedBox(height: 20),
               const PrivacySettingsPanel(),
@@ -134,7 +164,7 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               const SizedBox(height: 20),
               const LogoutPanel(),
               const SizedBox(height: 20),
-              DangerZonePanel(onDelete: _deleteAccount),
+              DangerZonePanel(onDelete: _deleteAccount, onResetVault: _resetVault),
             ],
           ),
         ),

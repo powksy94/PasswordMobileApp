@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import '../models/vault_item.dart';
 import '../../../shared/utils/downloads_directory.dart';
-import '../../auth/services/auth_service.dart';
+import '../../auth/services/master_key_service.dart';
 import '../../../shared/services/crypto_service.dart';
 
 class VaultExportService {
@@ -30,7 +30,7 @@ class VaultExportService {
   // ── Chiffré portable (master password) → Téléchargements ─────────────────
 
   static Future<String> exportPortable(List<VaultItem> items) async {
-    final key = AuthService.getMasterKey();
+    final key = MasterKeyService.getMasterKey();
     if (key == null) throw Exception('Master key absente — connectez-vous d\'abord');
 
     final jsonStr   = jsonEncode(items.map((i) => {

@@ -10,3 +10,9 @@ class MasterPasswordChangeException implements Exception {
   final Object cause;
   MasterPasswordChangeException(this.cause);
 }
+
+/// Levée par [VaultService.loadFromServer] quand le serveur retourne des items
+/// mais qu'aucun ne peut être déchiffré — indique un mot de passe maître incorrect.
+class VaultDecryptionException implements Exception {
+  const VaultDecryptionException();
+}

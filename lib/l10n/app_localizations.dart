@@ -520,6 +520,12 @@ abstract class AppLocalizations {
   /// **'Wrong master password'**
   String get errorWrongMasterPassword;
 
+  /// No description provided for @errorVaultDecryptionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not decrypt vault — please check your master password'**
+  String get errorVaultDecryptionFailed;
+
   /// No description provided for @btnGenerate.
   ///
   /// In en, this message translates to:
@@ -585,6 +591,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete my account'**
   String get btnDeleteAccount;
+
+  /// No description provided for @btnDangerResetVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Wipe vault and reset key'**
+  String get btnDangerResetVault;
+
+  /// No description provided for @titleResetVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset vault'**
+  String get titleResetVault;
+
+  /// No description provided for @warningResetVaultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical and irreversible action'**
+  String get warningResetVaultTitle;
+
+  /// No description provided for @warningResetVaultBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This operation will:\n\n• Permanently delete all your encrypted passwords\n• Allow you to set a new master password\n\n⚠️ Your data cannot be recovered.'**
+  String get warningResetVaultBody;
+
+  /// No description provided for @checkboxUnderstandVaultReset.
+  ///
+  /// In en, this message translates to:
+  /// **'I understand that all my passwords will be permanently deleted'**
+  String get checkboxUnderstandVaultReset;
+
+  /// No description provided for @btnResetVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Wipe and reset'**
+  String get btnResetVault;
+
+  /// No description provided for @progressResettingVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Resetting vault…'**
+  String get progressResettingVault;
+
+  /// No description provided for @successVaultReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault reset successfully'**
+  String get successVaultReset;
+
+  /// No description provided for @errorVaultResetFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset failed — please try again'**
+  String get errorVaultResetFailed;
 
   /// No description provided for @passwordEmpty.
   ///

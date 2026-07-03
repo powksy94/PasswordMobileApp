@@ -223,6 +223,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorWrongMasterPassword => 'Contraseña maestra incorrecta';
 
   @override
+  String get errorVaultDecryptionFailed =>
+      'No se pudo descifrar el cofre — verifica tu contraseña maestra';
+
+  @override
   String get btnGenerate => 'Generar';
 
   @override
@@ -255,6 +259,36 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get btnDeleteAccount => 'Eliminar mi cuenta';
+
+  @override
+  String get btnDangerResetVault => 'Vaciar cofre y restablecer clave';
+
+  @override
+  String get titleResetVault => 'Restablecer cofre';
+
+  @override
+  String get warningResetVaultTitle => 'Acción crítica e irreversible';
+
+  @override
+  String get warningResetVaultBody =>
+      'Esta operación va a:\n\n• Eliminar definitivamente todas tus contraseñas cifradas\n• Permitirte establecer una nueva contraseña maestra\n\n⚠️ Tus datos no podrán recuperarse.';
+
+  @override
+  String get checkboxUnderstandVaultReset =>
+      'Entiendo que todas mis contraseñas serán eliminadas permanentemente';
+
+  @override
+  String get btnResetVault => 'Vaciar y restablecer';
+
+  @override
+  String get progressResettingVault => 'Restableciendo cofre…';
+
+  @override
+  String get successVaultReset => 'Cofre restablecido con éxito';
+
+  @override
+  String get errorVaultResetFailed =>
+      'Error al restablecer — inténtalo de nuevo';
 
   @override
   String get passwordEmpty => 'Contraseña vacía';

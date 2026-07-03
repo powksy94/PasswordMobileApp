@@ -222,6 +222,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorWrongMasterPassword => 'Wrong master password';
 
   @override
+  String get errorVaultDecryptionFailed =>
+      'Could not decrypt vault — please check your master password';
+
+  @override
   String get btnGenerate => 'Generate';
 
   @override
@@ -253,6 +257,35 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get btnDeleteAccount => 'Delete my account';
+
+  @override
+  String get btnDangerResetVault => 'Wipe vault and reset key';
+
+  @override
+  String get titleResetVault => 'Reset vault';
+
+  @override
+  String get warningResetVaultTitle => 'Critical and irreversible action';
+
+  @override
+  String get warningResetVaultBody =>
+      'This operation will:\n\n• Permanently delete all your encrypted passwords\n• Allow you to set a new master password\n\n⚠️ Your data cannot be recovered.';
+
+  @override
+  String get checkboxUnderstandVaultReset =>
+      'I understand that all my passwords will be permanently deleted';
+
+  @override
+  String get btnResetVault => 'Wipe and reset';
+
+  @override
+  String get progressResettingVault => 'Resetting vault…';
+
+  @override
+  String get successVaultReset => 'Vault reset successfully';
+
+  @override
+  String get errorVaultResetFailed => 'Reset failed — please try again';
 
   @override
   String get passwordEmpty => 'Empty password';

@@ -22,30 +22,33 @@ class VaultService {
 
   // ── Chargement (réseau → cache en cas d'échec) ────────────────────────────
 
-  /// Retourne les items et un flag [fromCache] indiquant si les données viennent du cache.
-  static Future<({List<VaultItem> items, bool fromCache})> loadFromServer() async {
+  /// Retourne les items, un flag [fromCache] indiquant si les données viennent
+  /// du cache, et [skippedCount] : le nombre d'items présents côté serveur/cache
+  /// mais qui n'ont pas pu être déchiffrés (à signaler à l'utilisateur plutôt
+  /// que de les faire disparaître silencieusement du coffre).
+  static Future<({List<VaultItem> items, bool fromCache, int skippedCount})> loadFromServer() async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
     final key = MasterKeyService.getMasterKey();
     if (key == null) throw Exception('Master key absente — déverrouillez le vault');
 
     try {
-      final raw   = await _api.getVault(token);
+      final raw    = await _api.getVault(token);
       await VaultCache.save(raw);
-      final items = VaultCodec.decryptRaw(raw, key);
-      if (raw.isNotEmpty && items.isEmpty) {
+      final result = VaultCodec.decryptRaw(raw, key);
+      if (raw.isNotEmpty && result.items.isEmpty) {
         throw const VaultDecryptionException();
       }
-      AutofillCacheService.update(items).ignore();
-      return (items: items, fromCache: false);
+      AutofillCacheService.update(result.items).ignore();
+      return (items: result.items, fromCache: false, skippedCount: result.skipped);
     } on VaultDecryptionException {
       rethrow;
     } catch (_) {
       final cached = await VaultCache.load();
       if (cached == null) rethrow;
-      final items = VaultCodec.decryptRaw(cached, key);
-      if (cached.isNotEmpty && items.isEmpty) throw const VaultDecryptionException();
-      return (items: items, fromCache: true);
+      final result = VaultCodec.decryptRaw(cached, key);
+      if (cached.isNotEmpty && result.items.isEmpty) throw const VaultDecryptionException();
+      return (items: result.items, fromCache: true, skippedCount: result.skipped);
     }
   }
 
@@ -124,6 +127,16 @@ class VaultService {
 
     final result = await loadFromServer();
     final items  = result.items;
+
+    // An item that fails to decrypt under the old key would simply be
+    // missing from the re-encrypted batch sent to the server and lost for
+    // good once the new key is committed — refuse instead of silently
+    // re-encrypting an incomplete vault.
+    if (result.skippedCount > 0) {
+      throw MasterPasswordChangeException(
+        'skipped items during re-encrypt: ${result.skippedCount}',
+      );
+    }
 
     if (items.isNotEmpty) {
       final reencrypted = items.map((item) => VaultCodec.encryptFields(

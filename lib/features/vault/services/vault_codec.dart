@@ -33,9 +33,13 @@ class VaultCodec {
   }
 
   /// Déchiffre une liste brute (issue du serveur ou du cache) en [VaultItem].
-  /// Les entrées illisibles (clé incorrecte, données corrompues) sont ignorées.
-  static List<VaultItem> decryptRaw(List<dynamic> raw, Uint8List key) {
+  /// Les entrées illisibles (clé incorrecte, données corrompues) sont ignorées ;
+  /// [skipped] permet à l'appelant de signaler à l'utilisateur qu'une partie
+  /// du coffre n'a pas pu être affichée plutôt que de la faire disparaître
+  /// silencieusement.
+  static ({List<VaultItem> items, int skipped}) decryptRaw(List<dynamic> raw, Uint8List key) {
     final out = <VaultItem>[];
+    var skipped = 0;
     for (final r in raw) {
       try {
         final title    = CryptoService.decryptText(r['title'] as String, key);
@@ -62,9 +66,10 @@ class VaultCodec {
           url:      url,
         ));
       } catch (e) {
+        skipped++;
         debugPrint('Erreur decrypt item ${r['id']}: $e');
       }
     }
-    return out;
+    return (items: out, skipped: skipped);
   }
 }

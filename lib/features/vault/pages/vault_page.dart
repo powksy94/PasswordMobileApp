@@ -63,6 +63,14 @@ class VaultPageState extends State<VaultPage> {
           _items     = result.items;
           _fromCache = result.fromCache;
         });
+        if (result.skippedCount > 0) {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)!
+                .warningVaultItemsSkipped(result.skippedCount)),
+            duration: const Duration(seconds: 8),
+            backgroundColor: Colors.orangeAccent,
+          ));
+        }
       }
     } on VaultDecryptionException {
       if (mounted) {

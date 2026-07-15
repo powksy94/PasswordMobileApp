@@ -106,7 +106,7 @@ class BiometricExportService {
       // Produit {"data":"...","iv":"..."} — même format AES-GCM que le vault
       final encrypted = CryptoService.encryptText(jsonStr, key);
 
-      final dir       = await getDownloadsDirectory();
+      final dir       = await getExportScratchDirectory();
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final file      = File('${dir.path}/vault_secure_$timestamp.enc');
       await file.writeAsString(encrypted);

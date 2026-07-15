@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import '../models/vault_item.dart';
 import '../services/vault_export_service.dart';
 import '../services/biometric_export_service.dart';
 import '../../../l10n/app_localizations.dart';
 
-void _snackSuccess(BuildContext context, String path) {
-  final filename = path.split('/').last;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content:  Text('✅ $filename'),
-      duration: const Duration(seconds: 5),
-    ),
-  );
+/// Le fichier exporté est écrit dans un dossier privé à l'app (voir
+/// getExportScratchDirectory) : sous scoped storage (Android 10+), on ne
+/// peut pas garantir qu'un chemin public "Download/" soit écrivable. La
+/// feuille de partage système laisse l'utilisateur choisir la vraie
+/// destination (Fichiers, Drive, e-mail…).
+Future<void> _shareExportedFile(BuildContext context, String path) async {
+  await Share.shareXFiles([XFile(path)]);
 }
 
 Future<void> exportVaultBiometric(
@@ -33,7 +33,7 @@ Future<void> exportVaultBiometric(
     final path = await BiometricExportService.exportEncrypted(items);
     if (!context.mounted) return;
     if (path == null) return;
-    _snackSuccess(context, path);
+    await _shareExportedFile(context, path);
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
@@ -69,7 +69,7 @@ Future<void> exportVaultPortable(
   try {
     final path = await VaultExportService.exportPortable(items);
     if (!context.mounted) return;
-    _snackSuccess(context, path);
+    await _shareExportedFile(context, path);
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
@@ -105,7 +105,7 @@ Future<void> exportVaultJson(
   try {
     final path = await VaultExportService.exportToJson(items);
     if (!context.mounted) return;
-    _snackSuccess(context, path);
+    await _shareExportedFile(context, path);
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)

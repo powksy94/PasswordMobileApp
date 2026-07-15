@@ -9,7 +9,7 @@ class VaultExportService {
   // ── JSON (texte clair) → Téléchargements ─────────────────────────────────
 
   static Future<String> exportToJson(List<VaultItem> items) async {
-    final dir       = await getDownloadsDirectory();
+    final dir       = await getExportScratchDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final file      = File('${dir.path}/vault_export_$timestamp.json');
 
@@ -39,7 +39,7 @@ class VaultExportService {
     }).toList());
     final encrypted = CryptoService.encryptText(jsonStr, key);
 
-    final dir       = await getDownloadsDirectory();
+    final dir       = await getExportScratchDirectory();
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final file      = File('${dir.path}/vault_portable_$timestamp.enc');
     await file.writeAsString(encrypted);

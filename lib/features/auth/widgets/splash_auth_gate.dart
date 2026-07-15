@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/master_key_service.dart';
 import '../services/biometric_service.dart';
+import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 
@@ -28,8 +29,11 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
     if (!mounted) return;
 
     if (isLoggedIn) {
-      // Tente le déverrouillage biométrique immédiat
-      final bioAvailable = await BiometricService.isAvailable();
+      // Tente le déverrouillage biométrique immédiat, seulement si l'utilisateur
+      // l'a activé dans les réglages (sinon on tombe sur l'écran de verrouillage).
+      final biometricEnabled = await SettingsService.getBiometricEnabled();
+      if (!mounted) return;
+      final bioAvailable = biometricEnabled && await BiometricService.isAvailable();
       if (!mounted) return;
 
       if (bioAvailable) {

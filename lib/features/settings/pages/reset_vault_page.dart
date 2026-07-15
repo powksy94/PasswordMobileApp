@@ -14,16 +14,19 @@ class ResetVaultPage extends StatefulWidget {
 }
 
 class _ResetVaultPageState extends State<ResetVaultPage> {
+  final _currentCtrl = TextEditingController();
   final _newCtrl     = TextEditingController();
   final _confirmCtrl = TextEditingController();
 
   bool _understood  = false;
   bool _loading     = false;
+  bool _showCurrent = false;
   bool _showNew     = false;
   bool _showConfirm = false;
 
   @override
   void dispose() {
+    _currentCtrl.dispose();
     _newCtrl.dispose();
     _confirmCtrl.dispose();
     super.dispose();
@@ -36,6 +39,16 @@ class _ResetVaultPageState extends State<ResetVaultPage> {
 
     setState(() => _loading = true);
     try {
+      // Une action aussi destructrice et irréversible exige de reprouver la
+      // possession du mot de passe maître actuel (comme pour son changement),
+      // pour éviter qu'un téléphone déverrouillé et laissé sans surveillance
+      // permette de tout effacer via une simple case à cocher.
+      final validCurrent = await MasterKeyService.unlockWithMasterPassword(_currentCtrl.text);
+      if (!validCurrent) {
+        _snack(l.errorWrongMasterPassword);
+        return;
+      }
+
       await VaultService.purgeAll();
       final ok = await MasterKeyService.resetMasterKey(_newCtrl.text);
       if (!ok) throw Exception();
@@ -93,6 +106,20 @@ class _ResetVaultPageState extends State<ResetVaultPage> {
                   width: double.infinity,
                   child: Column(
                     children: [
+                      TextField(
+                        controller:  _currentCtrl,
+                        enabled:     _understood,
+                        obscureText: !_showCurrent,
+                        decoration: InputDecoration(
+                          labelText: l.labelCurrentMasterPassword,
+                          border:    const OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            icon: Icon(_showCurrent ? Icons.visibility_off : Icons.visibility),
+                            onPressed: () => setState(() => _showCurrent = !_showCurrent),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
                       TextField(
                         controller:  _newCtrl,
                         enabled:     _understood,

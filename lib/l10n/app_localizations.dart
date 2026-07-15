@@ -526,6 +526,12 @@ abstract class AppLocalizations {
   /// **'Could not decrypt vault — please check your master password'**
   String get errorVaultDecryptionFailed;
 
+  /// No description provided for @warningVaultItemsSkipped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, one{1 item} other{{count} items}} could not be decrypted and are hidden. Your data is not lost — try logging out and back in.'**
+  String warningVaultItemsSkipped(int count);
+
   /// No description provided for @btnGenerate.
   ///
   /// In en, this message translates to:
@@ -1179,6 +1185,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A login attempt to the admin panel has just been made.\n\nDid you initiate this login?'**
   String get bodyAdminLoginRequest;
+
+  /// No description provided for @labelRequestOrigin.
+  ///
+  /// In en, this message translates to:
+  /// **'Request origin: {ip}'**
+  String labelRequestOrigin(String ip);
 
   /// No description provided for @btnDeny.
   ///

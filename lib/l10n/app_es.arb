@@ -85,6 +85,7 @@
   "errorBiometricKey": "Clave biométrica no encontrada — ingresa tu contraseña maestra",
   "errorWrongMasterPassword": "Contraseña maestra incorrecta",
   "errorVaultDecryptionFailed": "No se pudo descifrar el cofre — verifica tu contraseña maestra",
+  "warningVaultItemsSkipped": "{count, plural, one{1 elemento} other{{count} elementos}} no se pudo descifrar y {count, plural, one{está oculto} other{están ocultos}}. Tus datos no se han perdido — intenta cerrar sesión y volver a iniciarla.",
   "btnGenerate": "Generar",
   "errorLabelMissing": "Por favor ingresa una etiqueta para la contraseña.",
   "vaultEmptyExport": "Cofre vacío — nada que exportar",
@@ -206,6 +207,7 @@
   "titleAdminLogin": "Inicio de sesión de administrador",
   "bodyVaultAdminAccessRequest": "Se acaba de realizar una solicitud de acceso al cofre de administración.\n\nApruébala para desbloquear el cofre.",
   "bodyAdminLoginRequest": "Se acaba de realizar un intento de inicio de sesión en el panel de administración.\n\n¿Iniciaste tú esta sesión?",
+  "labelRequestOrigin": "Origen de la solicitud: {ip}",
   "btnDeny": "Rechazar",
   "btnApprove": "Aprobar",
 

@@ -85,6 +85,12 @@
   "errorBiometricKey": "Biometric key not found — enter your master password",
   "errorWrongMasterPassword": "Wrong master password",
   "errorVaultDecryptionFailed": "Could not decrypt vault — please check your master password",
+  "warningVaultItemsSkipped": "{count, plural, one{1 item} other{{count} items}} could not be decrypted and are hidden. Your data is not lost — try logging out and back in.",
+  "@warningVaultItemsSkipped": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
   "btnGenerate": "Generate",
   "errorLabelMissing": "Please enter a label for the password.",
   "vaultEmptyExport": "Empty vault — nothing to export",
@@ -206,6 +212,12 @@
   "titleAdminLogin": "Admin login",
   "bodyVaultAdminAccessRequest": "A request to access the admin vault has just been made.\n\nApprove to unlock the vault.",
   "bodyAdminLoginRequest": "A login attempt to the admin panel has just been made.\n\nDid you initiate this login?",
+  "labelRequestOrigin": "Request origin: {ip}",
+  "@labelRequestOrigin": {
+    "placeholders": {
+      "ip": { "type": "String" }
+    }
+  },
   "btnDeny": "Deny",
   "btnApprove": "Approve",
 

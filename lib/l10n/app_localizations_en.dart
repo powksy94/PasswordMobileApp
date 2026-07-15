@@ -226,6 +226,17 @@ class AppLocalizationsEn extends AppLocalizations {
       'Could not decrypt vault — please check your master password';
 
   @override
+  String warningVaultItemsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count items',
+      one: '1 item',
+    );
+    return '$_temp0 could not be decrypted and are hidden. Your data is not lost — try logging out and back in.';
+  }
+
+  @override
   String get btnGenerate => 'Generate';
 
   @override
@@ -578,6 +589,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get bodyAdminLoginRequest =>
       'A login attempt to the admin panel has just been made.\n\nDid you initiate this login?';
+
+  @override
+  String labelRequestOrigin(String ip) {
+    return 'Request origin: $ip';
+  }
 
   @override
   String get btnDeny => 'Deny';

@@ -228,6 +228,23 @@ class AppLocalizationsFr extends AppLocalizations {
       'Impossible de déchiffrer le coffre — vérifiez votre mot de passe maître';
 
   @override
+  String warningVaultItemsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count éléments n\'ont',
+      one: '1 élément n\'a',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'sont masqués',
+      one: 'est masqué',
+    );
+    return '$_temp0 pas pu être déchiffré et $_temp1. Vos données ne sont pas perdues — essayez de vous déconnecter puis reconnecter.';
+  }
+
+  @override
   String get btnGenerate => 'Générer';
 
   @override
@@ -586,6 +603,11 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get bodyAdminLoginRequest =>
       'Une tentative de connexion au panneau d\'administration vient d\'être effectuée.\n\nÊtes-vous à l\'origine de cette connexion ?';
+
+  @override
+  String labelRequestOrigin(String ip) {
+    return 'Origine de la demande : $ip';
+  }
 
   @override
   String get btnDeny => 'Refuser';

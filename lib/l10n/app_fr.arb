@@ -85,6 +85,7 @@
   "errorBiometricKey": "Clé biométrique introuvable — entrez le mot de passe maître",
   "errorWrongMasterPassword": "Mot de passe maître incorrect",
   "errorVaultDecryptionFailed": "Impossible de déchiffrer le coffre — vérifiez votre mot de passe maître",
+  "warningVaultItemsSkipped": "{count, plural, one{1 élément n'a} other{{count} éléments n'ont}} pas pu être déchiffré et {count, plural, one{est masqué} other{sont masqués}}. Vos données ne sont pas perdues — essayez de vous déconnecter puis reconnecter.",
   "btnGenerate": "Générer",
   "errorLabelMissing": "Veuillez entrer un label pour le mot de passe.",
   "vaultEmptyExport": "Coffre vide — rien à exporter",
@@ -206,6 +207,7 @@
   "titleAdminLogin": "Connexion admin",
   "bodyVaultAdminAccessRequest": "Une demande d'accès au vault admin vient d'être effectuée.\n\nApprouvez pour déverrouiller le vault.",
   "bodyAdminLoginRequest": "Une tentative de connexion au panneau d'administration vient d'être effectuée.\n\nÊtes-vous à l'origine de cette connexion ?",
+  "labelRequestOrigin": "Origine de la demande : {ip}",
   "btnDeny": "Refuser",
   "btnApprove": "Approuver",
 

@@ -90,6 +90,7 @@ class FcmService {
   static Future<void> _handleMessage(BuildContext context, Map<String, dynamic> data) async {
     final type      = data['type'] as String?;
     final sessionId = data['sessionId'] as String? ?? '';
+    final requestIp = data['requestIp'] as String?;
 
     switch (type) {
       case 'admin_approval_request':
@@ -98,18 +99,22 @@ class FcmService {
           final myId = await AuthService.getUserId();
           if (myId != targetUserId) return;
         }
-        if (context.mounted) _showDialog(context, sessionId, ApprovalDialogType.adminLogin);
+        if (context.mounted) {
+          _showDialog(context, sessionId, ApprovalDialogType.adminLogin, requestIp);
+        }
       case 'admin_vault_auth':
-        if (context.mounted) _showDialog(context, sessionId, ApprovalDialogType.vaultAccess);
+        if (context.mounted) {
+          _showDialog(context, sessionId, ApprovalDialogType.vaultAccess, requestIp);
+        }
     }
   }
 
-  static void _showDialog(
-      BuildContext context, String sessionId, ApprovalDialogType type) {
+  static void _showDialog(BuildContext context, String sessionId,
+      ApprovalDialogType type, String? requestIp) {
     showDialog(
       context:            context,
       barrierDismissible: false,
-      builder: (_) => ApprovalDialog(sessionId: sessionId, type: type),
+      builder: (_) => ApprovalDialog(sessionId: sessionId, type: type, requestIp: requestIp),
     );
   }
 }

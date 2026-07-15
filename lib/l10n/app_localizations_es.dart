@@ -227,6 +227,23 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se pudo descifrar el cofre — verifica tu contraseña maestra';
 
   @override
+  String warningVaultItemsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count elementos',
+      one: '1 elemento',
+    );
+    String _temp1 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'están ocultos',
+      one: 'está oculto',
+    );
+    return '$_temp0 no se pudo descifrar y $_temp1. Tus datos no se han perdido — intenta cerrar sesión y volver a iniciarla.';
+  }
+
+  @override
   String get btnGenerate => 'Generar';
 
   @override
@@ -586,6 +603,11 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get bodyAdminLoginRequest =>
       'Se acaba de realizar un intento de inicio de sesión en el panel de administración.\n\n¿Iniciaste tú esta sesión?';
+
+  @override
+  String labelRequestOrigin(String ip) {
+    return 'Origen de la solicitud: $ip';
+  }
 
   @override
   String get btnDeny => 'Rechazar';

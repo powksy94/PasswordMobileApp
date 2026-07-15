@@ -12,7 +12,13 @@ enum ApprovalDialogType { adminLogin, vaultAccess }
 class ApprovalDialog extends StatefulWidget {
   final String             sessionId;
   final ApprovalDialogType type;
-  const ApprovalDialog({super.key, required this.sessionId, required this.type});
+  final String?            requestIp;
+  const ApprovalDialog({
+    super.key,
+    required this.sessionId,
+    required this.type,
+    this.requestIp,
+  });
 
   @override
   State<ApprovalDialog> createState() => _ApprovalDialogState();
@@ -70,8 +76,19 @@ class _ApprovalDialogState extends State<ApprovalDialog> {
           Text(_isVault ? l.titleVaultAdminAccess : l.titleAdminLogin),
         ],
       ),
-      content: Text(
-        _isVault ? l.bodyVaultAdminAccessRequest : l.bodyAdminLoginRequest,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(_isVault ? l.bodyVaultAdminAccessRequest : l.bodyAdminLoginRequest),
+          if (widget.requestIp != null) ...[
+            const SizedBox(height: 10),
+            Text(
+              l.labelRequestOrigin(widget.requestIp!),
+              style: const TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+            ),
+          ],
+        ],
       ),
       actions: [
         TextButton(

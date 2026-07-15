@@ -114,7 +114,6 @@
   "errorBiometricFailed": "Empreinte non reconnue — réessayez ou utilisez le formulaire",
   "labelConfirmPassword": "Confirmer le mot de passe",
   "labelConfirmMasterPassword": "Confirmer le mot de passe maître",
-  "validatorMinCharsUnit": "caractères minimum",
 
   "deleteAccountTitle": "Supprimer le compte",
   "deleteAccountContent": "Cette action est irréversible.\n\nTous vos mots de passe chiffrés seront définitivement supprimés.",
@@ -124,7 +123,8 @@
   "btnLoginWithBiometric": "Se connecter avec l'empreinte",
   "orDivider": "ou",
   "btnSignup": "Créer un compte",
-  "validatorMinChars": "6 caractères minimum",
+  "validatorMinChars": "12 caractères minimum",
+  "validatorPasswordComplexity": "Doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial",
   "sessionExpiredInfo": "Session expirée après inactivité.",
   "masterPasswordDialogContent": "Entrez votre mot de passe maître pour déchiffrer votre coffre.",
   "masterPasswordDialogHint": "Ce mot de passe est différent de votre mot de passe de connexion.",

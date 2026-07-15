@@ -52,7 +52,6 @@ class SignupStep2 extends StatelessWidget {
                         label:             l.labelMasterPassword,
                         controller:        masterPwCtrl,
                         confirmController: confirmMasterPwCtrl,
-                        minLength:         8,
                         showToggle:        true,
                         withInfoIcon:      true,
                         warningText:       l.warningMasterPassword,

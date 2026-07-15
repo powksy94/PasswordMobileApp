@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../auth/services/auth_service.dart';
 import '../../../shared/services/api_service.dart';
 import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/utils/password_policy.dart';
 import '../widgets/change_password_panel.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -32,8 +33,12 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       _snack(l.validatorPasswordMismatch);
       return;
     }
-    if (_newPwCtrl.text.length < 6) {
+    if (_newPwCtrl.text.length < PasswordPolicy.minLength) {
       _snack(l.validatorMinChars);
+      return;
+    }
+    if (!PasswordPolicy.meetsComplexity(_newPwCtrl.text)) {
+      _snack(l.validatorPasswordComplexity);
       return;
     }
     setState(() => _changingPw = true);

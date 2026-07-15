@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/common/password_strength_bar.dart';
+import '../../../shared/utils/password_policy.dart';
 import '../../../l10n/app_localizations.dart';
 
 class PasswordSection extends StatefulWidget {
   final String                      label;
   final TextEditingController       controller;
   final TextEditingController       confirmController;
-  final int                         minLength;
   final bool                        showToggle;
   final String?                     warningText;
   final bool                        withInfoIcon;
@@ -17,7 +17,6 @@ class PasswordSection extends StatefulWidget {
     required this.label,
     required this.controller,
     required this.confirmController,
-    required this.minLength,
     this.showToggle    = false,
     this.warningText,
     this.withInfoIcon  = false,
@@ -89,9 +88,7 @@ class _PasswordSectionState extends State<PasswordSection> {
           controller:  widget.controller,
           obscureText: !_showPassword,
           onChanged:   (_) => setState(() {}),
-          validator: (v) => v != null && v.length >= widget.minLength
-              ? null
-              : '${widget.minLength} ${l.validatorMinCharsUnit}',
+          validator: (v) => PasswordPolicy.validator(v, l),
           decoration: InputDecoration(
             labelText:  fieldLabel,
             prefixIcon: Icon(

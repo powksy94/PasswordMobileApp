@@ -114,7 +114,6 @@
   "errorBiometricFailed": "Huella no reconocida — reintenta o usa el formulario",
   "labelConfirmPassword": "Confirmar contraseña",
   "labelConfirmMasterPassword": "Confirmar contraseña maestra",
-  "validatorMinCharsUnit": "caracteres mínimo",
 
   "deleteAccountTitle": "Eliminar cuenta",
   "deleteAccountContent": "Esta acción es irreversible.\n\nTodas tus contraseñas cifradas serán eliminadas permanentemente.",
@@ -124,7 +123,8 @@
   "btnLoginWithBiometric": "Iniciar sesión con huella",
   "orDivider": "o",
   "btnSignup": "Crear una cuenta",
-  "validatorMinChars": "6 caracteres mínimo",
+  "validatorMinChars": "12 caracteres mínimo",
+  "validatorPasswordComplexity": "Debe contener una mayúscula, una minúscula, un dígito y un carácter especial",
   "sessionExpiredInfo": "Sesión expirada por inactividad.",
   "masterPasswordDialogContent": "Ingresa tu contraseña maestra para descifrar tu cofre.",
   "masterPasswordDialogHint": "Esta contraseña es diferente de tu contraseña de inicio de sesión.",

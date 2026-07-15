@@ -66,7 +66,6 @@ class SignupStep1 extends StatelessWidget {
                         label:             l.labelAccountPassword,
                         controller:        passwordCtrl,
                         confirmController: confirmPasswordCtrl,
-                        minLength:         6,
                         confirmValidator:  (v) => v == passwordCtrl.text
                             ? null
                             : l.validatorPasswordMismatch,

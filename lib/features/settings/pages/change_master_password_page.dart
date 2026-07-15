@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../vault/services/vault_service.dart';
 import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/utils/password_policy.dart';
 import '../widgets/master_password_warning_panel.dart';
 import '../widgets/change_master_password_panel.dart';
 import '../../../l10n/app_localizations.dart';
@@ -37,8 +38,12 @@ class _ChangeMasterPasswordPageState extends State<ChangeMasterPasswordPage> {
       _snack(l.validatorMasterPasswordMismatch);
       return;
     }
-    if (_newPwCtrl.text.length < 6) {
+    if (_newPwCtrl.text.length < PasswordPolicy.minLength) {
       _snack(l.validatorMinChars);
+      return;
+    }
+    if (!PasswordPolicy.meetsComplexity(_newPwCtrl.text)) {
+      _snack(l.validatorPasswordComplexity);
       return;
     }
 

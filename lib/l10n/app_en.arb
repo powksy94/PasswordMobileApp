@@ -119,7 +119,6 @@
   "errorBiometricFailed": "Fingerprint not recognized — retry or use the form",
   "labelConfirmPassword": "Confirm password",
   "labelConfirmMasterPassword": "Confirm master password",
-  "validatorMinCharsUnit": "characters minimum",
 
   "deleteAccountTitle": "Delete account",
   "deleteAccountContent": "This action is irreversible.\n\nAll your encrypted passwords will be permanently deleted.",
@@ -129,7 +128,8 @@
   "btnLoginWithBiometric": "Log in with fingerprint",
   "orDivider": "or",
   "btnSignup": "Create an account",
-  "validatorMinChars": "6 characters minimum",
+  "validatorMinChars": "12 characters minimum",
+  "validatorPasswordComplexity": "Must contain an uppercase letter, a lowercase letter, a digit and a special character",
   "sessionExpiredInfo": "Session expired due to inactivity.",
   "masterPasswordDialogContent": "Enter your master password to decrypt your vault.",
   "masterPasswordDialogHint": "This password is different from your login password.",

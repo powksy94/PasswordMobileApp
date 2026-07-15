@@ -682,12 +682,6 @@ abstract class AppLocalizations {
   /// **'Confirm master password'**
   String get labelConfirmMasterPassword;
 
-  /// No description provided for @validatorMinCharsUnit.
-  ///
-  /// In en, this message translates to:
-  /// **'characters minimum'**
-  String get validatorMinCharsUnit;
-
   /// No description provided for @deleteAccountTitle.
   ///
   /// In en, this message translates to:
@@ -733,8 +727,14 @@ abstract class AppLocalizations {
   /// No description provided for @validatorMinChars.
   ///
   /// In en, this message translates to:
-  /// **'6 characters minimum'**
+  /// **'12 characters minimum'**
   String get validatorMinChars;
+
+  /// No description provided for @validatorPasswordComplexity.
+  ///
+  /// In en, this message translates to:
+  /// **'Must contain an uppercase letter, a lowercase letter, a digit and a special character'**
+  String get validatorPasswordComplexity;
 
   /// No description provided for @sessionExpiredInfo.
   ///

@@ -324,9 +324,6 @@ class AppLocalizationsEs extends AppLocalizations {
   String get labelConfirmMasterPassword => 'Confirmar contraseña maestra';
 
   @override
-  String get validatorMinCharsUnit => 'caracteres mínimo';
-
-  @override
   String get deleteAccountTitle => 'Eliminar cuenta';
 
   @override
@@ -349,7 +346,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get btnSignup => 'Crear una cuenta';
 
   @override
-  String get validatorMinChars => '6 caracteres mínimo';
+  String get validatorMinChars => '12 caracteres mínimo';
+
+  @override
+  String get validatorPasswordComplexity =>
+      'Debe contener una mayúscula, una minúscula, un dígito y un carácter especial';
 
   @override
   String get sessionExpiredInfo => 'Sesión expirada por inactividad.';

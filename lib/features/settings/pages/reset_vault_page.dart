@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../auth/services/master_key_service.dart';
 import '../../vault/services/vault_service.dart';
+import '../../../shared/utils/password_policy.dart';
 import '../widgets/vault_reset_warning_panel.dart';
 import '../../../shared/widgets/common/neon_text.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
@@ -34,7 +35,8 @@ class _ResetVaultPageState extends State<ResetVaultPage> {
 
   Future<void> _submit() async {
     final l = AppLocalizations.of(context)!;
-    if (_newCtrl.text.length < 6) { _snack(l.validatorMinChars); return; }
+    if (_newCtrl.text.length < PasswordPolicy.minLength) { _snack(l.validatorMinChars); return; }
+    if (!PasswordPolicy.meetsComplexity(_newCtrl.text)) { _snack(l.validatorPasswordComplexity); return; }
     if (_newCtrl.text != _confirmCtrl.text) { _snack(l.validatorMasterPasswordMismatch); return; }
 
     setState(() => _loading = true);

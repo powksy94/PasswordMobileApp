@@ -325,9 +325,6 @@ class AppLocalizationsFr extends AppLocalizations {
   String get labelConfirmMasterPassword => 'Confirmer le mot de passe maître';
 
   @override
-  String get validatorMinCharsUnit => 'caractères minimum';
-
-  @override
   String get deleteAccountTitle => 'Supprimer le compte';
 
   @override
@@ -350,7 +347,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get btnSignup => 'Créer un compte';
 
   @override
-  String get validatorMinChars => '6 caractères minimum';
+  String get validatorMinChars => '12 caractères minimum';
+
+  @override
+  String get validatorPasswordComplexity =>
+      'Doit contenir une majuscule, une minuscule, un chiffre et un caractère spécial';
 
   @override
   String get sessionExpiredInfo => 'Session expirée après inactivité.';

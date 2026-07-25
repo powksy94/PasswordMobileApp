@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import '../services/master_key_service.dart';
 import '../services/biometric_service.dart';
+import '../services/biometric_unlock_service.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../widgets/lock_screen_panel.dart';
@@ -41,20 +42,16 @@ class _LockScreenState extends State<LockScreen> {
   }
 
   Future<void> _unlockBiometric() async {
-    final authenticated = await BiometricService.authenticate();
-    if (!authenticated || !mounted) return;
+    final l = AppLocalizations.of(context)!;
+    final key = await BiometricUnlockService.unlock(
+      promptTitle: l.biometricReason,
+      cancelLabel: l.btnCancel,
+    );
+    if (key == null || !mounted) return; // annulé/échoué → reste sur l'écran, mot de passe en repli
 
-    final success = await MasterKeyService.unlockFromStorage();
-    if (!mounted) return;
-
-    if (success) {
-      FcmService.initialize();
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.errorBiometricKey)),
-      );
-    }
+    MasterKeyService.setUnlockedKey(key);
+    FcmService.initialize();
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   Future<void> _unlockPassword() async {

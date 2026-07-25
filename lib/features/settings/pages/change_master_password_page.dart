@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../vault/services/vault_service.dart';
+import '../../auth/services/biometric_unlock_service.dart';
+import '../../auth/services/master_key_service.dart';
 import '../../../shared/widgets/common/neon_text.dart';
 import '../../../shared/utils/password_policy.dart';
 import '../widgets/master_password_warning_panel.dart';
@@ -54,6 +56,17 @@ class _ChangeMasterPasswordPageState extends State<ChangeMasterPasswordPage> {
         newMasterPassword: _newPwCtrl.text,
       );
       if (!mounted) return;
+
+      final key = MasterKeyService.getMasterKey();
+      if (key != null) {
+        await BiometricUnlockService.resyncAfterKeyChange(
+          key,
+          promptTitle: l.biometricReason,
+          cancelLabel: l.btnCancel,
+        );
+        if (!mounted) return;
+      }
+
       _currentPwCtrl.clear();
       _newPwCtrl.clear();
       _confirmPwCtrl.clear();

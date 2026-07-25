@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../auth/services/master_key_service.dart';
+import '../../auth/services/biometric_unlock_service.dart';
 import '../../vault/services/vault_service.dart';
 import '../../../shared/utils/password_policy.dart';
 import '../widgets/vault_reset_warning_panel.dart';
@@ -55,6 +56,17 @@ class _ResetVaultPageState extends State<ResetVaultPage> {
       final ok = await MasterKeyService.resetMasterKey(_newCtrl.text);
       if (!ok) throw Exception();
       if (!mounted) return;
+
+      final key = MasterKeyService.getMasterKey();
+      if (key != null) {
+        await BiometricUnlockService.resyncAfterKeyChange(
+          key,
+          promptTitle: l.biometricReason,
+          cancelLabel: l.btnCancel,
+        );
+        if (!mounted) return;
+      }
+
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content:         Text(l.successVaultReset),
         backgroundColor: Colors.green,

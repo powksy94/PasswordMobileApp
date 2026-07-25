@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/biometric_service.dart';
+import '../services/biometric_unlock_service.dart';
+import '../services/master_key_service.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../../../shared/services/role_provider.dart';
@@ -62,18 +64,10 @@ class _LoginPageState extends State<LoginPage>
     final l = AppLocalizations.of(context)!;
     setState(() => _loading = true);
 
-    final authenticated = await BiometricService.authenticate(
-      reason: l.biometricReason,
+    final success = await AuthService.restoreSessionAfterBiometric(
+      promptTitle: l.biometricReason,
+      cancelLabel: l.btnCancel,
     );
-    if (!mounted) return;
-
-    if (!authenticated) {
-      setState(() => _loading = false);
-      _snack(l.errorBiometricFailed);
-      return;
-    }
-
-    final success = await AuthService.restoreSessionAfterBiometric();
     if (!mounted) return;
     setState(() => _loading = false);
 
@@ -118,6 +112,18 @@ class _LoginPageState extends State<LoginPage>
         email:          _emailCtrl.text.trim(),
       );
       if (!mounted) return;
+
+      final l = AppLocalizations.of(context)!;
+      final key = MasterKeyService.getMasterKey();
+      if (key != null) {
+        await BiometricUnlockService.maybeAutoEnable(
+          key,
+          biometricEnabledSetting: await SettingsService.getBiometricEnabled(),
+          promptTitle: l.biometricReason,
+          cancelLabel: l.btnCancel,
+        );
+        if (!mounted) return;
+      }
 
       final roleStr = await AuthService.getUserRoleString();
       if (!mounted) return;

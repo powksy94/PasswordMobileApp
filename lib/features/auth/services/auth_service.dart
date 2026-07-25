@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../shared/services/api_service.dart';
 import './master_key_service.dart';
+import './biometric_unlock_service.dart';
 
 class AuthService {
   static const _storage = FlutterSecureStorage();
@@ -81,6 +82,7 @@ class AuthService {
     await _storage.delete(key: _keyRole);
     await _storage.delete(key: _keyEmail);
     await MasterKeyService.deleteAll();
+    await BiometricUnlockService.disable();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefLoggedOut);
     await prefs.remove(_prefUserEmail);
@@ -103,11 +105,18 @@ class AuthService {
     return prefs.getBool(_prefLoggedOut) ?? false;
   }
 
-  static Future<bool> restoreSessionAfterBiometric() async {
+  static Future<bool> restoreSessionAfterBiometric({
+    required String promptTitle,
+    required String cancelLabel,
+  }) async {
     final token = await _storage.read(key: _keyToken);
     if (token == null) return false;
-    final success = await MasterKeyService.unlockFromStorage();
-    if (!success) return false;
+    final key = await BiometricUnlockService.unlock(
+      promptTitle: promptTitle,
+      cancelLabel: cancelLabel,
+    );
+    if (key == null) return false;
+    MasterKeyService.setUnlockedKey(key);
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefLoggedOut);
     return true;

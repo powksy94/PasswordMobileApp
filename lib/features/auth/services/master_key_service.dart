@@ -19,6 +19,12 @@ class MasterKeyService {
   static Uint8List? getMasterKey()   => _masterKey;
   static void       clearMasterKey() => _masterKey = null;
 
+  /// Adopte une clé obtenue par une voie externe (ex. [BiometricUnlockService]
+  /// après une vérification biométrique matérielle) comme clé maître courante,
+  /// sans re-dériver ni ré-écrire les artefacts de vérification par mot de
+  /// passe (déjà en place depuis la dernière connexion/dérivation).
+  static void setUnlockedKey(Uint8List key) => _masterKey = key;
+
   // ── Setup depuis login / register ─────────────────────────────────────────────
 
   static Future<void> setupFromLogin(String salt, String masterPassword) async {

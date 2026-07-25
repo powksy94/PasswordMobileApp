@@ -5,6 +5,8 @@ import '../../../shared/widgets/common/glass_panel.dart';
 import '../../../shared/utils/legal_urls.dart';
 import '../../../l10n/app_localizations.dart';
 import '../services/settings_service.dart';
+import '../../auth/services/biometric_unlock_service.dart';
+import '../../auth/services/master_key_service.dart';
 
 class PrivacySettingsPanel extends StatefulWidget {
   const PrivacySettingsPanel({super.key});
@@ -46,6 +48,22 @@ class _PrivacySettingsPanelState extends State<PrivacySettingsPanel> {
 
   Future<void> _setBiometricEnabled(bool enabled) async {
     await SettingsService.setBiometricEnabled(enabled);
+    if (!mounted) return;
+
+    if (enabled) {
+      final l   = AppLocalizations.of(context)!;
+      final key = MasterKeyService.getMasterKey();
+      if (key != null) {
+        await BiometricUnlockService.enable(
+          key,
+          promptTitle: l.biometricReason,
+          cancelLabel: l.btnCancel,
+        );
+      }
+    } else {
+      await BiometricUnlockService.disable();
+    }
+
     if (mounted) setState(() => _biometricEnabled = enabled);
   }
 

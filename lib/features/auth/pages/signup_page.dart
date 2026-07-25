@@ -4,6 +4,9 @@ import '../../../shared/widgets/common/neon_text.dart';
 import '../widgets/signup_step1.dart';
 import '../widgets/signup_step2.dart';
 import '../services/auth_service.dart';
+import '../services/biometric_unlock_service.dart';
+import '../services/master_key_service.dart';
+import '../../settings/services/settings_service.dart';
 import '../utils/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -54,6 +57,19 @@ class _SignupPageState extends State<SignupPage> {
         _masterPwCtrl.text,
       );
       if (!mounted) return;
+
+      final l = AppLocalizations.of(context)!;
+      final key = MasterKeyService.getMasterKey();
+      if (key != null) {
+        await BiometricUnlockService.maybeAutoEnable(
+          key,
+          biometricEnabledSetting: await SettingsService.getBiometricEnabled(),
+          promptTitle: l.biometricReason,
+          cancelLabel: l.btnCancel,
+        );
+        if (!mounted) return;
+      }
+
       Navigator.pushReplacementNamed(context, '/signup-success');
     } catch (e) {
       if (!mounted) return;

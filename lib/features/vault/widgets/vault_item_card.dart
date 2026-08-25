@@ -4,6 +4,7 @@ import '../utils/vault_icons.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 import '../../../shared/widgets/common/neon_text.dart';
 import '../../../l10n/app_localizations.dart';
+import './pin_strength_badge.dart';
 
 class VaultItemCard extends StatelessWidget {
   final VaultItem item;
@@ -22,6 +23,8 @@ class VaultItemCard extends StatelessWidget {
     required this.onEdit,
     required this.onDelete,
   });
+
+  String get _secret => item.type == 'pin' ? item.pin : item.password;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,10 @@ class VaultItemCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                if (item.type == 'pin') ...[
+                  PinStrengthBadge(pin: item.pin),
+                  const SizedBox(width: 6),
+                ],
                 _iconBtn(Icons.edit_outlined,  accent,           l.tooltipEdit,   onEdit),
                 const SizedBox(width: 4),
                 _iconBtn(Icons.delete_outline, Colors.redAccent, l.tooltipDelete, onDelete),
@@ -79,13 +86,13 @@ class VaultItemCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Expanded(
                   // Intentionnellement un Text non sélectionnable : un
-                  // SelectableText permettrait de copier le mot de passe via
-                  // le menu de sélection natif, en contournant l'effacement
+                  // SelectableText permettrait de copier le secret via le
+                  // menu de sélection natif, en contournant l'effacement
                   // automatique du presse-papiers (ClipboardService). La
                   // seule voie de copie autorisée est le bouton dédié
                   // ci-dessous, qui passe par onCopy → ClipboardService.
                   child: Text(
-                    showPassword ? item.password : '●●●●●●●●',
+                    showPassword ? _secret : '●●●●●●●●',
                     style: TextStyle(
                       color:      textColor,
                       fontFamily: 'monospace',
@@ -105,8 +112,8 @@ class VaultItemCard extends StatelessWidget {
                 _iconBtn(
                   Icons.copy,
                   Colors.greenAccent,
-                  l.tooltipCopyPassword,
-                  () => onCopy(item.password, l.labelPassword),
+                  item.type == 'pin' ? l.tooltipCopyPin : l.tooltipCopyPassword,
+                  () => onCopy(_secret, item.type == 'pin' ? l.labelPin : l.labelPassword),
                   size: 18,
                 ),
               ],

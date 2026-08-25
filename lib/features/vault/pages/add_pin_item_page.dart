@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/vault_service.dart';
-import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../widgets/pin_item_form.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -61,50 +61,33 @@ class _AddPinItemPageState extends State<AddPinItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l      = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final l = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: NeonText(text: l.titleAdd, fontSize: 20, color: accent, glow: true),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [Colors.black, Colors.grey[900]!]
-                : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-            begin: Alignment.topLeft,
-            end:   Alignment.bottomRight,
+    return AppPageScaffold(
+      title: l.titleAdd,
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          PinItemForm(
+            labelCtrl: _labelCtrl,
+            pinCtrl:   _pinCtrl,
+            notesCtrl: _notesCtrl,
+            showPin:   _showPin,
+            onTogglePinVisibility: () => setState(() => _showPin = !_showPin),
+            onPinChanged: () => setState(() {}),
           ),
-        ),
-        child: ListView(
-          padding: const EdgeInsets.all(16),
-          children: [
-            PinItemForm(
-              labelCtrl: _labelCtrl,
-              pinCtrl:   _pinCtrl,
-              notesCtrl: _notesCtrl,
-              showPin:   _showPin,
-              onTogglePinVisibility: () => setState(() => _showPin = !_showPin),
-              onPinChanged: () => setState(() {}),
-            ),
-            const SizedBox(height: 16),
-            ElevatedButton.icon(
-              onPressed: _saving ? null : _save,
-              icon: _saving
-                  ? const SizedBox(
-                      width: 18, height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Icon(Icons.add),
-              label: Text(_saving ? l.btnAdding : l.btnAddToVault),
-            ),
-          ],
-        ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: _saving ? null : _save,
+            icon: _saving
+                ? const SizedBox(
+                    width: 18, height: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.add),
+            label: Text(_saving ? l.btnAdding : l.btnAddToVault),
+          ),
+        ],
       ),
     );
   }

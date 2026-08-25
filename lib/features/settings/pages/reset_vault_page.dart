@@ -4,7 +4,7 @@ import '../../auth/services/biometric_unlock_service.dart';
 import '../../vault/services/vault_service.dart';
 import '../../../shared/utils/password_policy.dart';
 import '../widgets/vault_reset_warning_panel.dart';
-import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -84,28 +84,12 @@ class _ResetVaultPageState extends State<ResetVaultPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l      = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final l = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: NeonText(text: l.titleResetVault, fontSize: 20, color: accent, glow: true),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [Colors.black, Colors.grey[900]!]
-                : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-            begin: Alignment.topLeft,
-            end:   Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(
-          child: ListView(
+    return AppPageScaffold(
+      title:    l.titleResetVault,
+      safeArea: true,
+      body: ListView(
             padding: const EdgeInsets.all(16),
             children: [
               VaultResetWarningPanel(
@@ -189,8 +173,6 @@ class _ResetVaultPageState extends State<ResetVaultPage> {
               ),
             ],
           ),
-        ),
-      ),
     );
   }
 }

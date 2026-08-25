@@ -4,7 +4,7 @@ import '../../auth/services/auth_service.dart';
 import '../../../shared/services/autofill_cache_service.dart';
 import '../../../shared/services/api_service.dart';
 import '../../../shared/services/role_provider.dart';
-import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 import '../widgets/danger_zone_panel.dart';
 import '../widgets/lock_timeout_panel.dart';
@@ -87,30 +87,12 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l      = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final l = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: NeonText(
-            text: l.titleSettings, fontSize: 20, color: accent, glow: true),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [Colors.black, Colors.grey[900]!]
-                : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-            begin: Alignment.topLeft,
-            end:   Alignment.bottomRight,
-          ),
-        ),
-        child: SafeArea(
-          bottom: true,
-          child: ListView(
+    return AppPageScaffold(
+      title:    l.titleSettings,
+      safeArea: true,
+      body: ListView(
             padding: const EdgeInsets.all(16),
             children: [
               GlassPanel(
@@ -167,8 +149,6 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               DangerZonePanel(onDelete: _deleteAccount, onResetVault: _resetVault),
             ],
           ),
-        ),
-      ),
     );
   }
 }

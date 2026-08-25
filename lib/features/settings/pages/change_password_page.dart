@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../auth/services/auth_service.dart';
 import '../../../shared/services/api_service.dart';
-import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../../../shared/utils/password_policy.dart';
 import '../widgets/change_password_panel.dart';
 import '../../../l10n/app_localizations.dart';
@@ -64,42 +64,22 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l      = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final l = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: NeonText(
-            text: l.titleChangePassword, fontSize: 20, color: accent, glow: true),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [Colors.black, Colors.grey[900]!]
-                : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-            begin: Alignment.topLeft,
-            end:   Alignment.bottomRight,
+    return AppPageScaffold(
+      title:    l.titleChangePassword,
+      safeArea: true,
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          ChangePasswordPanel(
+            currentCtrl: _currentPwCtrl,
+            newCtrl:     _newPwCtrl,
+            confirmCtrl: _confirmPwCtrl,
+            loading:     _changingPw,
+            onSubmit:    _changePassword,
           ),
-        ),
-        child: SafeArea(
-          bottom: true,
-          child: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              ChangePasswordPanel(
-                currentCtrl: _currentPwCtrl,
-                newCtrl:     _newPwCtrl,
-                confirmCtrl: _confirmPwCtrl,
-                loading:     _changingPw,
-                onSubmit:    _changePassword,
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }

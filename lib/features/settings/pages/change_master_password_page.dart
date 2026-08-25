@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../vault/services/vault_reencrypt_service.dart';
 import '../../auth/services/biometric_unlock_service.dart';
 import '../../auth/services/master_key_service.dart';
-import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../../../shared/utils/password_policy.dart';
 import '../widgets/master_password_warning_panel.dart';
 import '../widgets/change_master_password_panel.dart';
@@ -86,49 +86,29 @@ class _ChangeMasterPasswordPageState extends State<ChangeMasterPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l      = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final l = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: NeonText(
-            text: l.titleChangeMasterPassword, fontSize: 20, color: accent, glow: true),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [Colors.black, Colors.grey[900]!]
-                : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-            begin: Alignment.topLeft,
-            end:   Alignment.bottomRight,
+    return AppPageScaffold(
+      title:    l.titleChangeMasterPassword,
+      safeArea: true,
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          MasterPasswordWarningPanel(
+            understood: _understood,
+            enabled:    !_changing,
+            onUnderstoodChanged: (v) => setState(() => _understood = v),
           ),
-        ),
-        child: SafeArea(
-          bottom: true,
-          child: ListView(
-            padding: const EdgeInsets.all(16),
-            children: [
-              MasterPasswordWarningPanel(
-                understood: _understood,
-                enabled:    !_changing,
-                onUnderstoodChanged: (v) => setState(() => _understood = v),
-              ),
-              const SizedBox(height: 16),
-              ChangeMasterPasswordPanel(
-                currentCtrl:   _currentPwCtrl,
-                newCtrl:       _newPwCtrl,
-                confirmCtrl:   _confirmPwCtrl,
-                fieldsEnabled: _understood,
-                loading:       _changing,
-                onSubmit:      _submit,
-              ),
-            ],
+          const SizedBox(height: 16),
+          ChangeMasterPasswordPanel(
+            currentCtrl:   _currentPwCtrl,
+            newCtrl:       _newPwCtrl,
+            confirmCtrl:   _confirmPwCtrl,
+            fieldsEnabled: _understood,
+            loading:       _changing,
+            onSubmit:      _submit,
           ),
-        ),
+        ],
       ),
     );
   }

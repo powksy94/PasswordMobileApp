@@ -52,17 +52,26 @@ class BiometricUnlockService {
   // ── Écriture ──────────────────────────────────────────────────────────────────
 
   /// Écrit [key] dans le store protégé par biométrie (déclenche un prompt).
-  static Future<void> enable(
+  /// Retourne `false` (sans relancer d'exception) en cas d'annulation ou
+  /// d'échec : l'activation de la biométrie ne doit jamais faire échouer
+  /// l'opération qui l'a déclenchée (connexion, changement de mot de passe
+  /// maître…), qui a déjà réussi à ce stade.
+  static Future<bool> enable(
     Uint8List key, {
     required String promptTitle,
     required String cancelLabel,
   }) async {
-    final store = await _storage();
-    await store.write(
-      base64Encode(key),
-      promptInfo: _promptInfo(promptTitle, cancelLabel),
-    );
-    await _setProvisioned(true);
+    try {
+      final store = await _storage();
+      await store.write(
+        base64Encode(key),
+        promptInfo: _promptInfo(promptTitle, cancelLabel),
+      );
+      await _setProvisioned(true);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   /// Supprime la clé. Aucun prompt (suppression de fichier, pas d'opération
@@ -100,13 +109,20 @@ class BiometricUnlockService {
   /// avec la nouvelle clé : si la biométrie était déjà provisionnée, la
   /// remet à jour (sinon l'ancienne copie chiffrerait encore l'ancienne
   /// clé). Ne fait rien si elle n'était pas activée — pas de prompt surprise.
+  ///
+  /// Si l'utilisateur annule ce prompt, on désactive plutôt que de laisser
+  /// une clé désormais périmée dans le store : un futur déverrouillage
+  /// biométrique la lirait "avec succès" mais renverrait l'ANCIENNE clé,
+  /// corrompant silencieusement le déchiffrement du coffre au lieu de
+  /// simplement retomber sur le mot de passe.
   static Future<void> resyncAfterKeyChange(
     Uint8List key, {
     required String promptTitle,
     required String cancelLabel,
   }) async {
     if (!await isProvisioned()) return;
-    await enable(key, promptTitle: promptTitle, cancelLabel: cancelLabel);
+    final success = await enable(key, promptTitle: promptTitle, cancelLabel: cancelLabel);
+    if (!success) await disable();
   }
 
   // ── État ──────────────────────────────────────────────────────────────────────

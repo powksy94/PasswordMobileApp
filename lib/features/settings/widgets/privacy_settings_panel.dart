@@ -47,24 +47,27 @@ class _PrivacySettingsPanelState extends State<PrivacySettingsPanel> {
   }
 
   Future<void> _setBiometricEnabled(bool enabled) async {
-    await SettingsService.setBiometricEnabled(enabled);
-    if (!mounted) return;
+    var actuallyEnabled = enabled;
 
     if (enabled) {
       final l   = AppLocalizations.of(context)!;
       final key = MasterKeyService.getMasterKey();
-      if (key != null) {
-        await BiometricUnlockService.enable(
-          key,
-          promptTitle: l.biometricReason,
-          cancelLabel: l.btnCancel,
-        );
-      }
+      // Si l'utilisateur annule le prompt (ou si la clé n'est pas
+      // disponible), la biométrie n'est pas réellement activée : le switch
+      // ne doit pas mentir sur l'état réel.
+      actuallyEnabled = key != null &&
+          await BiometricUnlockService.enable(
+            key,
+            promptTitle: l.biometricReason,
+            cancelLabel: l.btnCancel,
+          );
     } else {
       await BiometricUnlockService.disable();
     }
 
-    if (mounted) setState(() => _biometricEnabled = enabled);
+    if (!mounted) return;
+    await SettingsService.setBiometricEnabled(actuallyEnabled);
+    if (mounted) setState(() => _biometricEnabled = actuallyEnabled);
   }
 
   Future<void> _setMaskInBackground(bool enabled) async {

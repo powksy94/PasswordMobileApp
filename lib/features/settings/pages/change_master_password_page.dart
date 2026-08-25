@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../vault/services/vault_service.dart';
+import '../../vault/services/vault_reencrypt_service.dart';
 import '../../auth/services/biometric_unlock_service.dart';
 import '../../auth/services/master_key_service.dart';
 import '../../../shared/widgets/common/neon_text.dart';
@@ -51,7 +51,7 @@ class _ChangeMasterPasswordPageState extends State<ChangeMasterPasswordPage> {
 
     setState(() => _changing = true);
     try {
-      await VaultService.changeMasterPassword(
+      await VaultReencryptService.changeMasterPassword(
         oldMasterPassword: _currentPwCtrl.text,
         newMasterPassword: _newPwCtrl.text,
       );

@@ -57,10 +57,12 @@ class VaultService {
   static Future<void> addToServer({
     required String label,
     required String password,
+    String type  = 'password',
     String login = '',
     String notes = '',
     String icon  = 'lock',
     String url   = '',
+    String pin   = '',
   }) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
@@ -69,12 +71,14 @@ class VaultService {
 
     await _api.addItem(token, VaultCodec.encryptFields(
       id:       _uuid.v4(),
+      type:     type,
       label:    label,
       login:    login,
       password: password,
       notes:    notes,
       icon:     icon,
       url:      url,
+      pin:      pin,
       key:      key,
     ));
   }
@@ -83,10 +87,12 @@ class VaultService {
     required String id,
     required String label,
     required String password,
+    String type  = 'password',
     String login = '',
     String notes = '',
     String icon  = 'lock',
     String url   = '',
+    String pin   = '',
   }) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
@@ -94,71 +100,16 @@ class VaultService {
     if (key == null) throw Exception('Master key absente');
 
     await _api.updateItem(token, id, VaultCodec.encryptFields(
+      type:     type,
       label:    label,
       login:    login,
       password: password,
       notes:    notes,
       icon:     icon,
       url:      url,
+      pin:      pin,
       key:      key,
     ));
-  }
-
-  // ── Changement du mot de passe maître ─────────────────────────────────────
-
-  /// Déchiffre tout le coffre avec l'ancienne clé, le re-chiffre avec la
-  /// nouvelle, puis envoie le tout en une seule transaction atomique côté
-  /// serveur (`PUT /vault/reencrypt-all`). Si l'ancien mot de passe est
-  /// incorrect → [WrongMasterPasswordException]. Si l'envoi échoue → le serveur
-  /// annule toute la transaction (coffre intact) et [MasterPasswordChangeException]
-  /// est levée ; la nouvelle clé n'est jamais persistée dans ce cas.
-  static Future<void> changeMasterPassword({
-    required String oldMasterPassword,
-    required String newMasterPassword,
-  }) async {
-    final token = await AuthService.getToken();
-    if (token == null) throw Exception('Non authentifié');
-
-    final validOld = await MasterKeyService.unlockWithMasterPassword(oldMasterPassword);
-    if (!validOld) throw WrongMasterPasswordException();
-
-    final newKey = await MasterKeyService.deriveKeyFromMasterPassword(newMasterPassword);
-    if (newKey == null) throw Exception('Sel introuvable — compte invalide');
-
-    final result = await loadFromServer();
-    final items  = result.items;
-
-    // An item that fails to decrypt under the old key would simply be
-    // missing from the re-encrypted batch sent to the server and lost for
-    // good once the new key is committed — refuse instead of silently
-    // re-encrypting an incomplete vault.
-    if (result.skippedCount > 0) {
-      throw MasterPasswordChangeException(
-        'skipped items during re-encrypt: ${result.skippedCount}',
-      );
-    }
-
-    if (items.isNotEmpty) {
-      final reencrypted = items.map((item) => VaultCodec.encryptFields(
-        id:       item.id,
-        label:    item.label,
-        login:    item.login,
-        password: item.password,
-        notes:    item.notes,
-        icon:     item.icon,
-        url:      item.url,
-        key:      newKey,
-      )).toList();
-
-      try {
-        await _api.reencryptVault(token, reencrypted);
-      } catch (e) {
-        throw MasterPasswordChangeException(e);
-      }
-    }
-
-    await MasterKeyService.commitNewMasterKey(newKey);
-    vaultVersion.value++;
   }
 
   static Future<void> deleteFromServer(String id) async {

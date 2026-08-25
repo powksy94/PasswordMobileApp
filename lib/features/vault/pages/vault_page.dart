@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/vault_service.dart';
 import '../../../shared/services/clipboard_service.dart';
 import '../models/vault_item.dart';
-import '../../../shared/widgets/common/neon_text.dart';
 import '../../../shared/widgets/common/gradient_background.dart';
-import '../widgets/vault_item_card.dart';
+import '../widgets/vault_item_list.dart';
 import '../widgets/offline_banner.dart';
 import '../widgets/vault_search_bar.dart';
 import '../widgets/vault_type_selector.dart';
@@ -166,10 +165,6 @@ class VaultPageState extends State<VaultPage> {
 
   @override
   Widget build(BuildContext context) {
-    final l      = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
-
     return GradientBackground(
       child: Column(
         children: [
@@ -188,34 +183,16 @@ class VaultPageState extends State<VaultPage> {
             },
           ),
           Expanded(
-            child: _filtered.isEmpty
-                ? Center(
-                    child: NeonText(
-                      text:     _searchQuery.isEmpty
-                          ? l.vaultEmpty
-                          : l.vaultNoResults,
-                      fontSize: 20,
-                      color:    accent,
-                      glow:     true,
-                    ),
-                  )
-                : ListView.builder(
-                    padding:     const EdgeInsets.all(16),
-                    itemCount:   _filtered.length,
-                    itemBuilder: (_, i) {
-                      final item = _filtered[i];
-                      return VaultItemCard(
-                        item:             item,
-                        showPassword:     _showPassword[item.id] ?? false,
-                        onTogglePassword: () => setState(
-                          () => _showPassword[item.id] =
-                              !(_showPassword[item.id] ?? false)),
-                        onCopy:   _copyToClipboard,
-                        onEdit:   () => _openEdit(item),
-                        onDelete: () => _deleteItem(item.id),
-                      );
-                    },
-                  ),
+            child: VaultItemList(
+              items:          _filtered,
+              hasSearchQuery: _searchQuery.isNotEmpty,
+              showPassword:   _showPassword,
+              onTogglePassword: (id) => setState(
+                () => _showPassword[id] = !(_showPassword[id] ?? false)),
+              onCopy:   _copyToClipboard,
+              onEdit:   _openEdit,
+              onDelete: _deleteItem,
+            ),
           ),
         ],
       ),

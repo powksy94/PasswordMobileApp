@@ -24,6 +24,9 @@
 
   "labelEmail": "Email",
   "labelPassword": "Mot de passe",
+  "labelPin": "PIN",
+  "tabPasswords": "Mots de passe",
+  "tabPins": "PINs",
   "labelMasterPassword": "Mot de passe maître",
   "labelAccountPassword": "Mot de passe du compte",
   "btnLogin": "Se connecter",
@@ -52,6 +55,7 @@
   "itemWebsiteHint": "ex: amazon.fr",
   "itemNotes": "Notes",
   "itemIcon": "Icône",
+  "itemPin": "PIN *",
 
   "titleAdd": "Ajouter",
   "titleEdit": "Modifier",
@@ -67,6 +71,7 @@
   "successModified": "Modifié avec succès",
   "errorLabelRequired": "Le label est requis",
   "errorPasswordRequired": "Le mot de passe est requis",
+  "errorPinRequired": "Le PIN est requis",
 
   "dialogDeleteTitle": "Supprimer",
   "dialogDeleteContent": "Supprimer cet élément définitivement ?",
@@ -80,6 +85,7 @@
   "tooltipHide": "Masquer",
   "tooltipCopy": "Copier",
   "tooltipCopyPassword": "Copier le mot de passe",
+  "tooltipCopyPin": "Copier le PIN",
 
   "snackPasswordAdded": "Mot de passe ajouté au coffre !",
   "errorBiometricKey": "Clé biométrique introuvable — entrez le mot de passe maître",

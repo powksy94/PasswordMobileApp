@@ -66,6 +66,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get labelPassword => 'Contraseña';
 
   @override
+  String get labelPin => 'PIN';
+
+  @override
+  String get tabPasswords => 'Contraseñas';
+
+  @override
+  String get tabPins => 'PINs';
+
+  @override
   String get labelMasterPassword => 'Contraseña maestra';
 
   @override
@@ -144,6 +153,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get itemIcon => 'Icono';
 
   @override
+  String get itemPin => 'PIN *';
+
+  @override
   String get titleAdd => 'Añadir';
 
   @override
@@ -180,6 +192,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorPasswordRequired => 'La contraseña es obligatoria';
 
   @override
+  String get errorPinRequired => 'El PIN es obligatorio';
+
+  @override
   String get dialogDeleteTitle => 'Eliminar';
 
   @override
@@ -211,6 +226,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get tooltipCopyPassword => 'Copiar contraseña';
+
+  @override
+  String get tooltipCopyPin => 'Copiar PIN';
 
   @override
   String get snackPasswordAdded => '¡Contraseña añadida al cofre!';

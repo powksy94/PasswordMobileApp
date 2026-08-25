@@ -214,6 +214,24 @@ abstract class AppLocalizations {
   /// **'Password'**
   String get labelPassword;
 
+  /// No description provided for @labelPin.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN'**
+  String get labelPin;
+
+  /// No description provided for @tabPasswords.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords'**
+  String get tabPasswords;
+
+  /// No description provided for @tabPins.
+  ///
+  /// In en, this message translates to:
+  /// **'PINs'**
+  String get tabPins;
+
   /// No description provided for @labelMasterPassword.
   ///
   /// In en, this message translates to:
@@ -364,6 +382,12 @@ abstract class AppLocalizations {
   /// **'Icon'**
   String get itemIcon;
 
+  /// No description provided for @itemPin.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN *'**
+  String get itemPin;
+
   /// No description provided for @titleAdd.
   ///
   /// In en, this message translates to:
@@ -436,6 +460,12 @@ abstract class AppLocalizations {
   /// **'Password is required'**
   String get errorPasswordRequired;
 
+  /// No description provided for @errorPinRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Pin is required'**
+  String get errorPinRequired;
+
   /// No description provided for @dialogDeleteTitle.
   ///
   /// In en, this message translates to:
@@ -501,6 +531,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Copy password'**
   String get tooltipCopyPassword;
+
+  /// No description provided for @tooltipCopyPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy PIN'**
+  String get tooltipCopyPin;
 
   /// No description provided for @snackPasswordAdded.
   ///

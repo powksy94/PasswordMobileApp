@@ -24,6 +24,9 @@
 
   "labelEmail": "Email",
   "labelPassword": "Contraseña",
+  "labelPin": "PIN",
+  "tabPasswords": "Contraseñas",
+  "tabPins": "PINs",
   "labelMasterPassword": "Contraseña maestra",
   "labelAccountPassword": "Contraseña de cuenta",
   "btnLogin": "Iniciar sesión",
@@ -52,6 +55,7 @@
   "itemWebsiteHint": "p. ej.: amazon.es",
   "itemNotes": "Notas",
   "itemIcon": "Icono",
+  "itemPin": "PIN *",
 
   "titleAdd": "Añadir",
   "titleEdit": "Editar",
@@ -67,6 +71,7 @@
   "successModified": "Modificado con éxito",
   "errorLabelRequired": "La etiqueta es obligatoria",
   "errorPasswordRequired": "La contraseña es obligatoria",
+  "errorPinRequired": "El PIN es obligatorio",
 
   "dialogDeleteTitle": "Eliminar",
   "dialogDeleteContent": "¿Eliminar este elemento definitivamente?",
@@ -80,6 +85,7 @@
   "tooltipHide": "Ocultar",
   "tooltipCopy": "Copiar",
   "tooltipCopyPassword": "Copiar contraseña",
+  "tooltipCopyPin": "Copiar PIN",
 
   "snackPasswordAdded": "¡Contraseña añadida al cofre!",
   "errorBiometricKey": "Clave biométrica no encontrada — ingresa tu contraseña maestra",

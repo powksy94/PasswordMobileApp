@@ -24,6 +24,9 @@
 
   "labelEmail": "Email",
   "labelPassword": "Password",
+  "labelPin": "PIN",
+  "tabPasswords": "Passwords",
+  "tabPins": "PINs",
   "labelMasterPassword": "Master password",
   "labelAccountPassword": "Account password",
   "btnLogin": "Log in",
@@ -52,6 +55,7 @@
   "itemWebsiteHint": "e.g.: amazon.com",
   "itemNotes": "Notes",
   "itemIcon": "Icon",
+  "itemPin": "PIN *",
 
   "titleAdd": "Add",
   "titleEdit": "Edit",
@@ -67,6 +71,7 @@
   "successModified": "Modified successfully",
   "errorLabelRequired": "Label is required",
   "errorPasswordRequired": "Password is required",
+  "errorPinRequired": "Pin is required",
 
   "dialogDeleteTitle": "Delete",
   "dialogDeleteContent": "Delete this item permanently?",
@@ -80,6 +85,7 @@
   "tooltipHide": "Hide",
   "tooltipCopy": "Copy",
   "tooltipCopyPassword": "Copy password",
+  "tooltipCopyPin": "Copy PIN",
 
   "snackPasswordAdded": "Password added to vault!",
   "errorBiometricKey": "Biometric key not found — enter your master password",

@@ -66,6 +66,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get labelPassword => 'Mot de passe';
 
   @override
+  String get labelPin => 'PIN';
+
+  @override
+  String get tabPasswords => 'Mots de passe';
+
+  @override
+  String get tabPins => 'PINs';
+
+  @override
   String get labelMasterPassword => 'Mot de passe maître';
 
   @override
@@ -145,6 +154,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get itemIcon => 'Icône';
 
   @override
+  String get itemPin => 'PIN *';
+
+  @override
   String get titleAdd => 'Ajouter';
 
   @override
@@ -181,6 +193,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorPasswordRequired => 'Le mot de passe est requis';
 
   @override
+  String get errorPinRequired => 'Le PIN est requis';
+
+  @override
   String get dialogDeleteTitle => 'Supprimer';
 
   @override
@@ -212,6 +227,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get tooltipCopyPassword => 'Copier le mot de passe';
+
+  @override
+  String get tooltipCopyPin => 'Copier le PIN';
 
   @override
   String get snackPasswordAdded => 'Mot de passe ajouté au coffre !';

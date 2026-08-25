@@ -66,6 +66,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelPassword => 'Password';
 
   @override
+  String get labelPin => 'PIN';
+
+  @override
+  String get tabPasswords => 'Passwords';
+
+  @override
+  String get tabPins => 'PINs';
+
+  @override
   String get labelMasterPassword => 'Master password';
 
   @override
@@ -143,6 +152,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get itemIcon => 'Icon';
 
   @override
+  String get itemPin => 'PIN *';
+
+  @override
   String get titleAdd => 'Add';
 
   @override
@@ -179,6 +191,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorPasswordRequired => 'Password is required';
 
   @override
+  String get errorPinRequired => 'Pin is required';
+
+  @override
   String get dialogDeleteTitle => 'Delete';
 
   @override
@@ -210,6 +225,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tooltipCopyPassword => 'Copy password';
+
+  @override
+  String get tooltipCopyPin => 'Copy PIN';
 
   @override
   String get snackPasswordAdded => 'Password added to vault!';

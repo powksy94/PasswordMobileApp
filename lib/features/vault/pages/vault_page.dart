@@ -6,9 +6,9 @@ import '../../../shared/widgets/common/neon_text.dart';
 import '../widgets/vault_item_card.dart';
 import '../widgets/offline_banner.dart';
 import '../widgets/vault_search_bar.dart';
+import '../widgets/vault_type_selector.dart';
 import '../../../l10n/app_localizations.dart';
-import './add_vault_item_page.dart';
-import './edit_vault_item_page.dart';
+import './vault_item_navigation.dart';
 
 class VaultPage extends StatefulWidget {
   const VaultPage({super.key});
@@ -22,7 +22,8 @@ class VaultPageState extends State<VaultPage> {
   bool            _fromCache = false;
   final Map<String, bool>     _showPassword    = {};
   final TextEditingController _searchController = TextEditingController();
-  String _searchQuery = '';
+  String _searchQuery  = '';
+  String _selectedType = 'password';
 
   @override
   void initState() {
@@ -41,9 +42,10 @@ class VaultPageState extends State<VaultPage> {
   void _onVaultVersionChanged() => loadVault();
 
   List<VaultItem> get _filtered {
-    if (_searchQuery.isEmpty) return _items;
+    final byType = _items.where((i) => i.type == _selectedType);
+    if (_searchQuery.isEmpty) return byType.toList();
     final q = _searchQuery.toLowerCase();
-    return _items
+    return byType
         .where((i) =>
             i.label.toLowerCase().contains(q) ||
             i.login.toLowerCase().contains(q))
@@ -89,11 +91,15 @@ class VaultPageState extends State<VaultPage> {
     }
   }
 
+  /// Appelée par HomePage via GlobalKey (FAB "+") : ouvre le formulaire
+  /// d'ajout correspondant au type actuellement sélectionné (onglet
+  /// Mots de passe / PINs), pas seulement les mots de passe malgré le nom
+  /// conservé pour ne pas modifier le point d'appel dans home_page.dart.
   Future<void> openAddPassword() async {
     if (!mounted) return;
     final result = await Navigator.push<bool>(
       context,
-      MaterialPageRoute(builder: (_) => const AddVaultItemPage()),
+      MaterialPageRoute(builder: (_) => VaultItemNavigation.addPageFor(_selectedType)),
     );
     if (result == true) await loadVault();
   }
@@ -150,7 +156,7 @@ class VaultPageState extends State<VaultPage> {
   Future<void> _openEdit(VaultItem item) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => EditVaultItemPage(item: item)),
+      MaterialPageRoute(builder: (_) => VaultItemNavigation.editPageFor(item)),
     );
     await loadVault();
   }
@@ -176,6 +182,10 @@ class VaultPageState extends State<VaultPage> {
       child: Column(
         children: [
           if (_fromCache) const OfflineBanner(),
+          VaultTypeSelector(
+            selected:  _selectedType,
+            onChanged: (v) => setState(() => _selectedType = v),
+          ),
           VaultSearchBar(
             controller: _searchController,
             query:      _searchQuery,

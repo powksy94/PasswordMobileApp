@@ -6,6 +6,7 @@ import '../services/biometric_unlock_service.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../widgets/lock_screen_panel.dart';
+import '../../../shared/widgets/common/gradient_background.dart';
 import '../../../l10n/app_localizations.dart';
 
 class LockScreen extends StatefulWidget {
@@ -82,19 +83,8 @@ class _LockScreenState extends State<LockScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: isDark
-                ? [Colors.black, Colors.grey[900]!]
-                : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-            begin: Alignment.topLeft,
-            end:   Alignment.bottomRight,
-          ),
-        ),
+      body: GradientBackground(
         child: SingleChildScrollView(
           child: ConstrainedBox(
             constraints: BoxConstraints(

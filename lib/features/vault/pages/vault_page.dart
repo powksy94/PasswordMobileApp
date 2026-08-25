@@ -3,6 +3,7 @@ import '../services/vault_service.dart';
 import '../../../shared/services/clipboard_service.dart';
 import '../models/vault_item.dart';
 import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/widgets/common/gradient_background.dart';
 import '../widgets/vault_item_card.dart';
 import '../widgets/offline_banner.dart';
 import '../widgets/vault_search_bar.dart';
@@ -169,16 +170,7 @@ class VaultPageState extends State<VaultPage> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [Colors.black, Colors.grey[900]!]
-              : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-          begin: Alignment.topLeft,
-          end:   Alignment.bottomRight,
-        ),
-      ),
+    return GradientBackground(
       child: Column(
         children: [
           if (_fromCache) const OfflineBanner(),

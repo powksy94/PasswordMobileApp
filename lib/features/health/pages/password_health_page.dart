@@ -3,6 +3,7 @@ import '../../vault/services/vault_service.dart';
 import '../../vault/models/vault_item.dart';
 import '../../../shared/utils/password_score.dart';
 import '../../../shared/widgets/common/neon_text.dart';
+import '../../../shared/widgets/common/gradient_background.dart';
 import '../widgets/health_score_card.dart';
 import '../widgets/weak_passwords_section.dart';
 import '../widgets/reused_passwords_section.dart';
@@ -93,16 +94,7 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
     final weak       = _weak;
     final duplicates = _duplicateGroups;
 
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [Colors.black, Colors.grey[900]!]
-              : [Colors.blueGrey[50]!, Colors.blueGrey[200]!],
-          begin: Alignment.topLeft,
-          end:   Alignment.bottomRight,
-        ),
-      ),
+    return GradientBackground(
       child: _items.isEmpty
           ? Center(
               child: NeonText(

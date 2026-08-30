@@ -95,11 +95,13 @@ class BiometricExportService {
 
       final jsonStr = jsonEncode(items
           .map((i) => {
+                'type':     i.type,
                 'label':    i.label,
                 'login':    i.login,
                 'password': i.password,
                 'notes':    i.notes,
                 'icon':     i.icon,
+                'pin':      i.pin,
               })
           .toList());
 

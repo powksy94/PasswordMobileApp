@@ -16,11 +16,13 @@ class VaultExportService {
     await file.writeAsString(
       const JsonEncoder.withIndent('  ').convert(
         items.map((i) => {
+          'type':     i.type,
           'label':    i.label,
           'login':    i.login,
           'password': i.password,
           'notes':    i.notes,
           'icon':     i.icon,
+          'pin':      i.pin,
         }).toList(),
       ),
     );
@@ -34,8 +36,9 @@ class VaultExportService {
     if (key == null) throw Exception('Master key absente — connectez-vous d\'abord');
 
     final jsonStr   = jsonEncode(items.map((i) => {
-      'label': i.label, 'login': i.login,
+      'type': i.type, 'label': i.label, 'login': i.login,
       'password': i.password, 'notes': i.notes, 'icon': i.icon,
+      'pin': i.pin,
     }).toList());
     final encrypted = CryptoService.encryptText(jsonStr, key);
 

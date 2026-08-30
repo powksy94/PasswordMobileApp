@@ -4,6 +4,12 @@ import './vault_import_exceptions.dart';
 
 /// Parse un export CSV générique (formats Chrome, Bitwarden, 1Password, etc.)
 /// en détectant séparateur et colonnes par mots-clés courants.
+///
+/// Volontairement sans notion de PIN : le CSV n'existe que pour importer
+/// depuis des outils tiers, qui n'ont pas ce concept — cette app elle-même
+/// n'exporte jamais en CSV (voir VaultExportService/BiometricExportService,
+/// qui gèrent le JSON et le chiffré, eux type-aware). Tout item CSV est donc
+/// à raison toujours un `type: 'password'` (valeur par défaut de [VaultItem]).
 class VaultCsvParser {
   static final _uuid = Uuid();
 

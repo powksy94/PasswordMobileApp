@@ -60,12 +60,14 @@ class VaultImportService {
     int count = 0;
     for (final item in items) {
       await VaultService.addToServer(
+        type:     item.type,
         label:    item.label,
         login:    item.login,
         password: item.password,
         notes:    item.notes,
         icon:     item.icon,
         url:      item.url,
+        pin:      item.pin,
       );
       count++;
     }
@@ -80,12 +82,14 @@ class VaultImportService {
       final m = raw as Map<String, dynamic>;
       return VaultItem(
         id:       _uuid.v4(),
+        type:     m['type']     as String? ?? 'password',
         label:    m['label']    as String? ?? '',
         login:    m['login']    as String? ?? '',
         password: m['password'] as String? ?? '',
         notes:    m['notes']    as String? ?? '',
         icon:     m['icon']     as String? ?? 'lock',
         url:      m['url']      as String? ?? '',
+        pin:      m['pin']      as String? ?? '',
       );
     }).toList();
   }

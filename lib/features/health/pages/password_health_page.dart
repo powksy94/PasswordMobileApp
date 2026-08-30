@@ -46,23 +46,34 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
     }
   }
 
-  List<VaultItem> get _weak =>
-      _items.where((i) => PasswordScore.compute(i.password) < 60).toList();
+  // Les items PIN partagent la même liste que les mots de passe
+  // (VaultService.loadFromServer retourne tout le coffre), mais leur secret
+  // vit dans `pin`, pas `password` (toujours '' pour eux) : sans ce filtre,
+  // chaque PIN serait compté comme un mot de passe de score 0 (faible), et
+  // tous les PINs se retrouveraient regroupés comme "mot de passe réutilisé"
+  // puisqu'ils partagent tous la même valeur `password` vide.
+  List<VaultItem> get _passwordItems =>
+      _items.where((i) => i.type != 'pin').toList();
+
+  List<VaultItem> get _weak => _passwordItems
+      .where((i) => PasswordScore.compute(i.password) < 60)
+      .toList();
 
   List<List<VaultItem>> get _duplicateGroups {
     final map = <String, List<VaultItem>>{};
-    for (final item in _items) {
+    for (final item in _passwordItems) {
       map.putIfAbsent(item.password, () => []).add(item);
     }
     return map.values.where((g) => g.length > 1).toList();
   }
 
   int get _globalScore {
-    if (_items.isEmpty) return 100;
-    return (_items
+    final items = _passwordItems;
+    if (items.isEmpty) return 100;
+    return (items
             .map((i) => PasswordScore.compute(i.password))
             .fold(0, (a, b) => a + b) /
-        _items.length)
+        items.length)
         .round();
   }
 
@@ -91,11 +102,12 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
       );
     }
 
-    final weak       = _weak;
-    final duplicates = _duplicateGroups;
+    final passwordItems = _passwordItems;
+    final weak          = _weak;
+    final duplicates    = _duplicateGroups;
 
     return GradientBackground(
-      child: _items.isEmpty
+      child: passwordItems.isEmpty
           ? Center(
               child: NeonText(
                   text: AppLocalizations.of(context)!.vaultEmpty, fontSize: 20, color: accent, glow: true))
@@ -104,8 +116,8 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
               children: [
                 HealthScoreCard(
                   score:       _globalScore,
-                  total:       _items.length,
-                  strongCount: _items
+                  total:       passwordItems.length,
+                  strongCount: passwordItems
                       .where((i) => PasswordScore.compute(i.password) >= 80)
                       .length,
                   weakCount:   weak.length,

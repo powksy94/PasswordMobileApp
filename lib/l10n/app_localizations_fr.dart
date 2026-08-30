@@ -658,4 +658,23 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get labelAllGood => 'Excellent ! Aucun problème détecté.';
+
+  @override
+  String get titlePinHealthSection => 'Santé des PINs';
+
+  @override
+  String get labelWeakPins => 'PINs faibles';
+
+  @override
+  String get subtitleWeakPins => 'Score < 65 — à remplacer en priorité';
+
+  @override
+  String get labelReusedPins => 'PINs réutilisés';
+
+  @override
+  String get subtitleReusedPins =>
+      'Le même PIN est utilisé sur plusieurs services';
+
+  @override
+  String get labelSamePin => 'services — même PIN';
 }

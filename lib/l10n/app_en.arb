@@ -234,5 +234,11 @@
   "labelGroupsCount": "group(s)",
   "subtitleReusedPasswords": "The same password is used across multiple services",
   "labelSameServicesPassword": "services — same password",
-  "labelAllGood": "Excellent! No issues detected."
+  "labelAllGood": "Excellent! No issues detected.",
+  "titlePinHealthSection": "PIN health",
+  "labelWeakPins": "Weak PINs",
+  "subtitleWeakPins": "Score < 65 — replace these first",
+  "labelReusedPins": "Reused PINs",
+  "subtitleReusedPins": "The same PIN is used on multiple services",
+  "labelSamePin": "services — same PIN"
 }

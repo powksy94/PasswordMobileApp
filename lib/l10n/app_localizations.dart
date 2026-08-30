@@ -1287,6 +1287,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Excellent! No issues detected.'**
   String get labelAllGood;
+
+  /// No description provided for @titlePinHealthSection.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN health'**
+  String get titlePinHealthSection;
+
+  /// No description provided for @labelWeakPins.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak PINs'**
+  String get labelWeakPins;
+
+  /// No description provided for @subtitleWeakPins.
+  ///
+  /// In en, this message translates to:
+  /// **'Score < 65 — replace these first'**
+  String get subtitleWeakPins;
+
+  /// No description provided for @labelReusedPins.
+  ///
+  /// In en, this message translates to:
+  /// **'Reused PINs'**
+  String get labelReusedPins;
+
+  /// No description provided for @subtitleReusedPins.
+  ///
+  /// In en, this message translates to:
+  /// **'The same PIN is used on multiple services'**
+  String get subtitleReusedPins;
+
+  /// No description provided for @labelSamePin.
+  ///
+  /// In en, this message translates to:
+  /// **'services — same PIN'**
+  String get labelSamePin;
 }
 
 class _AppLocalizationsDelegate

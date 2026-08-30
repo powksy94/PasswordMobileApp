@@ -25,7 +25,16 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
   void initState() {
     super.initState();
     _load();
+    VaultService.vaultVersion.addListener(_onVaultVersionChanged);
   }
+
+  @override
+  void dispose() {
+    VaultService.vaultVersion.removeListener(_onVaultVersionChanged);
+    super.dispose();
+  }
+
+  void _onVaultVersionChanged() => _load();
 
   // ── Action publique (appelée par HomePage via GlobalKey) ──────────────────
 

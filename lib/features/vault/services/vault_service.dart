@@ -16,8 +16,10 @@ class VaultService {
   static final _api  = ApiService();
   static final _uuid = Uuid();
 
-  /// Incrémenté quand le coffre change depuis l'extérieur de [VaultPage]
-  /// (ex: import depuis les Paramètres) pour signaler un rechargement.
+  /// Incrémenté à chaque écriture sur le coffre (ajout, modification,
+  /// suppression, purge, ré-encryption) — signal global pour que toute page
+  /// affichant des items du coffre (VaultPage, PasswordHealthPage…) se
+  /// resynchronise, quelle que soit la page qui a déclenché le changement.
   static final ValueNotifier<int> vaultVersion = ValueNotifier(0);
 
   // ── Chargement (réseau → cache en cas d'échec) ────────────────────────────
@@ -81,6 +83,7 @@ class VaultService {
       pin:      pin,
       key:      key,
     ));
+    vaultVersion.value++;
   }
 
   static Future<void> updateOnServer({
@@ -110,12 +113,14 @@ class VaultService {
       pin:      pin,
       key:      key,
     ));
+    vaultVersion.value++;
   }
 
   static Future<void> deleteFromServer(String id) async {
     final token = await AuthService.getToken();
     if (token == null) throw Exception('Non authentifié');
     await _api.deleteItem(token, id);
+    vaultVersion.value++;
   }
 
   static Future<void> purgeAll() async {

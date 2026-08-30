@@ -88,6 +88,9 @@
   "tooltipCopyPin": "Copier le PIN",
 
   "snackPasswordAdded": "Mot de passe ajouté au coffre !",
+  "snackPinAdded": "PIN ajouté au coffre !",
+  "pinEmpty": "PIN vide",
+  "labelPinLength": "Longueur du PIN",
   "errorBiometricKey": "Clé biométrique introuvable — entrez le mot de passe maître",
   "errorWrongMasterPassword": "Mot de passe maître incorrect",
   "errorVaultDecryptionFailed": "Impossible de déchiffrer le coffre — vérifiez votre mot de passe maître",

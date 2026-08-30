@@ -235,6 +235,15 @@ class AppLocalizationsFr extends AppLocalizations {
   String get snackPasswordAdded => 'Mot de passe ajouté au coffre !';
 
   @override
+  String get snackPinAdded => 'PIN ajouté au coffre !';
+
+  @override
+  String get pinEmpty => 'PIN vide';
+
+  @override
+  String get labelPinLength => 'Longueur du PIN';
+
+  @override
   String get errorBiometricKey =>
       'Clé biométrique introuvable — entrez le mot de passe maître';
 

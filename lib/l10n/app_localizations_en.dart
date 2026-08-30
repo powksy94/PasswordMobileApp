@@ -233,6 +233,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get snackPasswordAdded => 'Password added to vault!';
 
   @override
+  String get snackPinAdded => 'PIN added to vault!';
+
+  @override
+  String get pinEmpty => 'Empty PIN';
+
+  @override
+  String get labelPinLength => 'PIN length';
+
+  @override
   String get errorBiometricKey =>
       'Biometric key not found — enter your master password';
 

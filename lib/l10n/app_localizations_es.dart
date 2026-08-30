@@ -234,6 +234,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get snackPasswordAdded => '¡Contraseña añadida al cofre!';
 
   @override
+  String get snackPinAdded => '¡PIN añadido al cofre!';
+
+  @override
+  String get pinEmpty => 'PIN vacío';
+
+  @override
+  String get labelPinLength => 'Longitud del PIN';
+
+  @override
   String get errorBiometricKey =>
       'Clave biométrica no encontrada — ingresa tu contraseña maestra';
 

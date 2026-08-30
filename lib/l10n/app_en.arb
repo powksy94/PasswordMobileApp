@@ -88,6 +88,9 @@
   "tooltipCopyPin": "Copy PIN",
 
   "snackPasswordAdded": "Password added to vault!",
+  "snackPinAdded": "PIN added to vault!",
+  "pinEmpty": "Empty PIN",
+  "labelPinLength": "PIN length",
   "errorBiometricKey": "Biometric key not found — enter your master password",
   "errorWrongMasterPassword": "Wrong master password",
   "errorVaultDecryptionFailed": "Could not decrypt vault — please check your master password",

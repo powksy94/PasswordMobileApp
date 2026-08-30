@@ -88,6 +88,9 @@
   "tooltipCopyPin": "Copiar PIN",
 
   "snackPasswordAdded": "¡Contraseña añadida al cofre!",
+  "snackPinAdded": "¡PIN añadido al cofre!",
+  "pinEmpty": "PIN vacío",
+  "labelPinLength": "Longitud del PIN",
   "errorBiometricKey": "Clave biométrica no encontrada — ingresa tu contraseña maestra",
   "errorWrongMasterPassword": "Contraseña maestra incorrecta",
   "errorVaultDecryptionFailed": "No se pudo descifrar el cofre — verifica tu contraseña maestra",

@@ -544,6 +544,24 @@ abstract class AppLocalizations {
   /// **'Password added to vault!'**
   String get snackPasswordAdded;
 
+  /// No description provided for @snackPinAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN added to vault!'**
+  String get snackPinAdded;
+
+  /// No description provided for @pinEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Empty PIN'**
+  String get pinEmpty;
+
+  /// No description provided for @labelPinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN length'**
+  String get labelPinLength;
+
   /// No description provided for @errorBiometricKey.
   ///
   /// In en, this message translates to:

@@ -56,7 +56,10 @@ class _LoginPageState extends State<LoginPage>
   Future<void> _checkBiometricAvailability() async {
     final enabled      = await SettingsService.getBiometricEnabled();
     final hasSession   = await AuthService.hasLoggedOutSession();
-    final bioAvailable = enabled && hasSession && await BiometricService.isAvailable();
+    final bioAvailable = enabled &&
+        hasSession &&
+        await BiometricService.isAvailable() &&
+        await BiometricUnlockService.isProvisioned();
     if (mounted) setState(() => _showBiometric = bioAvailable);
   }
 

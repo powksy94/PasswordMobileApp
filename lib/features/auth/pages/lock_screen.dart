@@ -36,7 +36,9 @@ class _LockScreenState extends State<LockScreen> {
 
   Future<void> _initBiometric() async {
     final enabled   = await SettingsService.getBiometricEnabled();
-    final available = enabled && await BiometricService.isAvailable();
+    final available = enabled &&
+        await BiometricService.isAvailable() &&
+        await BiometricUnlockService.isProvisioned();
     if (!mounted) return;
     setState(() => _biometricAvailable = available);
     if (available) _unlockBiometric();

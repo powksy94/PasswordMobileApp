@@ -35,7 +35,9 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
       // l'a activé dans les réglages (sinon on tombe sur l'écran de verrouillage).
       final biometricEnabled = await SettingsService.getBiometricEnabled();
       if (!mounted) return;
-      final bioAvailable = biometricEnabled && await BiometricService.isAvailable();
+      final bioAvailable = biometricEnabled &&
+          await BiometricService.isAvailable() &&
+          await BiometricUnlockService.isProvisioned();
       if (!mounted) return;
 
       if (bioAvailable) {

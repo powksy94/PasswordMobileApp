@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../vault/services/vault_service.dart';
 import '../../vault/models/vault_item.dart';
-import '../../../shared/utils/password_score.dart';
 import '../../../shared/widgets/common/neon_text.dart';
 import '../../../shared/widgets/common/gradient_background.dart';
-import '../widgets/health_score_card.dart';
-import '../widgets/weak_passwords_section.dart';
-import '../widgets/reused_passwords_section.dart';
-import '../widgets/health_all_good_panel.dart';
-import '../../vault/pages/edit_vault_item_page.dart';
+import '../widgets/password_health_section.dart';
+import '../widgets/pin_health_section.dart';
+import '../../vault/pages/vault_item_navigation.dart';
 import '../../../l10n/app_localizations.dart';
 
 class PasswordHealthPage extends StatefulWidget {
@@ -34,8 +31,6 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
 
   Future<void> refresh() => _load();
 
-  // ── Analyses ───────────────────────────────────────────────────────────────
-
   Future<void> _load() async {
     setState(() { _loading = true; _error = null; });
     try {
@@ -46,41 +41,19 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
     }
   }
 
-  // Les items PIN partagent la même liste que les mots de passe
-  // (VaultService.loadFromServer retourne tout le coffre), mais leur secret
-  // vit dans `pin`, pas `password` (toujours '' pour eux) : sans ce filtre,
-  // chaque PIN serait compté comme un mot de passe de score 0 (faible), et
-  // tous les PINs se retrouveraient regroupés comme "mot de passe réutilisé"
-  // puisqu'ils partagent tous la même valeur `password` vide.
+  // Le détail de l'analyse (score, faibles, réutilisés) vit dans
+  // PasswordHealthSection/PinHealthSection, chacune autonome à partir de la
+  // sous-liste d'items de son type — cette page ne fait que charger et router.
   List<VaultItem> get _passwordItems =>
       _items.where((i) => i.type != 'pin').toList();
 
-  List<VaultItem> get _weak => _passwordItems
-      .where((i) => PasswordScore.compute(i.password) < 60)
-      .toList();
-
-  List<List<VaultItem>> get _duplicateGroups {
-    final map = <String, List<VaultItem>>{};
-    for (final item in _passwordItems) {
-      map.putIfAbsent(item.password, () => []).add(item);
-    }
-    return map.values.where((g) => g.length > 1).toList();
-  }
-
-  int get _globalScore {
-    final items = _passwordItems;
-    if (items.isEmpty) return 100;
-    return (items
-            .map((i) => PasswordScore.compute(i.password))
-            .fold(0, (a, b) => a + b) /
-        items.length)
-        .round();
-  }
+  List<VaultItem> get _pinItems =>
+      _items.where((i) => i.type == 'pin').toList();
 
   Future<void> _openEdit(VaultItem item) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (_) => EditVaultItemPage(item: item)),
+      MaterialPageRoute(builder: (_) => VaultItemNavigation.editPageFor(item)),
     );
     await _load();
   }
@@ -89,6 +62,7 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l      = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
 
@@ -97,46 +71,28 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
     }
     if (_error != null) {
       return Center(
-        child: Text('${AppLocalizations.of(context)!.errorPrefix}: $_error',
+        child: Text('${l.errorPrefix}: $_error',
             style: const TextStyle(color: Colors.redAccent)),
       );
     }
 
     final passwordItems = _passwordItems;
-    final weak          = _weak;
-    final duplicates    = _duplicateGroups;
+    final pinItems      = _pinItems;
 
     return GradientBackground(
-      child: passwordItems.isEmpty
+      child: (passwordItems.isEmpty && pinItems.isEmpty)
           ? Center(
               child: NeonText(
-                  text: AppLocalizations.of(context)!.vaultEmpty, fontSize: 20, color: accent, glow: true))
+                  text: l.vaultEmpty, fontSize: 20, color: accent, glow: true))
           : ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                HealthScoreCard(
-                  score:       _globalScore,
-                  total:       passwordItems.length,
-                  strongCount: passwordItems
-                      .where((i) => PasswordScore.compute(i.password) >= 80)
-                      .length,
-                  weakCount:   weak.length,
-                  dupCount:    duplicates.fold(0, (s, g) => s + g.length),
-                ),
+                if (passwordItems.isNotEmpty)
+                  PasswordHealthSection(items: passwordItems, onEdit: _openEdit),
 
-                if (weak.isNotEmpty) ...[
-                  const SizedBox(height: 20),
-                  WeakPasswordsSection(items: weak, onEdit: _openEdit),
-                ],
-
-                if (duplicates.isNotEmpty) ...[
-                  const SizedBox(height: 20),
-                  ReusedPasswordsSection(groups: duplicates, onEdit: _openEdit),
-                ],
-
-                if (weak.isEmpty && duplicates.isEmpty) ...[
-                  const SizedBox(height: 20),
-                  const HealthAllGoodPanel(),
+                if (pinItems.isNotEmpty) ...[
+                  const SizedBox(height: 28),
+                  PinHealthSection(items: pinItems, onEdit: _openEdit),
                 ],
 
                 const SizedBox(height: 24),

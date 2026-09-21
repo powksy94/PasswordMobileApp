@@ -1,18 +1,18 @@
-/// Levée par [VaultReencryptService.changeMasterPassword] quand l'ancien mot de passe
-/// maître saisi ne correspond pas à celui actuellement utilisé.
+/// Thrown by [VaultReencryptService.changeMasterPassword] when the old master
+/// password entered does not match the one currently in use.
 class WrongMasterPasswordException implements Exception {}
 
-/// Levée par [VaultReencryptService.changeMasterPassword] quand l'envoi du coffre
-/// re-chiffré échoue. Le serveur traite la mise à jour comme une transaction
-/// tout-ou-rien : en cas d'erreur, aucune écriture n'est appliquée et le coffre
-/// reste intact avec l'ancien chiffrement (la nouvelle clé n'est pas persistée).
+/// Thrown by [VaultReencryptService.changeMasterPassword] when sending the re-encrypted
+/// vault fails. The server treats the update as an all-or-nothing
+/// transaction: on error, no write is applied and the vault
+/// stays intact with the old encryption (the new key is not persisted).
 class MasterPasswordChangeException implements Exception {
   final Object cause;
   MasterPasswordChangeException(this.cause);
 }
 
-/// Levée par [VaultService.loadFromServer] quand le serveur retourne des items
-/// mais qu'aucun ne peut être déchiffré — indique un mot de passe maître incorrect.
+/// Thrown by [VaultService.loadFromServer] when the server returns items
+/// but none can be decrypted: indicates an incorrect master password.
 class VaultDecryptionException implements Exception {
   const VaultDecryptionException();
 }

@@ -1,9 +1,9 @@
 import 'package:biometric_storage/biometric_storage.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Textes localisés du prompt biométrique système utilisé pour l'export/import
-/// chiffré par l'appareil. Fournis par l'appelant (qui a un `context`), car
-/// [BiometricExportService] est un service statique sans accès aux traductions.
+/// Localized texts of the system biometric prompt used for the device-encrypted
+/// export/import. Provided by the caller (which has a `context`), because
+/// [BiometricExportService] is a static service with no access to translations.
 class BiometricPromptTexts {
   final String title;
   final String subtitle;

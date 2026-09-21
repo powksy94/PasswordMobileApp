@@ -2,21 +2,21 @@ import 'package:uuid/uuid.dart';
 import '../models/vault_item.dart';
 import './vault_import_exceptions.dart';
 
-/// Parse un export CSV générique (formats Chrome, Bitwarden, 1Password, etc.)
-/// en détectant séparateur et colonnes par mots-clés courants.
+/// Parses a generic CSV export (Chrome, Bitwarden, 1Password formats, etc.)
+/// by detecting the separator and columns from common keywords.
 ///
-/// Volontairement sans notion de PIN : le CSV n'existe que pour importer
-/// depuis des outils tiers, qui n'ont pas ce concept — cette app elle-même
-/// n'exporte jamais en CSV (voir VaultExportService/BiometricExportService,
-/// qui gèrent le JSON et le chiffré, eux type-aware). Tout item CSV est donc
-/// à raison toujours un `type: 'password'` (valeur par défaut de [VaultItem]).
+/// Deliberately without any notion of PIN: the CSV only exists to import
+/// from third-party tools, which have no such concept; this app itself
+/// never exports to CSV (see VaultExportService/BiometricExportService,
+/// which handle JSON and the encrypted format, both type-aware). Every CSV item is therefore
+/// always a `type: 'password'` (default value of [VaultItem]).
 class VaultCsvParser {
   static final _uuid = Uuid();
 
-  /// [fallbackLabelPrefix] est utilisé pour nommer les lignes sans titre
-  /// reconnaissable (ex. "Import 3") — fourni par l'appelant pour rester localisé.
+  /// [fallbackLabelPrefix] is used to name the rows without a recognizable
+  /// title (e.g. "Import 3"); provided by the caller to stay localized.
   static List<VaultItem> parse(String content, {required String fallbackLabelPrefix}) {
-    // Détection du séparateur (, ou ;)
+    // Separator detection (, or ;)
     final firstLine = content.split('\n').first;
     final sep = firstLine.contains(';') ? ';' : ',';
 
@@ -28,12 +28,12 @@ class VaultCsvParser {
 
     if (lines.length < 2) throw InvalidCsvFileException();
 
-    // En-têtes normalisés
+    // Normalized headers
     final headers = _splitLine(lines[0], sep)
         .map((h) => h.toLowerCase().trim())
         .toList();
 
-    // Mapping flexible : noms de colonnes courants selon les gestionnaires
+    // Flexible mapping: common column names depending on the password managers
     final nameIdx     = _col(headers, ['name', 'title', 'label', 'nom', 'libellé', 'service']);
     final loginIdx    = _col(headers, ['username', 'login', 'user', 'email', 'utilisateur', 'login_username']);
     final passwordIdx = _col(headers, ['password', 'pass', 'passwd', 'mot de passe', 'login_password']);
@@ -46,12 +46,12 @@ class VaultCsvParser {
     for (int i = 1; i < lines.length; i++) {
       final cells = _splitLine(lines[i], sep);
       final pw = _cell(cells, passwordIdx);
-      if (pw.isEmpty) continue; // ignore les lignes sans mot de passe
+      if (pw.isEmpty) continue; // ignore the rows without a password
 
       final url   = urlIdx   >= 0 ? _cell(cells, urlIdx)   : '';
       final notes = notesIdx >= 0 ? _cell(cells, notesIdx) : '';
 
-      // Label : nom du service, sinon l'URL, sinon le préfixe de repli
+      // Label: service name, otherwise the URL, otherwise the fallback prefix
       String label = nameIdx >= 0 ? _cell(cells, nameIdx) : '';
       if (label.isEmpty && url.isNotEmpty) label = url;
       if (label.isEmpty) label = '$fallbackLabelPrefix $i';
@@ -71,7 +71,7 @@ class VaultCsvParser {
     return items;
   }
 
-  /// Découpe une ligne CSV en gérant les champs entre guillemets.
+  /// Splits a CSV line while handling quoted fields.
   static List<String> _splitLine(String line, String sep) {
     final result  = <String>[];
     var   current = StringBuffer();
@@ -80,7 +80,7 @@ class VaultCsvParser {
     for (int i = 0; i < line.length; i++) {
       final ch = line[i];
       if (ch == '"') {
-        // Guillemet doublé = guillemet littéral
+        // Doubled quote = literal quote
         if (inQuote && i + 1 < line.length && line[i + 1] == '"') {
           current.write('"');
           i++;
@@ -98,7 +98,7 @@ class VaultCsvParser {
     return result;
   }
 
-  /// Cherche le premier index correspondant à un des noms candidats.
+  /// Finds the first index matching one of the candidate names.
   static int _col(List<String> headers, List<String> candidates) {
     for (final c in candidates) {
       final idx = headers.indexOf(c);
@@ -107,7 +107,7 @@ class VaultCsvParser {
     return -1;
   }
 
-  /// Valeur d'une cellule, nettoyée des guillemets résiduels.
+  /// Value of a cell, cleaned of residual quotes.
   static String _cell(List<String> cells, int idx) {
     if (idx < 0 || idx >= cells.length) return '';
     return cells[idx].replaceAll(RegExp(r'^"+|"+$'), '');

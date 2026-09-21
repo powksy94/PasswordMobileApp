@@ -8,11 +8,11 @@ import '../../../shared/utils/error_message.dart';
 import '../widgets/import_preview_dialog.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Orchestre le flux d'import : sélection fichier → aperçu → confirmation → import.
+/// Orchestrates the import flow: file selection -> preview -> confirmation -> import.
 Future<bool> showVaultImportDialog(BuildContext context) async {
   final l = AppLocalizations.of(context)!;
 
-  // 1. Sélection du fichier (withData pour Android scoped storage)
+  // 1. File selection (withData for Android scoped storage)
   final result = await FilePicker.platform.pickFiles(
     type:              FileType.custom,
     allowedExtensions: ['enc', 'json', 'csv'],
@@ -24,7 +24,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
   final file = result.files.single;
   final String fileName = file.name.toLowerCase();
 
-  // Lecture du contenu : path d'abord, bytes en fallback
+  // Reading the content: path first, bytes as fallback
   String content;
   try {
     if (file.path != null) {
@@ -40,7 +40,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
       return false;
     }
   } catch (e) {
-    debugPrint('[import] lecture du fichier échouée : $e');
+    debugPrint('[import] file read failed: $e');
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(l.errorFileReadFailed)),
@@ -51,7 +51,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
 
   if (!context.mounted) return false;
 
-  // 2. Parsing et déchiffrement
+  // 2. Parsing and decryption
   List<VaultItem> items;
   try {
     items = await VaultImportService.parseContent(
@@ -77,7 +77,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
     return false;
   }
 
-  // 3. Aperçu et confirmation
+  // 3. Preview and confirmation
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (_) => ImportPreviewDialog(items: items),
@@ -103,7 +103,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
   }
 }
 
-/// Traduit une exception de [VaultImportService.parseContent] en message localisé.
+/// Translates an exception from [VaultImportService.parseContent] into a localized message.
 String _importErrorMessage(AppLocalizations l, Object e) {
   if (e is UnsupportedImportFormatException) return l.errorUnsupportedImportFormat;
   if (e is ImportDecryptionFailedException)  return l.errorImportDecryptionFailed;

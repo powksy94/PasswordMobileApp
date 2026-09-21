@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Barre de recherche du coffre-fort.
-/// Filtre par label ou login. Affiche un bouton "effacer" quand la saisie est non vide.
+/// Vault search bar.
+/// Filters by label or login. Shows a "clear" button when the input is non-empty.
 class VaultSearchBar extends StatelessWidget {
   final TextEditingController controller;
   final String                query;

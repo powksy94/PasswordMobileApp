@@ -3,7 +3,7 @@ import '../models/vault_item.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Aperçu des items détectés dans un fichier avant de confirmer leur import.
+/// Preview of the items detected in a file before confirming their import.
 class ImportPreviewDialog extends StatelessWidget {
   final List<VaultItem> items;
   const ImportPreviewDialog({super.key, required this.items});

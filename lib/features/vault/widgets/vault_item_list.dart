@@ -4,9 +4,9 @@ import '../../../shared/widgets/common/neon_text.dart';
 import './vault_item_card.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Liste des items du coffre (ou état vide), extraite de [VaultPage] — pur
-/// rendu, aucune logique d'état propre : tout est piloté par les callbacks
-/// et l'état (showPassword) que la page continue de porter.
+/// Vault item list (or empty state), extracted from [VaultPage]: pure
+/// rendering, no state logic of its own: everything is driven by the callbacks
+/// and by the state (showPassword) that the page keeps carrying.
 class VaultItemList extends StatelessWidget {
   final List<VaultItem>            items;
   final bool                       hasSearchQuery;

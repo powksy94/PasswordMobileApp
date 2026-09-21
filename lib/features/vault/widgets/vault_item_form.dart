@@ -4,8 +4,8 @@ import '../../../shared/widgets/common/password_strength_bar.dart';
 import './icon_selector.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Formulaire commun à l'ajout et à la modification d'un item du coffre
-/// (label, login, mot de passe, site web, notes, icône).
+/// Shared form for adding and editing a vault item
+/// (label, login, password, website, notes, icon).
 class VaultItemForm extends StatelessWidget {
   final TextEditingController labelCtrl;
   final TextEditingController loginCtrl;

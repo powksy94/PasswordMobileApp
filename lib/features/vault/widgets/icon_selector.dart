@@ -13,7 +13,7 @@ const vaultIconOptions = <(String, IconData)>[
   ('cloud',       Icons.cloud),
 ];
 
-/// Libellé localisé (infobulle) d'une icône de [vaultIconOptions].
+/// Localized label (tooltip) of an icon from [vaultIconOptions].
 String vaultIconLabel(AppLocalizations l, String id) => switch (id) {
       'lock'        => l.iconLock,
       'email'       => l.iconEmail,

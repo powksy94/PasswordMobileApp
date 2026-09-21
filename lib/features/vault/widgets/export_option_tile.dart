@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Une option du dialogue d'export du coffre (icône + titre + sous-titre).
+/// One option of the vault export dialog (icon + title + subtitle).
 class ExportOptionTile extends StatelessWidget {
   final IconData     icon;
   final Color        color;

@@ -7,7 +7,7 @@ import '../../auth/services/master_key_service.dart';
 import '../../../shared/services/crypto_service.dart';
 
 class VaultExportService {
-  // ── JSON (texte clair) → Téléchargements ─────────────────────────────────
+  // ── JSON (plain text) -> Downloads ─────────────────────────────────
 
   static Future<String> exportToJson(List<VaultItem> items) async {
     final dir       = await getExportScratchDirectory();
@@ -30,7 +30,7 @@ class VaultExportService {
     return file.path;
   }
 
-  // ── Chiffré portable (master password) → Téléchargements ─────────────────
+  // ── Portable encrypted (master password) -> Downloads ─────────────────
 
   static Future<String> exportPortable(List<VaultItem> items) async {
     final key = MasterKeyService.getMasterKey();

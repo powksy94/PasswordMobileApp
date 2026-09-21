@@ -17,18 +17,18 @@ class VaultService {
   static final _api  = ApiService();
   static final _uuid = Uuid();
 
-  /// Incrémenté à chaque écriture sur le coffre (ajout, modification,
-  /// suppression, purge, ré-encryption) — signal global pour que toute page
-  /// affichant des items du coffre (VaultPage, PasswordHealthPage…) se
-  /// resynchronise, quelle que soit la page qui a déclenché le changement.
+  /// Incremented on every write to the vault (add, edit,
+  /// delete, purge, re-encryption): global signal so that any page
+  /// displaying vault items (VaultPage, PasswordHealthPage...)
+  /// resynchronizes, whichever page triggered the change.
   static final ValueNotifier<int> vaultVersion = ValueNotifier(0);
 
-  // ── Chargement (réseau → cache en cas d'échec) ────────────────────────────
+  // ── Loading (network -> cache on failure) ────────────────────────────
 
-  /// Retourne les items, un flag [fromCache] indiquant si les données viennent
-  /// du cache, et [skippedCount] : le nombre d'items présents côté serveur/cache
-  /// mais qui n'ont pas pu être déchiffrés (à signaler à l'utilisateur plutôt
-  /// que de les faire disparaître silencieusement du coffre).
+  /// Returns the items, a [fromCache] flag telling whether the data comes
+  /// from the cache, and [skippedCount]: the number of items present on the server/cache
+  /// but that could not be decrypted (to report to the user rather
+  /// than silently making them disappear from the vault).
   static Future<({List<VaultItem> items, bool fromCache, int skippedCount})> loadFromServer() async {
     final token = await AuthService.getToken();
     if (token == null) throw NotAuthenticatedException();
@@ -55,7 +55,7 @@ class VaultService {
     }
   }
 
-  // ── Écriture ──────────────────────────────────────────────────────────────
+  // ── Write ──────────────────────────────────────────────────────────────
 
   static Future<void> addToServer({
     required String label,

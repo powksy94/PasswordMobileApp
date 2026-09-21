@@ -53,7 +53,7 @@ class VaultPageState extends State<VaultPage> {
         .toList();
   }
 
-  // ── Actions publiques (appelées par HomePage via GlobalKey) ───────────────
+  // ── Public actions (called by HomePage via GlobalKey) ───────────────
 
   Future<void> loadVault() async {
     try {
@@ -92,10 +92,10 @@ class VaultPageState extends State<VaultPage> {
     }
   }
 
-  /// Appelée par HomePage via GlobalKey (FAB "+") : ouvre le formulaire
-  /// d'ajout correspondant au type actuellement sélectionné (onglet
-  /// Mots de passe / PINs), pas seulement les mots de passe malgré le nom
-  /// conservé pour ne pas modifier le point d'appel dans home_page.dart.
+  /// Called by HomePage via GlobalKey (FAB "+"): opens the add form
+  /// matching the currently selected type (Passwords /
+  /// PINs tab), not only passwords despite the name,
+  /// which is kept so as not to change the call site in home_page.dart.
   Future<void> openAddPassword() async {
     if (!mounted) return;
     final result = await Navigator.push<bool>(
@@ -105,7 +105,7 @@ class VaultPageState extends State<VaultPage> {
     if (result == true) await loadVault();
   }
 
-  // ── Actions internes ──────────────────────────────────────────────────────
+  // ── Internal actions ──────────────────────────────────────────────────────
 
   Future<void> _deleteItem(String id) async {
     final l = AppLocalizations.of(context)!;
@@ -151,7 +151,7 @@ class VaultPageState extends State<VaultPage> {
     if (!mounted) return;
     final l = AppLocalizations.of(context)!;
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('$label — ${l.snackCopied}')),
+      SnackBar(content: Text('$label - ${l.snackCopied}')),
     );
   }
 
@@ -163,7 +163,7 @@ class VaultPageState extends State<VaultPage> {
     await loadVault();
   }
 
-  // ── Build — pas de Scaffold ni d'AppBar (géré par HomePage) ──────────────
+  // ── Build - no Scaffold or AppBar (handled by HomePage) ──────────────
 
   @override
   Widget build(BuildContext context) {

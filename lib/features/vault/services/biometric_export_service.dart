@@ -8,31 +8,31 @@ import './biometric_prompt_texts.dart';
 import '../../../shared/utils/downloads_directory.dart';
 import '../../../shared/services/crypto_service.dart';
 
-/// Export du vault chiffré avec une clé stockée dans le Keystore hardware.
+/// Export of the vault encrypted with a key stored in the hardware Keystore.
 ///
-/// Android Keystore / iOS Secure Enclave : la clé ne peut être lue qu'après
-/// authentification biométrique (ou PIN de secours). Le fichier `.enc` est
-/// donc illisible sans cet appareil physique + empreinte.
+/// Android Keystore / iOS Secure Enclave: the key can only be read after
+/// biometric authentication (or fallback PIN). The `.enc` file is
+/// therefore unreadable without this physical device + fingerprint.
 class BiometricExportService {
   static const _storeName = 'vault_export_key_v1';
 
-  // ── Disponibilité ──────────────────────────────────────────────────────────
+  // ── Availability ──────────────────────────────────────────────────────────
 
   static Future<bool> isAvailable() async {
     final result = await BiometricStorage().canAuthenticate();
     return result == CanAuthenticateResponse.success;
   }
 
-  // ── Clé AES protégée biométrie ─────────────────────────────────────────────
+  // ── Biometric-protected AES key ─────────────────────────────────────────────
 
-  /// Lit ou crée la clé AES dans le Keystore (déclenche la biométrie).
+  /// Reads or creates the AES key in the Keystore (triggers biometrics).
   static Future<Uint8List?> _getOrCreateKey(BiometricPromptTexts prompt) async {
     final store = await BiometricStorage().getStorage(
       _storeName,
       options: StorageFileInitOptions(
         authenticationRequired:                true,
-        // -1 = toujours demander l'empreinte, sans fenêtre de validité
-        // androidBiometricOnly: true requis avec -1 (pas de fallback PIN)
+        // -1 = always ask for the fingerprint, no validity window
+        // androidBiometricOnly: true required with -1 (no PIN fallback)
         authenticationValidityDurationSeconds: -1,
         androidBiometricOnly:                  true,
       ),
@@ -50,10 +50,10 @@ class BiometricExportService {
     return base64Decode(stored);
   }
 
-  // ── Import : récupère la clé pour déchiffrer un fichier existant ─────────────
+  // ── Import: retrieves the key to decrypt an existing file ─────────────
 
-  /// Déclenche la biométrie et retourne la clé de chiffrement stockée.
-  /// Retourne null si non dispo ou si l'utilisateur annule.
+  /// Triggers biometrics and returns the stored encryption key.
+  /// Returns null if unavailable or if the user cancels.
   static Future<Uint8List?> getKeyForDecrypt(BiometricPromptTexts prompt) async {
     try {
       final store = await BiometricStorage().getStorage(
@@ -75,8 +75,8 @@ class BiometricExportService {
 
   // ── Export ─────────────────────────────────────────────────────────────────
 
-  /// Chiffre les items et écrit un fichier `.enc` dans les documents.
-  /// Retourne le chemin du fichier, ou `null` si l'utilisateur a annulé.
+  /// Encrypts the items and writes an `.enc` file in the documents folder.
+  /// Returns the file path, or `null` if the user cancelled.
   static Future<String?> exportEncrypted(
     List<VaultItem> items,
     BiometricPromptTexts prompt,
@@ -97,7 +97,7 @@ class BiometricExportService {
               })
           .toList());
 
-      // Produit {"data":"...","iv":"..."} — même format AES-GCM que le vault
+      // Produces {"data":"...","iv":"..."} - same AES-GCM format as the vault
       final encrypted = CryptoService.encryptText(jsonStr, key);
 
       final dir       = await getExportScratchDirectory();
@@ -108,7 +108,7 @@ class BiometricExportService {
     } on AuthException catch (e) {
       if (e.code == AuthExceptionCode.userCanceled ||
           e.code == AuthExceptionCode.canceled) {
-        return null; // Annulé → silence
+        return null; // Cancelled -> silence
       }
       rethrow;
     }

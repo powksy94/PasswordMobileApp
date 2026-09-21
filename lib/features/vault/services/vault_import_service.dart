@@ -15,16 +15,16 @@ export 'vault_import_exceptions.dart';
 class VaultImportService {
   static const _uuid = Uuid();
 
-  // ── Lecture et déchiffrement ──────────────────────────────────────────────
+  // ── Reading and decryption ──────────────────────────────────────────────
 
-  /// Lit un fichier depuis son chemin (fallback pour les anciens appels).
+  /// Reads a file from its path (fallback for the old calls).
   static Future<String> readPath(String filePath) =>
       File(filePath).readAsString();
 
-  /// Parse le contenu d'un fichier déjà lu, selon son nom (extension).
-  /// [csvFallbackLabelPrefix] nomme les lignes CSV sans titre reconnaissable
-  /// (ex. "Import 3") - fourni localisé par l'appelant. [biometricPrompt] sert
-  /// au prompt système si le fichier `.enc` est déchiffré via la clé de l'appareil.
+  /// Parses the content of an already-read file, depending on its name (extension).
+  /// [csvFallbackLabelPrefix] names the CSV rows without a recognizable title
+  /// (e.g. "Import 3"), provided localized by the caller. [biometricPrompt] is used
+  /// for the system prompt if the `.enc` file is decrypted via the device key.
   static Future<List<VaultItem>> parseContent(
     String content,
     String fileName, {
@@ -57,7 +57,7 @@ class VaultImportService {
     throw UnsupportedImportFormatException();
   }
 
-  // ── Import vers le serveur ────────────────────────────────────────────────
+  // ── Import to the server ────────────────────────────────────────────────
 
   static Future<int> importItems(List<VaultItem> items) async {
     int count = 0;

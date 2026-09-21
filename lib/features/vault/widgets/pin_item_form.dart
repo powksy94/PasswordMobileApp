@@ -4,8 +4,8 @@ import '../../../shared/widgets/common/glass_panel.dart';
 import '../../../shared/widgets/common/pin_score_bar.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Formulaire commun à l'ajout et à la modification d'un PIN (label, PIN,
-/// notes) — pendant minimal de [VaultItemForm], sans login/url/icône.
+/// Shared form for adding and editing a PIN (label, PIN,
+/// notes): minimal counterpart of [VaultItemForm], without login/url/icon.
 class PinItemForm extends StatelessWidget {
   final TextEditingController labelCtrl;
   final TextEditingController pinCtrl;

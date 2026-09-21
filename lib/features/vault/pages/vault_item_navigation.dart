@@ -5,9 +5,9 @@ import './edit_vault_item_page.dart';
 import './add_pin_item_page.dart';
 import './edit_pin_item_page.dart';
 
-/// Centralise le choix de la page d'ajout/modification selon le type d'item
-/// (mot de passe ou PIN) : les appelants (ex. VaultPage) n'ont pas besoin de
-/// connaître les 4 pages individuellement ni leur logique de dispatch.
+/// Centralizes the choice of the add/edit page depending on the item type
+/// (password or PIN): callers (e.g. VaultPage) do not need to
+/// know the 4 individual pages nor their dispatch logic.
 class VaultItemNavigation {
   const VaultItemNavigation._();
 

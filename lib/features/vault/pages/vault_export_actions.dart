@@ -7,11 +7,11 @@ import '../services/biometric_prompt_texts.dart';
 import '../../../shared/utils/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Le fichier exporté est écrit dans un dossier privé à l'app (voir
-/// getExportScratchDirectory) : sous scoped storage (Android 10+), on ne
-/// peut pas garantir qu'un chemin public "Download/" soit écrivable. La
-/// feuille de partage système laisse l'utilisateur choisir la vraie
-/// destination (Fichiers, Drive, e-mail…).
+/// The exported file is written to an app-private folder (see
+/// getExportScratchDirectory): under scoped storage (Android 10+), we cannot
+/// guarantee that a public "Download/" path is writable. The
+/// system share sheet lets the user choose the real
+/// destination (Files, Drive, email...).
 Future<void> _shareExportedFile(BuildContext context, String path) async {
   await Share.shareXFiles([XFile(path)]);
 }

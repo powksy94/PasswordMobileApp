@@ -7,18 +7,18 @@ import './vault_service.dart';
 
 export 'vault_exceptions.dart';
 
-/// Ré-chiffrement en masse du coffre (changement de mot de passe maître) —
-/// isolé de [VaultService] : c'est une opération transactionnelle distincte
-/// du CRUD simple, avec ses propres règles d'échec (voir doc de la méthode).
+/// Bulk re-encryption of the vault (master password change),
+/// isolated from [VaultService] because it is a transactional operation distinct
+/// from simple CRUD, with its own failure rules (see the method doc).
 class VaultReencryptService {
   static final _api = ApiService();
 
-  /// Déchiffre tout le coffre avec l'ancienne clé, le re-chiffre avec la
-  /// nouvelle, puis envoie le tout en une seule transaction atomique côté
-  /// serveur (`PUT /vault/reencrypt-all`). Si l'ancien mot de passe est
-  /// incorrect → [WrongMasterPasswordException]. Si l'envoi échoue → le serveur
-  /// annule toute la transaction (coffre intact) et [MasterPasswordChangeException]
-  /// est levée ; la nouvelle clé n'est jamais persistée dans ce cas.
+  /// Decrypts the whole vault with the old key, re-encrypts it with the
+  /// new one, then sends everything in a single atomic transaction on the
+  /// server (`PUT /vault/reencrypt-all`). If the old password is
+  /// incorrect -> [WrongMasterPasswordException]. If sending fails -> the server
+  /// cancels the whole transaction (vault intact) and [MasterPasswordChangeException]
+  /// is thrown; the new key is never persisted in that case.
   static Future<void> changeMasterPassword({
     required String oldMasterPassword,
     required String newMasterPassword,
@@ -37,7 +37,7 @@ class VaultReencryptService {
 
     // An item that fails to decrypt under the old key would simply be
     // missing from the re-encrypted batch sent to the server and lost for
-    // good once the new key is committed — refuse instead of silently
+    // good once the new key is committed - refuse instead of silently
     // re-encrypting an incomplete vault.
     if (result.skippedCount > 0) {
       throw MasterPasswordChangeException(

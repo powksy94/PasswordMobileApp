@@ -4,13 +4,13 @@ import '../../../shared/utils/password_score.dart';
 import '../../../shared/utils/pin_score.dart';
 import '../models/vault_item.dart';
 
-/// Convertit les [VaultItem] vers/depuis leur représentation chiffrée
-/// échangée avec le serveur. Centralise la logique de chiffrement/déchiffrement
-/// des champs, partagée par l'ajout, la modification et le re-chiffrement du coffre.
+/// Converts [VaultItem]s to/from their encrypted representation
+/// exchanged with the server. Centralizes the field encryption/decryption
+/// logic, shared by adding, editing and re-encrypting the vault.
 class VaultCodec {
-  /// Chiffre les champs d'un item pour l'envoi au serveur.
-  /// [id] est inclus dans le résultat seulement s'il est fourni
-  /// (l'API d'update le passe séparément, l'ajout et le re-chiffrement non).
+  /// Encrypts the fields of an item for sending to the server.
+  /// [id] is included in the result only if provided
+  /// (the update API passes it separately, add and re-encrypt do not).
   static Map<String, dynamic> encryptFields({
     String? id,
     String type = 'password',
@@ -39,11 +39,11 @@ class VaultCodec {
     };
   }
 
-  /// Déchiffre une liste brute (issue du serveur ou du cache) en [VaultItem].
-  /// Les entrées illisibles (clé incorrecte, données corrompues) sont ignorées ;
-  /// [skipped] permet à l'appelant de signaler à l'utilisateur qu'une partie
-  /// du coffre n'a pas pu être affichée plutôt que de la faire disparaître
-  /// silencieusement.
+  /// Decrypts a raw list (from the server or the cache) into [VaultItem]s.
+  /// Unreadable entries (wrong key, corrupted data) are skipped;
+  /// [skipped] lets the caller tell the user that part of the vault
+  /// could not be displayed, rather than silently making it
+  /// disappear.
   static ({List<VaultItem> items, int skipped}) decryptRaw(List<dynamic> raw, Uint8List key) {
     final out = <VaultItem>[];
     var skipped = 0;
@@ -91,7 +91,7 @@ class VaultCodec {
         ));
       } catch (e) {
         skipped++;
-        debugPrint('Erreur decrypt item ${r['id']}: $e');
+        debugPrint('Decrypt error for item ${r['id']}: $e');
       }
     }
     return (items: out, skipped: skipped);

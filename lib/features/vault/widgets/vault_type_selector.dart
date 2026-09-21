@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Sélecteur "Mots de passe / PINs" en haut de [VaultPage], sur le même
-/// modèle de composition que [OfflineBanner]/[VaultSearchBar] : un petit
-/// widget dédié plutôt qu'inliné dans la page.
+/// "Passwords / PINs" selector at the top of [VaultPage], following the same
+/// composition pattern as [OfflineBanner]/[VaultSearchBar]: a small
+/// dedicated widget rather than inlined in the page.
 class VaultTypeSelector extends StatelessWidget {
   final String selected;
   final ValueChanged<String> onChanged;

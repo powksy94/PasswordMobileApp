@@ -85,12 +85,12 @@ class VaultItemCard extends StatelessWidget {
                 Icon(Icons.lock_outline, size: 16, color: subColor),
                 const SizedBox(width: 6),
                 Expanded(
-                  // Intentionnellement un Text non sélectionnable : un
-                  // SelectableText permettrait de copier le secret via le
-                  // menu de sélection natif, en contournant l'effacement
-                  // automatique du presse-papiers (ClipboardService). La
-                  // seule voie de copie autorisée est le bouton dédié
-                  // ci-dessous, qui passe par onCopy → ClipboardService.
+                  // Intentionally a non-selectable Text: a
+                  // SelectableText would allow copying the secret via the
+                  // native selection menu, bypassing the automatic clipboard
+                  // clearing (ClipboardService). The only
+                  // allowed way to copy is the dedicated button
+                  // below, which goes through onCopy -> ClipboardService.
                   child: Text(
                     showPassword ? _secret : '●●●●●●●●',
                     style: TextStyle(

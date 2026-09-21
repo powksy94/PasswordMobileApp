@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Associe le nom d'icône stocké sur un [VaultItem] à son [IconData] —
-/// logique partagée entre les cartes du coffre et les listes de santé.
+/// Maps the icon name stored on a [VaultItem] to its [IconData]:
+/// logic shared between the vault cards and the health lists.
 class VaultIcons {
   static IconData forName(String iconName) {
     switch (iconName) {

@@ -1,23 +1,23 @@
-/// Levée par [VaultImportService.parseContent] quand l'extension du fichier
-/// n'est ni `.enc`, `.json` ni `.csv`.
+/// Thrown by [VaultImportService.parseContent] when the file extension
+/// is neither `.enc`, `.json` nor `.csv`.
 class UnsupportedImportFormatException implements Exception {}
 
-/// Levée quand un fichier `.enc` ne peut être déchiffré ni avec la master key
-/// du compte courant, ni avec la clé biométrique de l'appareil.
+/// Thrown when an `.enc` file can be decrypted neither with the master key
+/// of the current account nor with the device's biometric key.
 class ImportDecryptionFailedException implements Exception {}
 
-/// Levée par le parseur CSV quand le fichier est vide ou ne contient pas
-/// au moins un en-tête et une ligne de données.
+/// Thrown by the CSV parser when the file is empty or does not contain
+/// at least one header and one data row.
 class InvalidCsvFileException implements Exception {}
 
-/// Levée quand aucune colonne ne correspond à un mot de passe.
-/// [headers] contient les en-têtes détectés, pour aider l'utilisateur
-/// à comprendre pourquoi le fichier a été rejeté.
+/// Thrown when no column matches a password.
+/// [headers] contains the detected headers, to help the user
+/// understand why the file was rejected.
 class CsvPasswordColumnMissingException implements Exception {
   final List<String> headers;
   CsvPasswordColumnMissingException(this.headers);
 }
 
-/// Levée quand le CSV est valide mais qu'aucune ligne n'a pu être convertie
-/// en item exploitable (toutes les lignes ont un mot de passe vide).
+/// Thrown when the CSV is valid but no row could be converted
+/// into a usable item (all rows have an empty password).
 class EmptyCsvImportException implements Exception {}

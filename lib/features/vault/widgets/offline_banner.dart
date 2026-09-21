@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Bandeau affiché quand le vault est chargé depuis le cache local (pas de réseau).
+/// Banner shown when the vault is loaded from the local cache (no network).
 class OfflineBanner extends StatelessWidget {
   const OfflineBanner({super.key});
 

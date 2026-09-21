@@ -3,10 +3,10 @@ import '../../../shared/utils/pin_score.dart';
 import '../../../shared/utils/strength_level.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Petit badge coloré affichant la robustesse d'un PIN (calculée localement
-/// depuis la valeur en clair, disponible côté client après déchiffrement —
-/// pas besoin de dépendre de `pin_strength` renvoyé par le serveur pour
-/// l'affichage).
+/// Small colored badge showing the strength of a PIN (computed locally
+/// from the plain value, available client-side after decryption,
+/// no need to depend on the `pin_strength` returned by the server for
+/// display).
 class PinStrengthBadge extends StatelessWidget {
   final String pin;
 

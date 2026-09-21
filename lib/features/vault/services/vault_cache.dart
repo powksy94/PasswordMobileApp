@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Persiste une copie chiffrée brute du coffre pour permettre un accès
-/// hors-ligne quand le serveur est injoignable ([VaultService.loadFromServer]).
+/// Persists a raw encrypted copy of the vault to allow offline
+/// access when the server is unreachable ([VaultService.loadFromServer]).
 class VaultCache {
   static const _cacheKey = 'vault_cache_raw';
 

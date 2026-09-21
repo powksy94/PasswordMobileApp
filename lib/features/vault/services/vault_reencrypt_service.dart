@@ -1,3 +1,4 @@
+import '../../auth/services/auth_exceptions.dart';
 import '../../auth/services/auth_service.dart';
 import '../../auth/services/master_key_service.dart';
 import '../../../shared/services/api_service.dart';
@@ -23,13 +24,13 @@ class VaultReencryptService {
     required String newMasterPassword,
   }) async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('Non authentifié');
+    if (token == null) throw NotAuthenticatedException();
 
     final validOld = await MasterKeyService.unlockWithMasterPassword(oldMasterPassword);
     if (!validOld) throw WrongMasterPasswordException();
 
     final newKey = await MasterKeyService.deriveKeyFromMasterPassword(newMasterPassword);
-    if (newKey == null) throw Exception('Sel introuvable — compte invalide');
+    if (newKey == null) throw AccountSaltMissingException();
 
     final result = await VaultService.loadFromServer();
     final items  = result.items;

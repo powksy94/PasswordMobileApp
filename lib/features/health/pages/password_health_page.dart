@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../vault/services/vault_service.dart';
 import '../../vault/models/vault_item.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../shared/widgets/common/neon_text.dart';
 import '../../../shared/widgets/common/gradient_background.dart';
 import '../widgets/password_health_section.dart';
@@ -46,7 +47,12 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
       final result = await VaultService.loadFromServer();
       if (mounted) setState(() { _items = result.items; _loading = false; });
     } catch (e) {
-      if (mounted) setState(() { _error = e.toString(); _loading = false; });
+      if (mounted) {
+        setState(() {
+          _error   = errorMessage(AppLocalizations.of(context)!, e);
+          _loading = false;
+        });
+      }
     }
   }
 

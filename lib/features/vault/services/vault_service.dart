@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import '../../../shared/services/api_service.dart';
 import '../models/vault_item.dart';
+import '../../auth/services/auth_exceptions.dart';
 import '../../auth/services/auth_service.dart';
 import '../../auth/services/master_key_service.dart';
 import '../../../shared/services/autofill_cache_service.dart';
@@ -30,9 +31,9 @@ class VaultService {
   /// que de les faire disparaître silencieusement du coffre).
   static Future<({List<VaultItem> items, bool fromCache, int skippedCount})> loadFromServer() async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('Non authentifié');
+    if (token == null) throw NotAuthenticatedException();
     final key = MasterKeyService.getMasterKey();
-    if (key == null) throw Exception('Master key absente — déverrouillez le vault');
+    if (key == null) throw MasterKeyMissingException();
 
     try {
       final raw    = await _api.getVault(token);
@@ -67,9 +68,9 @@ class VaultService {
     String pin   = '',
   }) async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('Non authentifié');
+    if (token == null) throw NotAuthenticatedException();
     final key = MasterKeyService.getMasterKey();
-    if (key == null) throw Exception('Master key absente');
+    if (key == null) throw MasterKeyMissingException();
 
     await _api.addItem(token, VaultCodec.encryptFields(
       id:       _uuid.v4(),
@@ -98,9 +99,9 @@ class VaultService {
     String pin   = '',
   }) async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('Non authentifié');
+    if (token == null) throw NotAuthenticatedException();
     final key = MasterKeyService.getMasterKey();
-    if (key == null) throw Exception('Master key absente');
+    if (key == null) throw MasterKeyMissingException();
 
     await _api.updateItem(token, id, VaultCodec.encryptFields(
       type:     type,
@@ -118,14 +119,14 @@ class VaultService {
 
   static Future<void> deleteFromServer(String id) async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('Non authentifié');
+    if (token == null) throw NotAuthenticatedException();
     await _api.deleteItem(token, id);
     vaultVersion.value++;
   }
 
   static Future<void> purgeAll() async {
     final token = await AuthService.getToken();
-    if (token == null) throw Exception('Non authentifié');
+    if (token == null) throw NotAuthenticatedException();
     await _api.purgeVault(token);
     await VaultCache.save([]);
     vaultVersion.value++;

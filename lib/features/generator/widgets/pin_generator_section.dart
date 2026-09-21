@@ -3,6 +3,7 @@ import '../services/pin_generator.dart';
 import '../services/pin_generator_controller.dart';
 import './generated_pin_result_panel.dart';
 import './pin_generator_controls.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Mirroring de [PasswordGeneratorSection] pour les PINs — widget fin,
@@ -69,7 +70,7 @@ class _PinGeneratorSectionState extends State<PinGeneratorSection> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.errorLabelMissing)));
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(l, e))));
     }
   }
 

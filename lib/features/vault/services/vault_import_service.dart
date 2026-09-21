@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../models/vault_item.dart';
 import '../../auth/services/master_key_service.dart';
 import './biometric_export_service.dart';
+import './biometric_prompt_texts.dart';
 import '../../../shared/services/crypto_service.dart';
 import './vault_csv_parser.dart';
 import './vault_import_exceptions.dart';
@@ -22,11 +23,13 @@ class VaultImportService {
 
   /// Parse le contenu d'un fichier déjà lu, selon son nom (extension).
   /// [csvFallbackLabelPrefix] nomme les lignes CSV sans titre reconnaissable
-  /// (ex. "Import 3") — fourni localisé par l'appelant.
+  /// (ex. "Import 3") - fourni localisé par l'appelant. [biometricPrompt] sert
+  /// au prompt système si le fichier `.enc` est déchiffré via la clé de l'appareil.
   static Future<List<VaultItem>> parseContent(
     String content,
     String fileName, {
     required String csvFallbackLabelPrefix,
+    required BiometricPromptTexts biometricPrompt,
   }) async {
     if (fileName.endsWith('.json')) return _parseJson(content);
     if (fileName.endsWith('.csv')) {
@@ -41,7 +44,7 @@ class VaultImportService {
         } catch (_) {}
       }
 
-      final bioKey = await BiometricExportService.getKeyForDecrypt();
+      final bioKey = await BiometricExportService.getKeyForDecrypt(biometricPrompt);
       if (bioKey != null) {
         try {
           return _parseJson(CryptoService.decryptText(content, bioKey));

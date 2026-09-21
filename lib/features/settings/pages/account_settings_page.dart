@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../auth/services/auth_exceptions.dart';
 import '../../auth/services/auth_service.dart';
 import '../../../shared/services/autofill_cache_service.dart';
 import '../../../shared/services/api_service.dart';
 import '../../../shared/services/role_provider.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 import '../widgets/danger_zone_panel.dart';
@@ -65,12 +67,12 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
 
     try {
       final token = await AuthService.getToken();
-      if (token == null) throw Exception('Not authenticated');
+      if (token == null) throw NotAuthenticatedException();
       await ApiService().deleteAccount(token);
       if (!mounted) return;
       await _logoutAndRedirect();
     } catch (e) {
-      if (mounted) _snack('$e');
+      if (mounted) _snack(errorMessage(l, e));
     }
   }
 

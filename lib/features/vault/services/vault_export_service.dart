@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import '../models/vault_item.dart';
 import '../../../shared/utils/downloads_directory.dart';
+import '../../auth/services/auth_exceptions.dart';
 import '../../auth/services/master_key_service.dart';
 import '../../../shared/services/crypto_service.dart';
 
@@ -33,7 +34,7 @@ class VaultExportService {
 
   static Future<String> exportPortable(List<VaultItem> items) async {
     final key = MasterKeyService.getMasterKey();
-    if (key == null) throw Exception('Master key absente — connectez-vous d\'abord');
+    if (key == null) throw MasterKeyMissingException();
 
     final jsonStr   = jsonEncode(items.map((i) => {
       'type': i.type, 'label': i.label, 'login': i.login,

@@ -2,7 +2,9 @@ import 'dart:convert';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import '../models/vault_item.dart';
+import '../services/biometric_prompt_texts.dart';
 import '../services/vault_import_service.dart';
+import '../../../shared/utils/error_message.dart';
 import '../widgets/import_preview_dialog.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -38,9 +40,10 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
       return false;
     }
   } catch (e) {
+    debugPrint('[import] lecture du fichier échouée : $e');
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${l.errorFileReadFailed}: $e')),
+        SnackBar(content: Text(l.errorFileReadFailed)),
       );
     }
     return false;
@@ -55,6 +58,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
       content,
       fileName,
       csvFallbackLabelPrefix: l.labelImportFallbackPrefix,
+      biometricPrompt:        BiometricPromptTexts.forExport(l),
     );
   } catch (e) {
     if (context.mounted) {
@@ -92,7 +96,7 @@ Future<bool> showVaultImportDialog(BuildContext context) async {
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${l.errorImportFailed}: $e')),
+        SnackBar(content: Text('${l.errorImportFailed}: ${errorMessage(l, e)}')),
       );
     }
     return false;
@@ -108,5 +112,5 @@ String _importErrorMessage(AppLocalizations l, Object e) {
     return '${l.errorCsvPasswordColumnMissing}\n${l.labelDetectedColumns}: ${e.headers.join(', ')}';
   }
   if (e is EmptyCsvImportException) return l.errorEmptyCsvImport;
-  return e.toString();
+  return errorMessage(l, e);
 }

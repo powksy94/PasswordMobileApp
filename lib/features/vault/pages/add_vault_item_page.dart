@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/vault_service.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../widgets/vault_item_form.dart';
 import '../../../l10n/app_localizations.dart';
@@ -56,7 +57,7 @@ class _AddVaultItemPageState extends State<AddVaultItemPage> {
       _snack(l.successAdded);
       Navigator.pop(context, true);
     } catch (e) {
-      if (mounted) _snack('$e');
+      if (mounted) _snack(errorMessage(l, e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }

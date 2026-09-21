@@ -3,6 +3,7 @@ import '../../vault/services/vault_reencrypt_service.dart';
 import '../../auth/services/biometric_unlock_service.dart';
 import '../../auth/services/master_key_service.dart';
 import '../../../shared/widgets/common/app_page_scaffold.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../shared/utils/password_policy.dart';
 import '../widgets/master_password_warning_panel.dart';
 import '../widgets/change_master_password_panel.dart';
@@ -78,7 +79,7 @@ class _ChangeMasterPasswordPageState extends State<ChangeMasterPasswordPage> {
     } on MasterPasswordChangeException {
       if (mounted) _snack(l.errorMasterPasswordChangeFailed);
     } catch (e) {
-      if (mounted) _snack('$e');
+      if (mounted) _snack(errorMessage(l, e));
     } finally {
       if (mounted) setState(() => _changing = false);
     }

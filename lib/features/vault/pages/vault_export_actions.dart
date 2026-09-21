@@ -3,6 +3,8 @@ import 'package:share_plus/share_plus.dart';
 import '../models/vault_item.dart';
 import '../services/vault_export_service.dart';
 import '../services/biometric_export_service.dart';
+import '../services/biometric_prompt_texts.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Le fichier exporté est écrit dans un dossier privé à l'app (voir
@@ -30,14 +32,17 @@ Future<void> exportVaultBiometric(
   }
 
   try {
-    final path = await BiometricExportService.exportEncrypted(items);
+    final path = await BiometricExportService.exportEncrypted(
+      items,
+      BiometricPromptTexts.forExport(l),
+    );
     if (!context.mounted) return;
     if (path == null) return;
     await _shareExportedFile(context, path);
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('$e')));
+          .showSnackBar(SnackBar(content: Text(errorMessage(l, e))));
     }
   }
 }
@@ -73,7 +78,7 @@ Future<void> exportVaultPortable(
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('$e')));
+          .showSnackBar(SnackBar(content: Text(errorMessage(l, e))));
     }
   }
 }
@@ -109,7 +114,7 @@ Future<void> exportVaultJson(
   } catch (e) {
     if (context.mounted) {
       ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('$e')));
+          .showSnackBar(SnackBar(content: Text(errorMessage(l, e))));
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../vault/services/vault_service.dart';
@@ -15,7 +16,9 @@ class VaultDataPanel extends StatelessWidget {
       if (context.mounted) await showVaultExportDialog(context, result.items);
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage(AppLocalizations.of(context)!, e))),
+        );
       }
     }
   }

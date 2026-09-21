@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/vault_service.dart';
 import '../../../shared/services/clipboard_service.dart';
+import '../../../shared/utils/error_message.dart';
 import '../models/vault_item.dart';
 import '../../../shared/widgets/common/gradient_background.dart';
 import '../widgets/vault_item_list.dart';
@@ -85,7 +86,7 @@ class VaultPageState extends State<VaultPage> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('$e')),
+          SnackBar(content: Text(errorMessage(AppLocalizations.of(context)!, e))),
         );
       }
     }
@@ -138,8 +139,9 @@ class VaultPageState extends State<VaultPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('$e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(errorMessage(AppLocalizations.of(context)!, e))),
+        );
       }
     }
   }

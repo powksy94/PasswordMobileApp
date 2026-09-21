@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:biometric_storage/biometric_storage.dart';
 import '../models/vault_item.dart';
+import './biometric_prompt_texts.dart';
 import '../../../shared/utils/downloads_directory.dart';
 import '../../../shared/services/crypto_service.dart';
 
@@ -15,18 +16,6 @@ import '../../../shared/services/crypto_service.dart';
 class BiometricExportService {
   static const _storeName = 'vault_export_key_v1';
 
-  static final _promptInfo = const PromptInfo(
-    androidPromptInfo: AndroidPromptInfo(
-      title:          'Déverrouillez l\'export',
-      subtitle:       'Accès à la clé de chiffrement du vault',
-      negativeButton: 'Annuler',
-    ),
-    iosPromptInfo: IosPromptInfo(
-      saveTitle:   'Déverrouillez l\'export',
-      accessTitle: 'Déverrouillez l\'export',
-    ),
-  );
-
   // ── Disponibilité ──────────────────────────────────────────────────────────
 
   static Future<bool> isAvailable() async {
@@ -37,7 +26,7 @@ class BiometricExportService {
   // ── Clé AES protégée biométrie ─────────────────────────────────────────────
 
   /// Lit ou crée la clé AES dans le Keystore (déclenche la biométrie).
-  static Future<Uint8List?> _getOrCreateKey() async {
+  static Future<Uint8List?> _getOrCreateKey(BiometricPromptTexts prompt) async {
     final store = await BiometricStorage().getStorage(
       _storeName,
       options: StorageFileInitOptions(
@@ -47,7 +36,7 @@ class BiometricExportService {
         authenticationValidityDurationSeconds: -1,
         androidBiometricOnly:                  true,
       ),
-      promptInfo: _promptInfo,
+      promptInfo: prompt.toPromptInfo(),
     );
 
     final stored = await store.read();
@@ -65,7 +54,7 @@ class BiometricExportService {
 
   /// Déclenche la biométrie et retourne la clé de chiffrement stockée.
   /// Retourne null si non dispo ou si l'utilisateur annule.
-  static Future<Uint8List?> getKeyForDecrypt() async {
+  static Future<Uint8List?> getKeyForDecrypt(BiometricPromptTexts prompt) async {
     try {
       final store = await BiometricStorage().getStorage(
         _storeName,
@@ -74,7 +63,7 @@ class BiometricExportService {
           authenticationValidityDurationSeconds: -1,
           androidBiometricOnly:                  true,
         ),
-        promptInfo: _promptInfo,
+        promptInfo: prompt.toPromptInfo(),
       );
       final stored = await store.read();
       if (stored == null) return null;
@@ -88,9 +77,12 @@ class BiometricExportService {
 
   /// Chiffre les items et écrit un fichier `.enc` dans les documents.
   /// Retourne le chemin du fichier, ou `null` si l'utilisateur a annulé.
-  static Future<String?> exportEncrypted(List<VaultItem> items) async {
+  static Future<String?> exportEncrypted(
+    List<VaultItem> items,
+    BiometricPromptTexts prompt,
+  ) async {
     try {
-      final key = await _getOrCreateKey();
+      final key = await _getOrCreateKey(prompt);
       if (key == null) return null;
 
       final jsonStr = jsonEncode(items

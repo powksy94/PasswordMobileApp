@@ -1,4 +1,5 @@
 import 'dart:math';
+import './generator_exceptions.dart';
 
 class PasswordGenerator {
   static const _lower = "abcdefghijklmnopqrstuvwxyz";
@@ -26,9 +27,7 @@ class PasswordGenerator {
     // 🔥 Exclusion des caractères non désirés
     chars = chars.split("").where((c) => !exclude.contains(c)).join();
 
-    if (chars.isEmpty) {
-      throw Exception("Aucun caractère disponible après exclusions !");
-    }
+    if (chars.isEmpty) throw NoCharacterAvailableException();
 
     List<String> password = [];
 
@@ -53,7 +52,7 @@ class PasswordGenerator {
 
   static String _pick(String charset, String exclude, Random rand) {
     final filtered = charset.split("").where((c) => !exclude.contains(c)).toList();
-    if (filtered.isEmpty) throw Exception("Impossible de prendre un caractère, tout est exclu !");
+    if (filtered.isEmpty) throw NoCharacterAvailableException();
     return filtered[rand.nextInt(filtered.length)];
   }
 }

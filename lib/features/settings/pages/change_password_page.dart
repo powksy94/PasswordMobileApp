@@ -1,6 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import '../../auth/services/auth_exceptions.dart';
 import '../../auth/services/auth_service.dart';
 import '../../../shared/services/api_service.dart';
+import '../../../shared/services/session_expiry_interceptor.dart';
+import '../../../shared/utils/api_error.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../../../shared/utils/password_policy.dart';
 import '../widgets/change_password_panel.dart';
@@ -44,7 +49,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     setState(() => _changingPw = true);
     try {
       final token = await AuthService.getToken();
-      if (token == null) throw Exception('Not authenticated');
+      if (token == null) throw NotAuthenticatedException();
       await ApiService().changePassword(
           token, _currentPwCtrl.text, _newPwCtrl.text);
       if (!mounted) return;
@@ -52,8 +57,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       _newPwCtrl.clear();
       _confirmPwCtrl.clear();
       _snack(l.successModified);
+    } on DioException catch (e) {
+      if (!mounted || SessionExpiryInterceptor.isTokenRejection(e)) return;
+      _snack(e.response?.statusCode == 401
+          ? l.errorCurrentPasswordIncorrect
+          : apiErrorMessage(l, e));
     } catch (e) {
-      if (mounted) _snack('$e');
+      if (mounted) _snack(errorMessage(l, e));
     } finally {
       if (mounted) setState(() => _changingPw = false);
     }

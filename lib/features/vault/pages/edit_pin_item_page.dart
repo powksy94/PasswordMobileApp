@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/vault_service.dart';
 import '../models/vault_item.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../shared/widgets/common/app_page_scaffold.dart';
 import '../widgets/pin_item_form.dart';
 import '../../../l10n/app_localizations.dart';
@@ -61,7 +62,7 @@ class _EditPinItemPageState extends State<EditPinItemPage> {
       _snack(l.successModified);
       Navigator.pop(context);
     } catch (e) {
-      if (mounted) _snack('$e');
+      if (mounted) _snack(errorMessage(l, e));
     } finally {
       if (mounted) setState(() => _saving = false);
     }

@@ -3,6 +3,7 @@ import '../services/password_generator.dart';
 import '../services/password_generator_controller.dart';
 import './generated_password_result_panel.dart';
 import './generator_controls.dart';
+import '../../../shared/utils/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 
 /// Contenu de l'ancienne PasswordGeneratorPage — la page n'est plus qu'un
@@ -50,8 +51,9 @@ class _PasswordGeneratorSectionState extends State<PasswordGeneratorSection> {
   }
 
   void _generate() {
-    setState(() {
-      password = PasswordGenerator.generate(
+    final String generated;
+    try {
+      generated = PasswordGenerator.generate(
         length:          length,
         useLower:        useLower,
         useUpper:        useUpper,
@@ -60,6 +62,14 @@ class _PasswordGeneratorSectionState extends State<PasswordGeneratorSection> {
         requireAllTypes: requireAll,
         exclude:         exclude,
       );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage(AppLocalizations.of(context)!, e))),
+      );
+      return;
+    }
+    setState(() {
+      password     = generated;
       showPassword = false;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -93,7 +103,7 @@ class _PasswordGeneratorSectionState extends State<PasswordGeneratorSection> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(l.errorLabelMissing)));
     } catch (e) {
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$e')));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errorMessage(l, e))));
     }
   }
 

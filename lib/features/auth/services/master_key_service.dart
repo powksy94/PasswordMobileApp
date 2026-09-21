@@ -3,6 +3,8 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../shared/services/crypto_service.dart';
+import '../../vault/services/vault_cache.dart';
+import './master_password_verifier.dart';
 
 class MasterKeyService {
   static const _storage = FlutterSecureStorage();
@@ -44,6 +46,10 @@ class MasterKeyService {
     final stored = await _storage.read(key: _keyVerification);
 
     if (stored == null) {
+      // Pas de référence locale : plutôt que d'adopter aveuglément la saisie
+      // (une faute de frappe deviendrait la référence), on la recoupe avec le
+      // cache du coffre quand il existe. Sans cache, on ne peut pas trancher.
+      if (await _contradictsCachedVault(key)) return false;
       _masterKey = key;
       await _persistKeyArtifacts(key);
       return true;
@@ -56,6 +62,15 @@ class MasterKeyService {
     } catch (_) {
       return false;
     }
+  }
+
+  /// Clé persistée par la dernière connexion/dérivation, sans l'adopter comme
+  /// clé courante. Sert à détecter qu'une nouvelle dérivation produit une clé
+  /// différente (autre compte, mot de passe maître changé ailleurs).
+  static Future<Uint8List?> readPersistedKey() async {
+    final stored = await _storage.read(key: _keyMasterKey);
+    if (stored == null) return null;
+    return Uint8List.fromList(base64Decode(stored));
   }
 
   static Future<bool> unlockFromStorage() async {
@@ -106,6 +121,16 @@ class MasterKeyService {
     final out = Uint8List(length);
     for (int i = 0; i < length; i++) { out[i] = rnd.nextInt(256); }
     return out;
+  }
+
+  static Future<bool> _contradictsCachedVault(Uint8List key) async {
+    try {
+      final cached = await VaultCache.load();
+      if (cached == null) return false;
+      return MasterPasswordVerifier.probe(cached, key) == MasterPasswordCheck.mismatch;
+    } catch (_) {
+      return false; // cache illisible : on ne bloque pas l'utilisateur
+    }
   }
 
   static Future<void> _persistKeyArtifacts(Uint8List key) async {

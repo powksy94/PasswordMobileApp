@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../shared/services/api_service.dart';
@@ -25,7 +26,7 @@ class AuthService {
     final saltBase64 = base64Encode(MasterKeyService.pcSecureRandom(16));
     await _api.register(email, password, saltBase64);
     await _storage.write(key: _keyEmail, value: email);
-    await MasterKeyService.setupFromLogin(saltBase64, masterPassword);
+    await _deriveKeyAndSyncBiometric(saltBase64, masterPassword);
   }
 
   // ── Login ─────────────────────────────────────────────────────────────────────
@@ -50,7 +51,7 @@ class AuthService {
     await _storage.write(key: _keyToken, value: token);
     await _storage.write(key: _keyRole,  value: role);
     await _storage.write(key: _keyEmail, value: email);
-    await MasterKeyService.setupFromLogin(salt, masterPassword);
+    await _deriveKeyAndSyncBiometric(salt, masterPassword);
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefLoggedOut);
@@ -74,6 +75,19 @@ class AuthService {
     MasterKeyService.clearMasterKey();
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_prefLoggedOut, true);
+  }
+
+  /// Le serveur a rejeté le token (expiré/invalide) : la session ne peut plus
+  /// être restaurée, même par biométrie. On supprime le token et on ferme le
+  /// coffre, mais on garde sel + clé persistée (le reste du profil) : la
+  /// reconnexion par mot de passe retrouve ainsi la même clé, et la copie
+  /// biométrique reste valable.
+  static Future<void> expireSession() async {
+    MasterKeyService.clearMasterKey();
+    await _storage.delete(key: _keyToken);
+    await _storage.delete(key: _keyRole);
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_prefLoggedOut);
   }
 
   static Future<void> fullLogout() async {
@@ -150,6 +164,21 @@ class AuthService {
   }
 
   // ── Privé ─────────────────────────────────────────────────────────────────────
+
+  /// Dérive et persiste la clé maître. Si elle diffère de celle déjà
+  /// persistée (autre compte, mot de passe maître changé depuis un autre
+  /// appareil) ou si l'on ne peut pas comparer, la copie protégée par
+  /// biométrie est périmée : la désactiver évite qu'un prochain
+  /// déverrouillage biométrique n'installe l'ancienne clé. L'appelant la
+  /// re-provisionne ensuite avec la clé courante (`maybeAutoEnable`).
+  static Future<void> _deriveKeyAndSyncBiometric(String salt, String masterPassword) async {
+    final previous = await MasterKeyService.readPersistedKey();
+    await MasterKeyService.setupFromLogin(salt, masterPassword);
+    final current = MasterKeyService.getMasterKey();
+    if (previous == null || current == null || !listEquals(previous, current)) {
+      await BiometricUnlockService.disable();
+    }
+  }
 
   static String? _extractUserIdFromToken(String token) {
     try {

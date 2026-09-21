@@ -4,6 +4,7 @@ import '../services/auth_service.dart';
 import '../services/biometric_service.dart';
 import '../services/biometric_unlock_service.dart';
 import '../services/master_key_service.dart';
+import '../services/master_password_verifier.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../../../shared/services/role_provider.dart';
@@ -75,8 +76,10 @@ class _LoginPageState extends State<LoginPage>
     setState(() => _loading = false);
 
     if (!success) {
-      _snack(l.sessionExpired);
-      setState(() => _showBiometric = false);
+      _snack(l.errorBiometricFailed);
+      // Annulation → le bouton reste pour réessayer ; clé invalidée →
+      // `unlock()` a désactivé le store, la relecture masque alors le bouton.
+      await _checkBiometricAvailability();
       return;
     }
 
@@ -103,8 +106,11 @@ class _LoginPageState extends State<LoginPage>
       if (!mounted) return;
       setState(() => _loading = false);
 
-      final masterPw = await showMasterPasswordDialog(context);
-      if (masterPw == null || masterPw.isEmpty || !mounted) return;
+      final masterPw = await _askVerifiedMasterPassword(
+        token: session.token,
+        salt:  session.salt,
+      );
+      if (masterPw == null || !mounted) return;
 
       setState(() => _loading = true);
       await AuthService.completeLogin(
@@ -141,6 +147,32 @@ class _LoginPageState extends State<LoginPage>
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  /// Redemande le mot de passe maître tant qu'il ne correspond pas au coffre
+  /// existant : une faute de frappe ne doit jamais être persistée comme clé.
+  /// `null` si l'utilisateur annule.
+  Future<String?> _askVerifiedMasterPassword({
+    required String token,
+    required String salt,
+  }) async {
+    while (mounted) {
+      final masterPw = await showMasterPasswordDialog(context);
+      if (masterPw == null || masterPw.isEmpty || !mounted) return null;
+
+      setState(() => _loading = true);
+      final check = await MasterPasswordVerifier.checkAgainstServerVault(
+        token:          token,
+        salt:           salt,
+        masterPassword: masterPw,
+      );
+      if (!mounted) return null;
+      setState(() => _loading = false);
+
+      if (check != MasterPasswordCheck.mismatch) return masterPw;
+      _snack(AppLocalizations.of(context)!.errorWrongMasterPassword);
+    }
+    return null;
   }
 
   void _applyRole(String roleStr) {

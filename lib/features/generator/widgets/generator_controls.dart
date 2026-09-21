@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/common/neon_text.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Slider de longueur + cases à cocher des jeux de caractères.
 /// Purement présentatif — chaque changement remonte via callback.
@@ -34,12 +35,13 @@ class GeneratorControls extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final l      = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         NeonText(
-          text:     'Longueur : $length',
+          text:     l.generatorLength(length),
           fontSize: 16,
           color:    accent,
         ),
@@ -54,22 +56,22 @@ class GeneratorControls extends StatelessWidget {
         CheckboxListTile(
           value:     useLower,
           onChanged: (v) => onLowerChanged(v!),
-          title:     const Text('Minuscules'),
+          title:     Text(l.generatorLowercase),
         ),
         CheckboxListTile(
           value:     useUpper,
           onChanged: (v) => onUpperChanged(v!),
-          title:     const Text('Majuscules'),
+          title:     Text(l.generatorUppercase),
         ),
         CheckboxListTile(
           value:     useDigits,
           onChanged: (v) => onDigitsChanged(v!),
-          title:     const Text('Chiffres'),
+          title:     Text(l.generatorDigits),
         ),
         CheckboxListTile(
           value:     useSpecials,
           onChanged: (v) => onSpecialsChanged(v!),
-          title:     const Text('Spéciaux'),
+          title:     Text(l.generatorSpecials),
         ),
       ],
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './strength_level.dart';
 
 /// Calcul de la force d'un mot de passe — logique partagée entre
 /// [PasswordStrengthBar], [PasswordHealthPage] et tout widget qui en a besoin.
@@ -25,16 +26,16 @@ class PasswordScore {
     return Colors.cyanAccent;
   }
 
-  static String label(int score) {
-    if (score < 30) return 'Faible';
-    if (score < 60) return 'Moyen';
-    if (score < 80) return 'Fort';
-    return 'Très fort';
+  static StrengthLevel level(int score) {
+    if (score < 30) return StrengthLevel.weak;
+    if (score < 60) return StrengthLevel.medium;
+    if (score < 80) return StrengthLevel.strong;
+    return StrengthLevel.veryStrong;
   }
 
   /// Catégorie technique à 3 niveaux ('weak' | 'medium' | 'strong'), seule
   /// information envoyée au serveur pour les statistiques admin — distincte de
-  /// [label], qui reste un libellé d'affichage à 4 niveaux pour l'utilisateur.
+  /// [level], qui reste un niveau d'affichage à 4 paliers pour l'utilisateur.
   static String category(int score) {
     if (score < 30) return 'weak';
     if (score < 60) return 'medium';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../vault/models/vault_item.dart';
 import '../../../shared/utils/pin_score.dart';
+import '../../../shared/utils/strength_level.dart';
 import '../../../l10n/app_localizations.dart';
 
 class PinHealthItemTile extends StatelessWidget {
@@ -31,7 +32,7 @@ class PinHealthItemTile extends StatelessWidget {
         style: TextStyle(color: isDark ? Colors.white : Colors.black87),
       ),
       subtitle: Text(
-        PinScore.label(s),
+        PinScore.level(s).label(l),
         style: TextStyle(color: PinScore.color(s), fontSize: 12),
       ),
       trailing: IconButton(

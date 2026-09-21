@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './strength_level.dart';
 
 /// Calcul de robustesse d'un code PIN — voir PIN_VAULT_SPEC.md pour l'algorithme
 /// et le détail des pénalités. Logique volontairement indépendante de
@@ -40,10 +41,10 @@ class PinScore {
     return 'strong';
   }
 
-  static String label(int score) {
-    if (score < 30) return 'Faible';
-    if (score < 65) return 'Moyen';
-    return 'Fort';
+  static StrengthLevel level(int score) {
+    if (score < 30) return StrengthLevel.weak;
+    if (score < 65) return StrengthLevel.medium;
+    return StrengthLevel.strong;
   }
 
   static Color color(int score) {

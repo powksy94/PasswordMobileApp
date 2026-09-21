@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:password_mobile_app/shared/utils/password_score.dart';
+import 'package:password_mobile_app/shared/utils/strength_level.dart';
 
 void main() {
   group('PasswordScore.compute', () {
@@ -48,25 +49,25 @@ void main() {
     });
   });
 
-  group('PasswordScore.label', () {
-    test('retourne Faible pour score < 30', () {
-      expect(PasswordScore.label(0), equals('Faible'));
-      expect(PasswordScore.label(29), equals('Faible'));
+  group('PasswordScore.level', () {
+    test('weak pour score < 30', () {
+      expect(PasswordScore.level(0), equals(StrengthLevel.weak));
+      expect(PasswordScore.level(29), equals(StrengthLevel.weak));
     });
 
-    test('retourne Moyen pour score 30–59', () {
-      expect(PasswordScore.label(30), equals('Moyen'));
-      expect(PasswordScore.label(59), equals('Moyen'));
+    test('medium pour score 30–59', () {
+      expect(PasswordScore.level(30), equals(StrengthLevel.medium));
+      expect(PasswordScore.level(59), equals(StrengthLevel.medium));
     });
 
-    test('retourne Fort pour score 60–79', () {
-      expect(PasswordScore.label(60), equals('Fort'));
-      expect(PasswordScore.label(79), equals('Fort'));
+    test('strong pour score 60–79', () {
+      expect(PasswordScore.level(60), equals(StrengthLevel.strong));
+      expect(PasswordScore.level(79), equals(StrengthLevel.strong));
     });
 
-    test('retourne Très fort pour score ≥ 80', () {
-      expect(PasswordScore.label(80), equals('Très fort'));
-      expect(PasswordScore.label(100), equals('Très fort'));
+    test('veryStrong pour score ≥ 80', () {
+      expect(PasswordScore.level(80), equals(StrengthLevel.veryStrong));
+      expect(PasswordScore.level(100), equals(StrengthLevel.veryStrong));
     });
   });
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/utils/pin_score.dart';
+import '../../../shared/utils/strength_level.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Petit badge coloré affichant la robustesse d'un PIN (calculée localement
 /// depuis la valeur en clair, disponible côté client après déchiffrement —
@@ -14,7 +16,7 @@ class PinStrengthBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final score = PinScore.compute(pin);
     final color = PinScore.color(score);
-    final label = PinScore.label(score);
+    final label = PinScore.level(score).label(AppLocalizations.of(context)!);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),

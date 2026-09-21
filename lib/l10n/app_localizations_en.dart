@@ -242,8 +242,84 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelPinLength => 'PIN length';
 
   @override
-  String get errorBiometricKey =>
-      'Biometric key not found — enter your master password';
+  String get strengthWeak => 'Weak';
+
+  @override
+  String get strengthMedium => 'Medium';
+
+  @override
+  String get strengthStrong => 'Strong';
+
+  @override
+  String get strengthVeryStrong => 'Very strong';
+
+  @override
+  String generatorLength(Object length) {
+    return 'Length: $length';
+  }
+
+  @override
+  String get generatorLowercase => 'Lowercase';
+
+  @override
+  String get generatorUppercase => 'Uppercase';
+
+  @override
+  String get generatorDigits => 'Digits';
+
+  @override
+  String get generatorSpecials => 'Symbols';
+
+  @override
+  String get labelOptional => '(optional)';
+
+  @override
+  String get healthScoreGlobal => 'Overall score';
+
+  @override
+  String get healthStatTotal => 'Total';
+
+  @override
+  String get healthStatStrong => 'Strong';
+
+  @override
+  String get healthStatWeak => 'Weak';
+
+  @override
+  String get healthStatDuplicates => 'Duplicates';
+
+  @override
+  String get vaultSearchHint => 'Search by label or login…';
+
+  @override
+  String get offlineBanner => 'Offline mode - data from the last load';
+
+  @override
+  String get iconLock => 'Padlock';
+
+  @override
+  String get iconEmail => 'Email';
+
+  @override
+  String get iconWifi => 'Wi-Fi';
+
+  @override
+  String get iconCard => 'Card';
+
+  @override
+  String get iconAccount => 'Account';
+
+  @override
+  String get iconVpnKey => 'VPN key';
+
+  @override
+  String get iconPhone => 'Phone';
+
+  @override
+  String get iconComputer => 'Computer';
+
+  @override
+  String get iconCloud => 'Cloud';
 
   @override
   String get errorWrongMasterPassword => 'Wrong master password';
@@ -256,8 +332,82 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$seconds seconds',
       one: '1 second',
     );
-    return 'Too many attempts — try again in $_temp0';
+    return 'Too many attempts - try again in $_temp0';
   }
+
+  @override
+  String signupStepProgress(Object current, Object total) {
+    return 'Step $current / $total';
+  }
+
+  @override
+  String get signupSuccessTitle => 'Account created successfully';
+
+  @override
+  String get signupSuccessSubtitle => 'You can now log in';
+
+  @override
+  String get btnGotIt => 'Got it';
+
+  @override
+  String get loadingSplash => 'Loading…';
+
+  @override
+  String get errorHttpBadRequest => 'Invalid request.';
+
+  @override
+  String get errorHttpUnauthorized => 'Incorrect email or login password.';
+
+  @override
+  String get errorHttpForbidden => 'Access denied.';
+
+  @override
+  String get errorHttpNotFound => 'Account not found.';
+
+  @override
+  String get errorHttpConflict => 'This email is already in use.';
+
+  @override
+  String get errorHttpInvalidData => 'Invalid data.';
+
+  @override
+  String get errorHttpServer => 'Server error - please try again later.';
+
+  @override
+  String errorHttpNetwork(Object status) {
+    return 'Network error ($status).';
+  }
+
+  @override
+  String get errorNoConnection =>
+      'Unable to reach the server - check your connection.';
+
+  @override
+  String get errorCurrentPasswordIncorrect => 'Current password is incorrect';
+
+  @override
+  String get errorUnexpected => 'An unexpected error occurred.';
+
+  @override
+  String get errorNotAuthenticated =>
+      'No active session - please log in again.';
+
+  @override
+  String get errorMasterKeyMissing => 'Vault locked - unlock it first.';
+
+  @override
+  String get errorAccountSaltMissing =>
+      'Incomplete account - please log in again.';
+
+  @override
+  String get errorGeneratorNoCharset =>
+      'No characters available - enable a character type or reduce the exclusions.';
+
+  @override
+  String get exportBiometricTitle => 'Unlock the export';
+
+  @override
+  String get exportBiometricSubtitle => 'Access to the vault encryption key';
 
   @override
   String get errorVaultDecryptionFailed =>

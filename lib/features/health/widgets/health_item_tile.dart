@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../vault/models/vault_item.dart';
 import '../../../shared/utils/password_score.dart';
+import '../../../shared/utils/strength_level.dart';
 import '../../vault/utils/vault_icons.dart';
 import '../../../l10n/app_localizations.dart';
 
@@ -32,7 +33,7 @@ class HealthItemTile extends StatelessWidget {
         style: TextStyle(color: isDark ? Colors.white : Colors.black87),
       ),
       subtitle: Text(
-        PasswordScore.label(s),
+        PasswordScore.level(s).label(l),
         style: TextStyle(color: PasswordScore.color(s), fontSize: 12),
       ),
       trailing: IconButton(

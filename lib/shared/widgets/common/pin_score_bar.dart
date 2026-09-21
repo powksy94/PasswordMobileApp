@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../utils/pin_score.dart';
+import '../../utils/strength_level.dart';
+import '../../../l10n/app_localizations.dart';
 
 class PinScoreBar extends StatelessWidget {
   final String pin;
@@ -10,7 +12,7 @@ class PinScoreBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final score = PinScore.compute(pin);
     final color = PinScore.color(score);
-    final label = PinScore.label(score);
+    final label = PinScore.level(score).label(AppLocalizations.of(context)!);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

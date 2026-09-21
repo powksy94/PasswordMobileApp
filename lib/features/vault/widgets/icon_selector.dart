@@ -1,16 +1,31 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 
-const vaultIconOptions = <(String, IconData, String)>[
-  ('lock',        Icons.lock,        'Cadenas'),
-  ('email',       Icons.email,       'Email'),
-  ('wifi',        Icons.wifi,        'Wi-Fi'),
-  ('credit_card', Icons.credit_card, 'Carte'),
-  ('person',      Icons.person,      'Compte'),
-  ('vpn_key',     Icons.vpn_key,     'Clé VPN'),
-  ('phone',       Icons.phone,       'Téléphone'),
-  ('computer',    Icons.computer,    'Ordinateur'),
-  ('cloud',       Icons.cloud,       'Cloud'),
+const vaultIconOptions = <(String, IconData)>[
+  ('lock',        Icons.lock),
+  ('email',       Icons.email),
+  ('wifi',        Icons.wifi),
+  ('credit_card', Icons.credit_card),
+  ('person',      Icons.person),
+  ('vpn_key',     Icons.vpn_key),
+  ('phone',       Icons.phone),
+  ('computer',    Icons.computer),
+  ('cloud',       Icons.cloud),
 ];
+
+/// Libellé localisé (infobulle) d'une icône de [vaultIconOptions].
+String vaultIconLabel(AppLocalizations l, String id) => switch (id) {
+      'lock'        => l.iconLock,
+      'email'       => l.iconEmail,
+      'wifi'        => l.iconWifi,
+      'credit_card' => l.iconCard,
+      'person'      => l.iconAccount,
+      'vpn_key'     => l.iconVpnKey,
+      'phone'       => l.iconPhone,
+      'computer'    => l.iconComputer,
+      'cloud'       => l.iconCloud,
+      _             => id,
+    };
 
 class IconSelector extends StatelessWidget {
   final String            selected;
@@ -26,6 +41,7 @@ class IconSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final accent = isDark ? Colors.cyanAccent : Colors.blueAccent;
+    final l      = AppLocalizations.of(context)!;
 
     return Wrap(
       spacing:    8,
@@ -35,7 +51,7 @@ class IconSelector extends StatelessWidget {
         return GestureDetector(
           onTap: () => onChanged(opt.$1),
           child: Tooltip(
-            message: opt.$3,
+            message: vaultIconLabel(l, opt.$1),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 150),
               padding:  const EdgeInsets.all(8),

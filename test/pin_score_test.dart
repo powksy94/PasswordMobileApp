@@ -1,7 +1,25 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:password_mobile_app/shared/utils/pin_score.dart';
+import 'package:password_mobile_app/shared/utils/strength_level.dart';
 
 void main() {
+  group('PinScore.level', () {
+    test('weak pour score < 30', () {
+      expect(PinScore.level(0), StrengthLevel.weak);
+      expect(PinScore.level(29), StrengthLevel.weak);
+    });
+
+    test('medium pour score 30–64', () {
+      expect(PinScore.level(30), StrengthLevel.medium);
+      expect(PinScore.level(64), StrengthLevel.medium);
+    });
+
+    test('strong pour score ≥ 65, jamais veryStrong', () {
+      expect(PinScore.level(65), StrengthLevel.strong);
+      expect(PinScore.level(100), StrengthLevel.strong);
+    });
+  });
+
   group('PinScore.compute', () {
     test('pin vide → 0', () {
       expect(PinScore.compute(''), equals(0));

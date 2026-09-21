@@ -562,11 +562,161 @@ abstract class AppLocalizations {
   /// **'PIN length'**
   String get labelPinLength;
 
-  /// No description provided for @errorBiometricKey.
+  /// No description provided for @strengthWeak.
   ///
   /// In en, this message translates to:
-  /// **'Biometric key not found — enter your master password'**
-  String get errorBiometricKey;
+  /// **'Weak'**
+  String get strengthWeak;
+
+  /// No description provided for @strengthMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get strengthMedium;
+
+  /// No description provided for @strengthStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get strengthStrong;
+
+  /// No description provided for @strengthVeryStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Very strong'**
+  String get strengthVeryStrong;
+
+  /// No description provided for @generatorLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Length: {length}'**
+  String generatorLength(Object length);
+
+  /// No description provided for @generatorLowercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Lowercase'**
+  String get generatorLowercase;
+
+  /// No description provided for @generatorUppercase.
+  ///
+  /// In en, this message translates to:
+  /// **'Uppercase'**
+  String get generatorUppercase;
+
+  /// No description provided for @generatorDigits.
+  ///
+  /// In en, this message translates to:
+  /// **'Digits'**
+  String get generatorDigits;
+
+  /// No description provided for @generatorSpecials.
+  ///
+  /// In en, this message translates to:
+  /// **'Symbols'**
+  String get generatorSpecials;
+
+  /// No description provided for @labelOptional.
+  ///
+  /// In en, this message translates to:
+  /// **'(optional)'**
+  String get labelOptional;
+
+  /// No description provided for @healthScoreGlobal.
+  ///
+  /// In en, this message translates to:
+  /// **'Overall score'**
+  String get healthScoreGlobal;
+
+  /// No description provided for @healthStatTotal.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get healthStatTotal;
+
+  /// No description provided for @healthStatStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get healthStatStrong;
+
+  /// No description provided for @healthStatWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get healthStatWeak;
+
+  /// No description provided for @healthStatDuplicates.
+  ///
+  /// In en, this message translates to:
+  /// **'Duplicates'**
+  String get healthStatDuplicates;
+
+  /// No description provided for @vaultSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search by label or login…'**
+  String get vaultSearchHint;
+
+  /// No description provided for @offlineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline mode - data from the last load'**
+  String get offlineBanner;
+
+  /// No description provided for @iconLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Padlock'**
+  String get iconLock;
+
+  /// No description provided for @iconEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get iconEmail;
+
+  /// No description provided for @iconWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Wi-Fi'**
+  String get iconWifi;
+
+  /// No description provided for @iconCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Card'**
+  String get iconCard;
+
+  /// No description provided for @iconAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get iconAccount;
+
+  /// No description provided for @iconVpnKey.
+  ///
+  /// In en, this message translates to:
+  /// **'VPN key'**
+  String get iconVpnKey;
+
+  /// No description provided for @iconPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get iconPhone;
+
+  /// No description provided for @iconComputer.
+  ///
+  /// In en, this message translates to:
+  /// **'Computer'**
+  String get iconComputer;
+
+  /// No description provided for @iconCloud.
+  ///
+  /// In en, this message translates to:
+  /// **'Cloud'**
+  String get iconCloud;
 
   /// No description provided for @errorWrongMasterPassword.
   ///
@@ -577,8 +727,140 @@ abstract class AppLocalizations {
   /// No description provided for @errorUnlockLockedOut.
   ///
   /// In en, this message translates to:
-  /// **'Too many attempts — try again in {seconds, plural, one{1 second} other{{seconds} seconds}}'**
+  /// **'Too many attempts - try again in {seconds, plural, one{1 second} other{{seconds} seconds}}'**
   String errorUnlockLockedOut(num seconds);
+
+  /// No description provided for @signupStepProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} / {total}'**
+  String signupStepProgress(Object current, Object total);
+
+  /// No description provided for @signupSuccessTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created successfully'**
+  String get signupSuccessTitle;
+
+  /// No description provided for @signupSuccessSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You can now log in'**
+  String get signupSuccessSubtitle;
+
+  /// No description provided for @btnGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it'**
+  String get btnGotIt;
+
+  /// No description provided for @loadingSplash.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading…'**
+  String get loadingSplash;
+
+  /// No description provided for @errorHttpBadRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid request.'**
+  String get errorHttpBadRequest;
+
+  /// No description provided for @errorHttpUnauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Incorrect email or login password.'**
+  String get errorHttpUnauthorized;
+
+  /// No description provided for @errorHttpForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'Access denied.'**
+  String get errorHttpForbidden;
+
+  /// No description provided for @errorHttpNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Account not found.'**
+  String get errorHttpNotFound;
+
+  /// No description provided for @errorHttpConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already in use.'**
+  String get errorHttpConflict;
+
+  /// No description provided for @errorHttpInvalidData.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid data.'**
+  String get errorHttpInvalidData;
+
+  /// No description provided for @errorHttpServer.
+  ///
+  /// In en, this message translates to:
+  /// **'Server error - please try again later.'**
+  String get errorHttpServer;
+
+  /// No description provided for @errorHttpNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'Network error ({status}).'**
+  String errorHttpNetwork(Object status);
+
+  /// No description provided for @errorNoConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to reach the server - check your connection.'**
+  String get errorNoConnection;
+
+  /// No description provided for @errorCurrentPasswordIncorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password is incorrect'**
+  String get errorCurrentPasswordIncorrect;
+
+  /// No description provided for @errorUnexpected.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred.'**
+  String get errorUnexpected;
+
+  /// No description provided for @errorNotAuthenticated.
+  ///
+  /// In en, this message translates to:
+  /// **'No active session - please log in again.'**
+  String get errorNotAuthenticated;
+
+  /// No description provided for @errorMasterKeyMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Vault locked - unlock it first.'**
+  String get errorMasterKeyMissing;
+
+  /// No description provided for @errorAccountSaltMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'Incomplete account - please log in again.'**
+  String get errorAccountSaltMissing;
+
+  /// No description provided for @errorGeneratorNoCharset.
+  ///
+  /// In en, this message translates to:
+  /// **'No characters available - enable a character type or reduce the exclusions.'**
+  String get errorGeneratorNoCharset;
+
+  /// No description provided for @exportBiometricTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock the export'**
+  String get exportBiometricTitle;
+
+  /// No description provided for @exportBiometricSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Access to the vault encryption key'**
+  String get exportBiometricSubtitle;
 
   /// No description provided for @errorVaultDecryptionFailed.
   ///

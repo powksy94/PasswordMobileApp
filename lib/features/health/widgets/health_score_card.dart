@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/utils/password_score.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
+import '../../../l10n/app_localizations.dart';
 
 class HealthScoreCard extends StatelessWidget {
   final int score;
@@ -22,13 +23,14 @@ class HealthScoreCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final color  = PasswordScore.color(score);
+    final l      = AppLocalizations.of(context)!;
 
     return GlassPanel(
       width: double.infinity,
       child: Column(
         children: [
           Text(
-            'Score global',
+            l.healthScoreGlobal,
             style: TextStyle(
               color:    isDark ? Colors.white54 : Colors.black45,
               fontSize: 13,
@@ -56,10 +58,10 @@ class HealthScoreCard extends StatelessWidget {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _Stat('$total',       'Total',    color)),
-              Expanded(child: _Stat('$strongCount', 'Forts',    Colors.cyanAccent)),
-              Expanded(child: _Stat('$weakCount',   'Faibles',  Colors.redAccent)),
-              Expanded(child: _Stat('$dupCount',    'Doublons', Colors.orangeAccent)),
+              Expanded(child: _Stat('$total',       l.healthStatTotal,      color)),
+              Expanded(child: _Stat('$strongCount', l.healthStatStrong,     Colors.cyanAccent)),
+              Expanded(child: _Stat('$weakCount',   l.healthStatWeak,       Colors.redAccent)),
+              Expanded(child: _Stat('$dupCount',    l.healthStatDuplicates, Colors.orangeAccent)),
             ],
           ),
         ],

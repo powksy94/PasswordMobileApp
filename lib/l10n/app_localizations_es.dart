@@ -243,8 +243,84 @@ class AppLocalizationsEs extends AppLocalizations {
   String get labelPinLength => 'Longitud del PIN';
 
   @override
-  String get errorBiometricKey =>
-      'Clave biométrica no encontrada — ingresa tu contraseña maestra';
+  String get strengthWeak => 'Débil';
+
+  @override
+  String get strengthMedium => 'Media';
+
+  @override
+  String get strengthStrong => 'Fuerte';
+
+  @override
+  String get strengthVeryStrong => 'Muy fuerte';
+
+  @override
+  String generatorLength(Object length) {
+    return 'Longitud: $length';
+  }
+
+  @override
+  String get generatorLowercase => 'Minúsculas';
+
+  @override
+  String get generatorUppercase => 'Mayúsculas';
+
+  @override
+  String get generatorDigits => 'Dígitos';
+
+  @override
+  String get generatorSpecials => 'Símbolos';
+
+  @override
+  String get labelOptional => '(opcional)';
+
+  @override
+  String get healthScoreGlobal => 'Puntuación global';
+
+  @override
+  String get healthStatTotal => 'Total';
+
+  @override
+  String get healthStatStrong => 'Fuertes';
+
+  @override
+  String get healthStatWeak => 'Débiles';
+
+  @override
+  String get healthStatDuplicates => 'Duplicadas';
+
+  @override
+  String get vaultSearchHint => 'Buscar por etiqueta o usuario…';
+
+  @override
+  String get offlineBanner => 'Modo sin conexión - datos de la última carga';
+
+  @override
+  String get iconLock => 'Candado';
+
+  @override
+  String get iconEmail => 'Correo';
+
+  @override
+  String get iconWifi => 'Wi-Fi';
+
+  @override
+  String get iconCard => 'Tarjeta';
+
+  @override
+  String get iconAccount => 'Cuenta';
+
+  @override
+  String get iconVpnKey => 'Clave VPN';
+
+  @override
+  String get iconPhone => 'Teléfono';
+
+  @override
+  String get iconComputer => 'Ordenador';
+
+  @override
+  String get iconCloud => 'Nube';
 
   @override
   String get errorWrongMasterPassword => 'Contraseña maestra incorrecta';
@@ -257,8 +333,86 @@ class AppLocalizationsEs extends AppLocalizations {
       other: '$seconds segundos',
       one: '1 segundo',
     );
-    return 'Demasiados intentos — inténtalo de nuevo en $_temp0';
+    return 'Demasiados intentos - inténtalo de nuevo en $_temp0';
   }
+
+  @override
+  String signupStepProgress(Object current, Object total) {
+    return 'Paso $current / $total';
+  }
+
+  @override
+  String get signupSuccessTitle => 'Cuenta creada con éxito';
+
+  @override
+  String get signupSuccessSubtitle => 'Ya puedes iniciar sesión';
+
+  @override
+  String get btnGotIt => 'Entendido';
+
+  @override
+  String get loadingSplash => 'Cargando…';
+
+  @override
+  String get errorHttpBadRequest => 'Solicitud no válida.';
+
+  @override
+  String get errorHttpUnauthorized =>
+      'Correo o contraseña de acceso incorrectos.';
+
+  @override
+  String get errorHttpForbidden => 'Acceso denegado.';
+
+  @override
+  String get errorHttpNotFound => 'Cuenta no encontrada.';
+
+  @override
+  String get errorHttpConflict => 'Este correo ya está en uso.';
+
+  @override
+  String get errorHttpInvalidData => 'Datos no válidos.';
+
+  @override
+  String get errorHttpServer => 'Error del servidor - inténtalo más tarde.';
+
+  @override
+  String errorHttpNetwork(Object status) {
+    return 'Error de red ($status).';
+  }
+
+  @override
+  String get errorNoConnection =>
+      'No se puede conectar con el servidor - comprueba tu conexión.';
+
+  @override
+  String get errorCurrentPasswordIncorrect =>
+      'La contraseña actual es incorrecta';
+
+  @override
+  String get errorUnexpected => 'Se produjo un error inesperado.';
+
+  @override
+  String get errorNotAuthenticated =>
+      'Sin sesión activa - vuelve a iniciar sesión.';
+
+  @override
+  String get errorMasterKeyMissing =>
+      'Bóveda bloqueada - desbloquéala primero.';
+
+  @override
+  String get errorAccountSaltMissing =>
+      'Cuenta incompleta - vuelve a iniciar sesión.';
+
+  @override
+  String get errorGeneratorNoCharset =>
+      'No hay caracteres disponibles - activa un tipo de caracteres o reduce las exclusiones.';
+
+  @override
+  String get exportBiometricTitle => 'Desbloquea la exportación';
+
+  @override
+  String get exportBiometricSubtitle =>
+      'Acceso a la clave de cifrado de la bóveda';
 
   @override
   String get errorVaultDecryptionFailed =>

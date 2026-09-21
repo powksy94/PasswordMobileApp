@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Bandeau affiché quand le vault est chargé depuis le cache local (pas de réseau).
 class OfflineBanner extends StatelessWidget {
@@ -10,13 +11,13 @@ class OfflineBanner extends StatelessWidget {
       width:   double.infinity,
       color:   Colors.orangeAccent.withValues(alpha: 0.15),
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-      child: const Row(
+      child: Row(
         children: [
-          Icon(Icons.cloud_off, size: 16, color: Colors.orangeAccent),
-          SizedBox(width: 8),
+          const Icon(Icons.cloud_off, size: 16, color: Colors.orangeAccent),
+          const SizedBox(width: 8),
           Text(
-            'Mode hors-ligne — données du dernier chargement',
-            style: TextStyle(color: Colors.orangeAccent, fontSize: 12),
+            AppLocalizations.of(context)!.offlineBanner,
+            style: const TextStyle(color: Colors.orangeAccent, fontSize: 12),
           ),
         ],
       ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../utils/password_score.dart';
+import '../../utils/strength_level.dart';
+import '../../../l10n/app_localizations.dart';
 
 class PasswordStrengthBar extends StatelessWidget {
   final String password;
@@ -10,7 +12,7 @@ class PasswordStrengthBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final score = PasswordScore.compute(password);
     final color = PasswordScore.color(score);
-    final label = PasswordScore.label(score);
+    final label = PasswordScore.level(score).label(AppLocalizations.of(context)!);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -493,7 +493,7 @@ abstract class AppLocalizations {
   /// No description provided for @snackCopied.
   ///
   /// In en, this message translates to:
-  /// **'Copied — cleared in 30 s'**
+  /// **'Copied - cleared in 30 s'**
   String get snackCopied;
 
   /// No description provided for @tooltipEdit.
@@ -865,13 +865,13 @@ abstract class AppLocalizations {
   /// No description provided for @errorVaultDecryptionFailed.
   ///
   /// In en, this message translates to:
-  /// **'Could not decrypt vault — please check your master password'**
+  /// **'Could not decrypt vault - please check your master password'**
   String get errorVaultDecryptionFailed;
 
   /// No description provided for @warningVaultItemsSkipped.
   ///
   /// In en, this message translates to:
-  /// **'{count, plural, one{1 item} other{{count} items}} could not be decrypted and are hidden. Your data is not lost — try logging out and back in.'**
+  /// **'{count, plural, one{1 item} other{{count} items}} could not be decrypted and are hidden. Your data is not lost - try logging out and back in.'**
   String warningVaultItemsSkipped(int count);
 
   /// No description provided for @btnGenerate.
@@ -889,7 +889,7 @@ abstract class AppLocalizations {
   /// No description provided for @vaultEmptyExport.
   ///
   /// In en, this message translates to:
-  /// **'Empty vault — nothing to export'**
+  /// **'Empty vault - nothing to export'**
   String get vaultEmptyExport;
 
   /// No description provided for @btnAlreadyAccount.
@@ -991,7 +991,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorVaultResetFailed.
   ///
   /// In en, this message translates to:
-  /// **'Reset failed — please try again'**
+  /// **'Reset failed - please try again'**
   String get errorVaultResetFailed;
 
   /// No description provided for @passwordEmpty.
@@ -1009,7 +1009,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorBiometricFailed.
   ///
   /// In en, this message translates to:
-  /// **'Fingerprint not recognized — retry or use the form'**
+  /// **'Fingerprint not recognized - retry or use the form'**
   String get errorBiometricFailed;
 
   /// No description provided for @labelConfirmPassword.
@@ -1255,7 +1255,7 @@ abstract class AppLocalizations {
   /// No description provided for @warningChangeMasterPasswordBody.
   ///
   /// In en, this message translates to:
-  /// **'This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable — we cannot reset it.\n\nWrite it down in a safe place before continuing.'**
+  /// **'This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable - we cannot reset it.\n\nWrite it down in a safe place before continuing.'**
   String get warningChangeMasterPasswordBody;
 
   /// No description provided for @checkboxUnderstandRisks.
@@ -1303,7 +1303,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorMasterPasswordChangeFailed.
   ///
   /// In en, this message translates to:
-  /// **'Change failed — your vault was not modified'**
+  /// **'Change failed - your vault was not modified'**
   String get errorMasterPasswordChangeFailed;
 
   /// No description provided for @titleExportDialog.
@@ -1315,7 +1315,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportOptionBiometricTitle.
   ///
   /// In en, this message translates to:
-  /// **'Encrypted — biometric'**
+  /// **'Encrypted - biometric'**
   String get exportOptionBiometricTitle;
 
   /// No description provided for @exportOptionBiometricSubtitle.
@@ -1327,7 +1327,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportOptionPortableTitle.
   ///
   /// In en, this message translates to:
-  /// **'Encrypted — portable'**
+  /// **'Encrypted - portable'**
   String get exportOptionPortableTitle;
 
   /// No description provided for @exportOptionPortableSubtitle.
@@ -1339,7 +1339,7 @@ abstract class AppLocalizations {
   /// No description provided for @exportOptionJsonTitle.
   ///
   /// In en, this message translates to:
-  /// **'JSON — plaintext'**
+  /// **'JSON - plaintext'**
   String get exportOptionJsonTitle;
 
   /// No description provided for @exportOptionJsonSubtitle.
@@ -1351,7 +1351,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorBiometricExportUnavailable.
   ///
   /// In en, this message translates to:
-  /// **'Biometrics unavailable — use portable export'**
+  /// **'Biometrics unavailable - use portable export'**
   String get errorBiometricExportUnavailable;
 
   /// No description provided for @titlePortableExport.
@@ -1501,7 +1501,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorApprovalCancelled.
   ///
   /// In en, this message translates to:
-  /// **'Fingerprint not recognized — approval cancelled'**
+  /// **'Fingerprint not recognized - approval cancelled'**
   String get errorApprovalCancelled;
 
   /// No description provided for @titleVaultAdminAccess.
@@ -1561,7 +1561,7 @@ abstract class AppLocalizations {
   /// No description provided for @subtitleWeakPasswords.
   ///
   /// In en, this message translates to:
-  /// **'Score < 60 — replace as a priority'**
+  /// **'Score < 60 - replace as a priority'**
   String get subtitleWeakPasswords;
 
   /// No description provided for @labelReusedPasswords.
@@ -1585,7 +1585,7 @@ abstract class AppLocalizations {
   /// No description provided for @labelSameServicesPassword.
   ///
   /// In en, this message translates to:
-  /// **'services — same password'**
+  /// **'services - same password'**
   String get labelSameServicesPassword;
 
   /// No description provided for @labelAllGood.
@@ -1609,7 +1609,7 @@ abstract class AppLocalizations {
   /// No description provided for @subtitleWeakPins.
   ///
   /// In en, this message translates to:
-  /// **'Score < 65 — replace these first'**
+  /// **'Score < 65 - replace these first'**
   String get subtitleWeakPins;
 
   /// No description provided for @labelReusedPins.
@@ -1627,7 +1627,7 @@ abstract class AppLocalizations {
   /// No description provided for @labelSamePin.
   ///
   /// In en, this message translates to:
-  /// **'services — same PIN'**
+  /// **'services - same PIN'**
   String get labelSamePin;
 }
 

@@ -206,7 +206,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get snackItemDeleted => 'Item deleted';
 
   @override
-  String get snackCopied => 'Copied — cleared in 30 s';
+  String get snackCopied => 'Copied - cleared in 30 s';
 
   @override
   String get tooltipEdit => 'Edit';
@@ -411,7 +411,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorVaultDecryptionFailed =>
-      'Could not decrypt vault — please check your master password';
+      'Could not decrypt vault - please check your master password';
 
   @override
   String warningVaultItemsSkipped(int count) {
@@ -421,7 +421,7 @@ class AppLocalizationsEn extends AppLocalizations {
       other: '$count items',
       one: '1 item',
     );
-    return '$_temp0 could not be decrypted and are hidden. Your data is not lost — try logging out and back in.';
+    return '$_temp0 could not be decrypted and are hidden. Your data is not lost - try logging out and back in.';
   }
 
   @override
@@ -431,7 +431,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorLabelMissing => 'Please enter a label for the password.';
 
   @override
-  String get vaultEmptyExport => 'Empty vault — nothing to export';
+  String get vaultEmptyExport => 'Empty vault - nothing to export';
 
   @override
   String get btnAlreadyAccount => 'Already have an account? Log in';
@@ -484,7 +484,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get successVaultReset => 'Vault reset successfully';
 
   @override
-  String get errorVaultResetFailed => 'Reset failed — please try again';
+  String get errorVaultResetFailed => 'Reset failed - please try again';
 
   @override
   String get passwordEmpty => 'Empty password';
@@ -494,7 +494,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorBiometricFailed =>
-      'Fingerprint not recognized — retry or use the form';
+      'Fingerprint not recognized - retry or use the form';
 
   @override
   String get labelConfirmPassword => 'Confirm password';
@@ -625,7 +625,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get warningChangeMasterPasswordBody =>
-      'This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable — we cannot reset it.\n\nWrite it down in a safe place before continuing.';
+      'This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable - we cannot reset it.\n\nWrite it down in a safe place before continuing.';
 
   @override
   String get checkboxUnderstandRisks =>
@@ -652,34 +652,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorMasterPasswordChangeFailed =>
-      'Change failed — your vault was not modified';
+      'Change failed - your vault was not modified';
 
   @override
   String get titleExportDialog => 'Export';
 
   @override
-  String get exportOptionBiometricTitle => 'Encrypted — biometric';
+  String get exportOptionBiometricTitle => 'Encrypted - biometric';
 
   @override
   String get exportOptionBiometricSubtitle =>
       'This device only. Requires fingerprint or PIN.';
 
   @override
-  String get exportOptionPortableTitle => 'Encrypted — portable';
+  String get exportOptionPortableTitle => 'Encrypted - portable';
 
   @override
   String get exportOptionPortableSubtitle =>
       'Any device with your master password.';
 
   @override
-  String get exportOptionJsonTitle => 'JSON — plaintext';
+  String get exportOptionJsonTitle => 'JSON - plaintext';
 
   @override
   String get exportOptionJsonSubtitle => '⚠️ Passwords readable by anyone.';
 
   @override
   String get errorBiometricExportUnavailable =>
-      'Biometrics unavailable — use portable export';
+      'Biometrics unavailable - use portable export';
 
   @override
   String get titlePortableExport => 'Portable export';
@@ -763,7 +763,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorApprovalCancelled =>
-      'Fingerprint not recognized — approval cancelled';
+      'Fingerprint not recognized - approval cancelled';
 
   @override
   String get titleVaultAdminAccess => 'Admin vault access';
@@ -797,7 +797,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelWeakPasswords => 'Weak passwords';
 
   @override
-  String get subtitleWeakPasswords => 'Score < 60 — replace as a priority';
+  String get subtitleWeakPasswords => 'Score < 60 - replace as a priority';
 
   @override
   String get labelReusedPasswords => 'Reused passwords';
@@ -810,7 +810,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'The same password is used across multiple services';
 
   @override
-  String get labelSameServicesPassword => 'services — same password';
+  String get labelSameServicesPassword => 'services - same password';
 
   @override
   String get labelAllGood => 'Excellent! No issues detected.';
@@ -822,7 +822,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get labelWeakPins => 'Weak PINs';
 
   @override
-  String get subtitleWeakPins => 'Score < 65 — replace these first';
+  String get subtitleWeakPins => 'Score < 65 - replace these first';
 
   @override
   String get labelReusedPins => 'Reused PINs';
@@ -831,5 +831,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get subtitleReusedPins => 'The same PIN is used on multiple services';
 
   @override
-  String get labelSamePin => 'services — same PIN';
+  String get labelSamePin => 'services - same PIN';
 }

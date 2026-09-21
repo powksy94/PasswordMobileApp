@@ -207,7 +207,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get snackItemDeleted => 'Elemento eliminado';
 
   @override
-  String get snackCopied => 'Copiado — eliminado en 30 s';
+  String get snackCopied => 'Copiado - eliminado en 30 s';
 
   @override
   String get tooltipEdit => 'Editar';
@@ -416,7 +416,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorVaultDecryptionFailed =>
-      'No se pudo descifrar el cofre — verifica tu contraseña maestra';
+      'No se pudo descifrar el cofre - verifica tu contraseña maestra';
 
   @override
   String warningVaultItemsSkipped(int count) {
@@ -432,7 +432,7 @@ class AppLocalizationsEs extends AppLocalizations {
       other: 'están ocultos',
       one: 'está oculto',
     );
-    return '$_temp0 no se pudo descifrar y $_temp1. Tus datos no se han perdido — intenta cerrar sesión y volver a iniciarla.';
+    return '$_temp0 no se pudo descifrar y $_temp1. Tus datos no se han perdido - intenta cerrar sesión y volver a iniciarla.';
   }
 
   @override
@@ -443,7 +443,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Por favor ingresa una etiqueta para la contraseña.';
 
   @override
-  String get vaultEmptyExport => 'Cofre vacío — nada que exportar';
+  String get vaultEmptyExport => 'Cofre vacío - nada que exportar';
 
   @override
   String get btnAlreadyAccount => '¿Ya tienes cuenta? Iniciar sesión';
@@ -497,7 +497,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorVaultResetFailed =>
-      'Error al restablecer — inténtalo de nuevo';
+      'Error al restablecer - inténtalo de nuevo';
 
   @override
   String get passwordEmpty => 'Contraseña vacía';
@@ -507,7 +507,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorBiometricFailed =>
-      'Huella no reconocida — reintenta o usa el formulario';
+      'Huella no reconocida - reintenta o usa el formulario';
 
   @override
   String get labelConfirmPassword => 'Confirmar contraseña';
@@ -639,7 +639,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get warningChangeMasterPasswordBody =>
-      'Esta operación vuelve a cifrar todo tu cofre con una nueva contraseña maestra.\n\n⚠️ Si olvidas esta nueva contraseña, tu cofre quedará permanentemente irrecuperable — no podemos restablecerla.\n\nAnótala en un lugar seguro antes de continuar.';
+      'Esta operación vuelve a cifrar todo tu cofre con una nueva contraseña maestra.\n\n⚠️ Si olvidas esta nueva contraseña, tu cofre quedará permanentemente irrecuperable - no podemos restablecerla.\n\nAnótala en un lugar seguro antes de continuar.';
 
   @override
   String get checkboxUnderstandRisks =>
@@ -667,27 +667,27 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorMasterPasswordChangeFailed =>
-      'Error al cambiar — tu cofre no fue modificado';
+      'Error al cambiar - tu cofre no fue modificado';
 
   @override
   String get titleExportDialog => 'Exportar';
 
   @override
-  String get exportOptionBiometricTitle => 'Cifrado — biométrico';
+  String get exportOptionBiometricTitle => 'Cifrado - biométrico';
 
   @override
   String get exportOptionBiometricSubtitle =>
       'Solo este dispositivo. Requiere huella digital o PIN.';
 
   @override
-  String get exportOptionPortableTitle => 'Cifrado — portátil';
+  String get exportOptionPortableTitle => 'Cifrado - portátil';
 
   @override
   String get exportOptionPortableSubtitle =>
       'Cualquier dispositivo con tu contraseña maestra.';
 
   @override
-  String get exportOptionJsonTitle => 'JSON — texto plano';
+  String get exportOptionJsonTitle => 'JSON - texto plano';
 
   @override
   String get exportOptionJsonSubtitle =>
@@ -695,7 +695,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorBiometricExportUnavailable =>
-      'Biometría no disponible — usa la exportación portátil';
+      'Biometría no disponible - usa la exportación portátil';
 
   @override
   String get titlePortableExport => 'Exportación portátil';
@@ -781,7 +781,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get errorApprovalCancelled =>
-      'Huella no reconocida — aprobación cancelada';
+      'Huella no reconocida - aprobación cancelada';
 
   @override
   String get titleVaultAdminAccess => 'Acceso al cofre de administración';
@@ -816,7 +816,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get subtitleWeakPasswords =>
-      'Puntuación < 60 — reemplázalas cuanto antes';
+      'Puntuación < 60 - reemplázalas cuanto antes';
 
   @override
   String get labelReusedPasswords => 'Contraseñas reutilizadas';
@@ -829,7 +829,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'La misma contraseña se usa en varios servicios';
 
   @override
-  String get labelSameServicesPassword => 'servicios — misma contraseña';
+  String get labelSameServicesPassword => 'servicios - misma contraseña';
 
   @override
   String get labelAllGood => '¡Excelente! No se detectaron problemas.';
@@ -841,7 +841,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get labelWeakPins => 'PINs débiles';
 
   @override
-  String get subtitleWeakPins => 'Puntuación < 65 — reemplázalos cuanto antes';
+  String get subtitleWeakPins => 'Puntuación < 65 - reemplázalos cuanto antes';
 
   @override
   String get labelReusedPins => 'PINs reutilizados';
@@ -850,5 +850,5 @@ class AppLocalizationsEs extends AppLocalizations {
   String get subtitleReusedPins => 'El mismo PIN se usa en varios servicios';
 
   @override
-  String get labelSamePin => 'servicios — mismo PIN';
+  String get labelSamePin => 'servicios - mismo PIN';
 }

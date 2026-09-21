@@ -77,7 +77,7 @@
   "dialogDeleteContent": "Delete this item permanently?",
   "btnDelete": "Delete",
   "snackItemDeleted": "Item deleted",
-  "snackCopied": "Copied — cleared in 30 s",
+  "snackCopied": "Copied - cleared in 30 s",
 
   "tooltipEdit": "Edit",
   "tooltipDelete": "Delete",
@@ -141,8 +141,8 @@
   "errorGeneratorNoCharset": "No characters available - enable a character type or reduce the exclusions.",
   "exportBiometricTitle": "Unlock the export",
   "exportBiometricSubtitle": "Access to the vault encryption key",
-  "errorVaultDecryptionFailed": "Could not decrypt vault — please check your master password",
-  "warningVaultItemsSkipped": "{count, plural, one{1 item} other{{count} items}} could not be decrypted and are hidden. Your data is not lost — try logging out and back in.",
+  "errorVaultDecryptionFailed": "Could not decrypt vault - please check your master password",
+  "warningVaultItemsSkipped": "{count, plural, one{1 item} other{{count} items}} could not be decrypted and are hidden. Your data is not lost - try logging out and back in.",
   "@warningVaultItemsSkipped": {
     "placeholders": {
       "count": { "type": "int" }
@@ -150,7 +150,7 @@
   },
   "btnGenerate": "Generate",
   "errorLabelMissing": "Please enter a label for the password.",
-  "vaultEmptyExport": "Empty vault — nothing to export",
+  "vaultEmptyExport": "Empty vault - nothing to export",
   "btnAlreadyAccount": "Already have an account? Log in",
 
   "titleChangePassword": "Change login password",
@@ -168,12 +168,12 @@
   "btnResetVault": "Wipe and reset",
   "progressResettingVault": "Resetting vault…",
   "successVaultReset": "Vault reset successfully",
-  "errorVaultResetFailed": "Reset failed — please try again",
+  "errorVaultResetFailed": "Reset failed - please try again",
 
   "passwordEmpty": "Empty password",
   "signupTitle": "Create an account",
 
-  "errorBiometricFailed": "Fingerprint not recognized — retry or use the form",
+  "errorBiometricFailed": "Fingerprint not recognized - retry or use the form",
   "labelConfirmPassword": "Confirm password",
   "labelConfirmMasterPassword": "Confirm master password",
 
@@ -220,7 +220,7 @@
 
   "titleChangeMasterPassword": "Change master password",
   "warningChangeMasterPasswordTitle": "Critical, irreversible action",
-  "warningChangeMasterPasswordBody": "This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable — we cannot reset it.\n\nWrite it down in a safe place before continuing.",
+  "warningChangeMasterPasswordBody": "This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable - we cannot reset it.\n\nWrite it down in a safe place before continuing.",
   "checkboxUnderstandRisks": "I understand the risks and want to continue",
   "labelCurrentMasterPassword": "Current master password",
   "labelNewMasterPassword": "New master password",
@@ -228,16 +228,16 @@
   "btnChangeMasterPassword": "Change master password",
   "progressReencrypting": "Re-encrypting vault…",
   "successMasterPasswordChanged": "Master password changed successfully",
-  "errorMasterPasswordChangeFailed": "Change failed — your vault was not modified",
+  "errorMasterPasswordChangeFailed": "Change failed - your vault was not modified",
 
   "titleExportDialog": "Export",
-  "exportOptionBiometricTitle": "Encrypted — biometric",
+  "exportOptionBiometricTitle": "Encrypted - biometric",
   "exportOptionBiometricSubtitle": "This device only. Requires fingerprint or PIN.",
-  "exportOptionPortableTitle": "Encrypted — portable",
+  "exportOptionPortableTitle": "Encrypted - portable",
   "exportOptionPortableSubtitle": "Any device with your master password.",
-  "exportOptionJsonTitle": "JSON — plaintext",
+  "exportOptionJsonTitle": "JSON - plaintext",
   "exportOptionJsonSubtitle": "⚠️ Passwords readable by anyone.",
-  "errorBiometricExportUnavailable": "Biometrics unavailable — use portable export",
+  "errorBiometricExportUnavailable": "Biometrics unavailable - use portable export",
   "titlePortableExport": "Portable export",
   "bodyPortableExport": "The file will be encrypted with your master password.\n\nIt will be saved to your Downloads folder.",
   "btnExport": "Export",
@@ -264,7 +264,7 @@
 
   "reasonApproveVaultAccess": "Confirm your identity to access the admin vault",
   "reasonApproveAdminLogin": "Confirm your identity to approve the admin login",
-  "errorApprovalCancelled": "Fingerprint not recognized — approval cancelled",
+  "errorApprovalCancelled": "Fingerprint not recognized - approval cancelled",
   "titleVaultAdminAccess": "Admin vault access",
   "titleAdminLogin": "Admin login",
   "bodyVaultAdminAccessRequest": "A request to access the admin vault has just been made.\n\nApprove to unlock the vault.",
@@ -280,16 +280,16 @@
 
   "errorPrefix": "Error",
   "labelWeakPasswords": "Weak passwords",
-  "subtitleWeakPasswords": "Score < 60 — replace as a priority",
+  "subtitleWeakPasswords": "Score < 60 - replace as a priority",
   "labelReusedPasswords": "Reused passwords",
   "labelGroupsCount": "group(s)",
   "subtitleReusedPasswords": "The same password is used across multiple services",
-  "labelSameServicesPassword": "services — same password",
+  "labelSameServicesPassword": "services - same password",
   "labelAllGood": "Excellent! No issues detected.",
   "titlePinHealthSection": "PIN health",
   "labelWeakPins": "Weak PINs",
-  "subtitleWeakPins": "Score < 65 — replace these first",
+  "subtitleWeakPins": "Score < 65 - replace these first",
   "labelReusedPins": "Reused PINs",
   "subtitleReusedPins": "The same PIN is used on multiple services",
-  "labelSamePin": "services — same PIN"
+  "labelSamePin": "services - same PIN"
 }

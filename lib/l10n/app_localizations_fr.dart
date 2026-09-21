@@ -208,7 +208,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get snackItemDeleted => 'Élément supprimé';
 
   @override
-  String get snackCopied => 'Copié — effacé dans 30 s';
+  String get snackCopied => 'Copié - effacé dans 30 s';
 
   @override
   String get tooltipEdit => 'Modifier';
@@ -414,7 +414,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorVaultDecryptionFailed =>
-      'Impossible de déchiffrer le coffre — vérifiez votre mot de passe maître';
+      'Impossible de déchiffrer le coffre - vérifiez votre mot de passe maître';
 
   @override
   String warningVaultItemsSkipped(int count) {
@@ -430,7 +430,7 @@ class AppLocalizationsFr extends AppLocalizations {
       other: 'sont masqués',
       one: 'est masqué',
     );
-    return '$_temp0 pas pu être déchiffré et $_temp1. Vos données ne sont pas perdues — essayez de vous déconnecter puis reconnecter.';
+    return '$_temp0 pas pu être déchiffré et $_temp1. Vos données ne sont pas perdues - essayez de vous déconnecter puis reconnecter.';
   }
 
   @override
@@ -441,7 +441,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Veuillez entrer un label pour le mot de passe.';
 
   @override
-  String get vaultEmptyExport => 'Coffre vide — rien à exporter';
+  String get vaultEmptyExport => 'Coffre vide - rien à exporter';
 
   @override
   String get btnAlreadyAccount => 'Déjà un compte ? Se connecter';
@@ -495,7 +495,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorVaultResetFailed =>
-      'Échec de la réinitialisation — réessayez';
+      'Échec de la réinitialisation - réessayez';
 
   @override
   String get passwordEmpty => 'Mot de passe vide';
@@ -505,7 +505,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorBiometricFailed =>
-      'Empreinte non reconnue — réessayez ou utilisez le formulaire';
+      'Empreinte non reconnue - réessayez ou utilisez le formulaire';
 
   @override
   String get labelConfirmPassword => 'Confirmer le mot de passe';
@@ -636,7 +636,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get warningChangeMasterPasswordBody =>
-      'Cette opération re-chiffre l\'intégralité de votre coffre avec un nouveau mot de passe maître.\n\n⚠️ Si vous oubliez ce nouveau mot de passe, votre coffre sera définitivement irrécupérable — nous ne pouvons pas le réinitialiser.\n\nNotez-le dans un endroit sûr avant de continuer.';
+      'Cette opération re-chiffre l\'intégralité de votre coffre avec un nouveau mot de passe maître.\n\n⚠️ Si vous oubliez ce nouveau mot de passe, votre coffre sera définitivement irrécupérable - nous ne pouvons pas le réinitialiser.\n\nNotez-le dans un endroit sûr avant de continuer.';
 
   @override
   String get checkboxUnderstandRisks =>
@@ -664,27 +664,27 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorMasterPasswordChangeFailed =>
-      'Échec du changement — votre coffre n\'a pas été modifié';
+      'Échec du changement - votre coffre n\'a pas été modifié';
 
   @override
   String get titleExportDialog => 'Exporter';
 
   @override
-  String get exportOptionBiometricTitle => 'Chiffré — biométrique';
+  String get exportOptionBiometricTitle => 'Chiffré - biométrique';
 
   @override
   String get exportOptionBiometricSubtitle =>
       'Cet appareil uniquement. Empreinte digitale ou code requis.';
 
   @override
-  String get exportOptionPortableTitle => 'Chiffré — portable';
+  String get exportOptionPortableTitle => 'Chiffré - portable';
 
   @override
   String get exportOptionPortableSubtitle =>
       'N\'importe quel appareil avec votre mot de passe maître.';
 
   @override
-  String get exportOptionJsonTitle => 'JSON — texte brut';
+  String get exportOptionJsonTitle => 'JSON - texte brut';
 
   @override
   String get exportOptionJsonSubtitle =>
@@ -692,7 +692,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorBiometricExportUnavailable =>
-      'Biométrie indisponible — utilisez l\'export portable';
+      'Biométrie indisponible - utilisez l\'export portable';
 
   @override
   String get titlePortableExport => 'Export portable';
@@ -778,7 +778,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get errorApprovalCancelled =>
-      'Empreinte non reconnue — approbation annulée';
+      'Empreinte non reconnue - approbation annulée';
 
   @override
   String get titleVaultAdminAccess => 'Accès vault admin';
@@ -812,7 +812,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get labelWeakPasswords => 'Mots de passe faibles';
 
   @override
-  String get subtitleWeakPasswords => 'Score < 60 — à remplacer en priorité';
+  String get subtitleWeakPasswords => 'Score < 60 - à remplacer en priorité';
 
   @override
   String get labelReusedPasswords => 'Mots de passe réutilisés';
@@ -825,7 +825,7 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le même mot de passe est utilisé sur plusieurs services';
 
   @override
-  String get labelSameServicesPassword => 'services — même mot de passe';
+  String get labelSameServicesPassword => 'services - même mot de passe';
 
   @override
   String get labelAllGood => 'Excellent ! Aucun problème détecté.';
@@ -837,7 +837,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get labelWeakPins => 'PINs faibles';
 
   @override
-  String get subtitleWeakPins => 'Score < 65 — à remplacer en priorité';
+  String get subtitleWeakPins => 'Score < 65 - à remplacer en priorité';
 
   @override
   String get labelReusedPins => 'PINs réutilisés';
@@ -847,5 +847,5 @@ class AppLocalizationsFr extends AppLocalizations {
       'Le même PIN est utilisé sur plusieurs services';
 
   @override
-  String get labelSamePin => 'services — même PIN';
+  String get labelSamePin => 'services - même PIN';
 }

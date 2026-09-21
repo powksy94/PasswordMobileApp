@@ -8,7 +8,7 @@ import '../services/master_password_verifier.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../../../shared/services/role_provider.dart';
-import '../utils/api_error.dart';
+import '../../../shared/utils/api_error.dart';
 import '../widgets/login_form.dart';
 import '../widgets/master_password_dialog.dart';
 import '../../../shared/services/ad_service.dart';
@@ -143,7 +143,7 @@ class _LoginPageState extends State<LoginPage>
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, '/home');
     } catch (e) {
-      if (mounted) _snack(apiErrorMessage(e));
+      if (mounted) _snack(apiErrorMessage(AppLocalizations.of(context)!, e));
     } finally {
       if (mounted) setState(() => _loading = false);
     }

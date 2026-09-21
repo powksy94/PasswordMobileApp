@@ -94,7 +94,7 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Chargement…',
+                AppLocalizations.of(context)!.loadingSplash,
                 style: TextStyle(
                   fontSize: 16,
                   color:    isDark ? Colors.white70 : Colors.black54,

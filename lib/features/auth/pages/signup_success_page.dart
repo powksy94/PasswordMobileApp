@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/animations/lock_close_animation.dart';
 import '../../../shared/widgets/animations/typewriter_text.dart';
+import '../../../l10n/app_localizations.dart';
 
 class SignupSuccessPage extends StatefulWidget {
   const SignupSuccessPage({super.key});
@@ -10,9 +11,6 @@ class SignupSuccessPage extends StatefulWidget {
 }
 
 class _SignupSuccessPageState extends State<SignupSuccessPage> {
-  static const _line1 = 'COMPTE CRÉÉ AVEC SUCCÈS';
-  static const _line2 = 'VOUS POUVEZ MAINTENANT VOUS CONNECTER';
-
   bool _line2Started = false;
 
   Future<void> _navigateToLogin() async {
@@ -33,6 +31,8 @@ class _SignupSuccessPageState extends State<SignupSuccessPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -47,7 +47,7 @@ class _SignupSuccessPageState extends State<SignupSuccessPage> {
               ),
               const SizedBox(height: 40),
               TypewriterText(
-                text:       _line1,
+                text:       l.signupSuccessTitle.toUpperCase(),
                 style:      _style,
                 startDelay: const Duration(milliseconds: 1300),
                 onComplete: () => setState(() => _line2Started = true),
@@ -55,7 +55,7 @@ class _SignupSuccessPageState extends State<SignupSuccessPage> {
               const SizedBox(height: 8),
               if (_line2Started)
                 TypewriterText(
-                  text:       _line2,
+                  text:       l.signupSuccessSubtitle.toUpperCase(),
                   style:      _style.copyWith(
                     fontSize:      14,
                     letterSpacing: 1.5,

@@ -7,7 +7,7 @@ import '../services/auth_service.dart';
 import '../services/biometric_unlock_service.dart';
 import '../services/master_key_service.dart';
 import '../../settings/services/settings_service.dart';
-import '../utils/api_error.dart';
+import '../../../shared/utils/api_error.dart';
 import '../../../l10n/app_localizations.dart';
 
 class SignupPage extends StatefulWidget {
@@ -74,7 +74,7 @@ class _SignupPageState extends State<SignupPage> {
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(apiErrorMessage(e))),
+        SnackBar(content: Text(apiErrorMessage(AppLocalizations.of(context)!, e))),
       );
     } finally {
       if (mounted) setState(() => _loading = false);
@@ -116,7 +116,7 @@ class _SignupPageState extends State<SignupPage> {
                   padding: const EdgeInsets.only(top: 6, bottom: 16),
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text('Étape ${_step + 1} / 2',
+                    child: Text(AppLocalizations.of(context)!.signupStepProgress(_step + 1, 2),
                         style: TextStyle(
                           fontSize: 12,
                           color:    isDark ? Colors.white38 : Colors.black38,

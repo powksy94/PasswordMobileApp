@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../l10n/app_localizations.dart';
 
 class TutorialBubble extends StatelessWidget {
   final IconData icon;
@@ -59,7 +60,7 @@ class TutorialBubble extends StatelessWidget {
                     child: TextButton.icon(
                       onPressed: onDismiss,
                       icon:  Icon(Icons.arrow_forward, size: 16, color: accent),
-                      label: Text('J\'ai compris',
+                      label: Text(AppLocalizations.of(context)!.btnGotIt,
                           style: TextStyle(color: accent, fontSize: 13)),
                       style: TextButton.styleFrom(
                         padding:         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

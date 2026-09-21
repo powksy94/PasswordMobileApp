@@ -8,14 +8,19 @@ import './session_expiry_signal.dart';
 class SessionExpiryInterceptor extends Interceptor {
   static const _tokenInvalidCode = 'TOKEN_INVALID';
 
+  /// Vrai si [err] est un rejet du token de session (par opposition à un
+  /// autre 401 métier). Permet aux écrans d'ignorer cette erreur : le
+  /// gestionnaire de session s'en charge déjà.
+  static bool isTokenRejection(DioException err) {
+    final data = err.response?.data;
+    return err.response?.statusCode == 401 &&
+        data is Map &&
+        data['code'] == _tokenInvalidCode;
+  }
+
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    final data = err.response?.data;
-    if (err.response?.statusCode == 401 &&
-        data is Map &&
-        data['code'] == _tokenInvalidCode) {
-      SessionExpirySignal.raise();
-    }
+    if (isTokenRejection(err)) SessionExpirySignal.raise();
     handler.next(err);
   }
 }

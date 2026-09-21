@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import './session_expiry_interceptor.dart';
 
 class ApiService {
-  final Dio _dio = Dio(BaseOptions(baseUrl: 'https://passwordmobileappbackend-production.up.railway.app'));
+  final Dio _dio = Dio(BaseOptions(baseUrl: 'https://passwordmobileappbackend-production.up.railway.app'))
+    ..interceptors.add(SessionExpiryInterceptor());
 
   Future<void> register(String email, String password, String salt) async {
     await _dio.post('/auth/register', data: {

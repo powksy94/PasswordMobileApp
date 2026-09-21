@@ -24,6 +24,8 @@ import 'features/auth/widgets/splash_auth_gate.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'shared/services/role_provider.dart';
 import 'features/auth/services/master_key_service.dart';
+import 'features/auth/services/session_expiry_service.dart';
+import 'shared/services/session_expiry_signal.dart';
 import 'shared/services/autofill_cache_service.dart';
 import 'features/settings/services/settings_service.dart';
 
@@ -57,9 +59,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    SessionExpirySignal.notifier.addListener(_onSessionExpired);
     _loadTimeout();
     _applyMaskInBackground();
   }
+
+  void _onSessionExpired() => SessionExpiryService.handle(_navigatorKey);
 
   Future<void> _loadTimeout() async {
     final minutes = await SettingsService.getLockTimeout();
@@ -80,6 +85,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    SessionExpirySignal.notifier.removeListener(_onSessionExpired);
     super.dispose();
   }
 

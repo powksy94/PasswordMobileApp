@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // 🌑 DARK THEME — Neon Blue Cyberpunk
+  // 🌑 DARK THEME - Neon Blue Cyberpunk
   static final ThemeData darkTheme = ThemeData.dark().copyWith(
     scaffoldBackgroundColor: const Color(0xFF050A18),
     primaryColor: Colors.cyanAccent,
@@ -46,7 +46,7 @@ class AppTheme {
     ),
   );
 
-  // 🌕 LIGHT THEME — Neon Blue Futuristic
+  // 🌕 LIGHT THEME - Neon Blue Futuristic
   static final ThemeData lightTheme = ThemeData.light().copyWith(
     scaffoldBackgroundColor: const Color(0xFFEFF8FF),
     primaryColor: Colors.blueAccent,

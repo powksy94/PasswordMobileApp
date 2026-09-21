@@ -77,8 +77,8 @@ class _LoginPageState extends State<LoginPage>
 
     if (!success) {
       _snack(l.errorBiometricFailed);
-      // Annulation → le bouton reste pour réessayer ; clé invalidée →
-      // `unlock()` a désactivé le store, la relecture masque alors le bouton.
+      // Cancelled -> the button stays so the user can retry; key invalidated ->
+      // `unlock()` disabled the store, the re-read then hides the button.
       await _checkBiometricAvailability();
       return;
     }
@@ -149,9 +149,9 @@ class _LoginPageState extends State<LoginPage>
     }
   }
 
-  /// Redemande le mot de passe maître tant qu'il ne correspond pas au coffre
-  /// existant : une faute de frappe ne doit jamais être persistée comme clé.
-  /// `null` si l'utilisateur annule.
+  /// Asks for the master password again until it matches the existing vault:
+  /// a typo must never be persisted as the key.
+  /// `null` if the user cancels.
   Future<String?> _askVerifiedMasterPassword({
     required String token,
     required String salt,

@@ -52,9 +52,9 @@ class _PrivacySettingsPanelState extends State<PrivacySettingsPanel> {
     if (enabled) {
       final l   = AppLocalizations.of(context)!;
       final key = MasterKeyService.getMasterKey();
-      // Si l'utilisateur annule le prompt (ou si la clé n'est pas
-      // disponible), la biométrie n'est pas réellement activée : le switch
-      // ne doit pas mentir sur l'état réel.
+      // If the user cancels the prompt (or if the key is not
+      // available), biometrics are not really enabled: the switch
+      // must not lie about the real state.
       actuallyEnabled = key != null &&
           await BiometricUnlockService.enable(
             key,

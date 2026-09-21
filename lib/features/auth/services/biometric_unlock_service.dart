@@ -4,27 +4,27 @@ import 'package:biometric_storage/biometric_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import './biometric_service.dart';
 
-/// Stocke une copie de la clé maître dans le Keystore Android / Secure
-/// Enclave iOS (`biometric_storage`), pour que le déverrouillage biométrique
-/// soit garanti par le matériel plutôt que par un simple booléen applicatif
-/// (voir `upgrade/BIOMETRIC_UNLOCK_HARDENING.md`). Store distinct de celui
-/// utilisé par `biometric_export_service.dart` pour l'export.
+/// Stores a copy of the master key in the Android Keystore / iOS Secure
+/// Enclave (`biometric_storage`), so that the biometric unlock is
+/// guaranteed by the hardware rather than by a mere app-level boolean
+/// (see `upgrade/BIOMETRIC_UNLOCK_HARDENING.md`). Store distinct from the one
+/// used by `biometric_export_service.dart` for the export.
 ///
-/// Ne connaît rien de [MasterKeyService] : chaque appelant lui fournit la
-/// clé à protéger et récupère celle déverrouillée en retour.
+/// Knows nothing about [MasterKeyService]: each caller provides the
+/// key to protect and gets the unlocked one back.
 class BiometricUnlockService {
   static const _storeName = 'vault_unlock_key_v1';
 
-  // Suivi (sans prompt) de l'état de provisionnement : évite d'avoir à lire
-  // le store — ce qui déclencherait un prompt — juste pour savoir s'il
-  // contient déjà quelque chose.
+  // Tracking (without a prompt) of the provisioning state: avoids having to read
+  // the store, which would trigger a prompt, just to know whether it
+  // already contains something.
   static const _prefProvisioned = 'biometric_unlock_key_provisioned';
 
-  // ── Lecture ───────────────────────────────────────────────────────────────────
+  // ── Read ───────────────────────────────────────────────────────────────────
 
-  /// Lit la clé (déclenche le prompt biométrique matériel). `null` en cas
-  /// d'annulation, d'échec ou de clé absente/invalidée — l'appelant doit
-  /// alors proposer le déverrouillage par mot de passe.
+  /// Reads the key (triggers the hardware biometric prompt). `null` on
+  /// cancellation, failure or missing/invalidated key: the caller must
+  /// then offer the password unlock.
   static Future<Uint8List?> unlock({
     required String promptTitle,
     required String cancelLabel,
@@ -38,9 +38,9 @@ class BiometricUnlockService {
       if (e.code == AuthExceptionCode.userCanceled || e.code == AuthExceptionCode.canceled) {
         return null;
       }
-      // Erreur inattendue (ex. clé invalidée après changement d'empreintes
-      // enregistrées sur l'appareil) : on nettoie pour éviter d'échouer
-      // indéfiniment plutôt que de re-proposer une biométrie cassée.
+      // Unexpected error (e.g. key invalidated after the fingerprints
+      // enrolled on the device changed): we clean up to avoid failing
+      // forever instead of offering a broken biometric again.
       await disable();
       return null;
     } catch (_) {
@@ -49,13 +49,13 @@ class BiometricUnlockService {
     }
   }
 
-  // ── Écriture ──────────────────────────────────────────────────────────────────
+  // ── Write ──────────────────────────────────────────────────────────────────
 
-  /// Écrit [key] dans le store protégé par biométrie (déclenche un prompt).
-  /// Retourne `false` (sans relancer d'exception) en cas d'annulation ou
-  /// d'échec : l'activation de la biométrie ne doit jamais faire échouer
-  /// l'opération qui l'a déclenchée (connexion, changement de mot de passe
-  /// maître…), qui a déjà réussi à ce stade.
+  /// Writes [key] to the biometric-protected store (triggers a prompt).
+  /// Returns `false` (without rethrowing) on cancellation or
+  /// failure: enabling biometrics must never make the operation that
+  /// triggered it fail (login, master password change...), which
+  /// already succeeded at this point.
   static Future<bool> enable(
     Uint8List key, {
     required String promptTitle,
@@ -74,25 +74,25 @@ class BiometricUnlockService {
     }
   }
 
-  /// Supprime la clé. Aucun prompt (suppression de fichier, pas d'opération
-  /// cryptographique côté plugin natif).
+  /// Deletes the key. No prompt (file deletion, no cryptographic operation
+  /// on the native plugin side).
   static Future<void> disable() async {
     try {
       final store = await _storage();
       await store.delete();
     } catch (_) {
-      // Rien à supprimer ou store jamais initialisé — sans conséquence.
+      // Nothing to delete or store never initialized: harmless.
     }
     await _setProvisioned(false);
   }
 
-  // ── Scénarios d'appel ─────────────────────────────────────────────────────────
+  // ── Call scenarios ─────────────────────────────────────────────────────────
 
-  /// À appeler juste après une connexion/inscription réussie, avec la clé
-  /// maître qui vient d'être dérivée. Si la biométrie est activée (réglages)
-  /// et disponible, mais jamais encore provisionnée sur cet appareil,
-  /// l'active — un seul prompt, une seule fois, jamais répété aux
-  /// connexions suivantes.
+  /// To call right after a successful login/signup, with the master
+  /// key that was just derived. If biometrics are enabled (settings)
+  /// and available, but never provisioned on this device yet,
+  /// enables it: a single prompt, once, never repeated on later
+  /// logins.
   static Future<void> maybeAutoEnable(
     Uint8List key, {
     required bool biometricEnabledSetting,
@@ -105,16 +105,16 @@ class BiometricUnlockService {
     await enable(key, promptTitle: promptTitle, cancelLabel: cancelLabel);
   }
 
-  /// À appeler après un changement de mot de passe maître / reset du vault,
-  /// avec la nouvelle clé : si la biométrie était déjà provisionnée, la
-  /// remet à jour (sinon l'ancienne copie chiffrerait encore l'ancienne
-  /// clé). Ne fait rien si elle n'était pas activée — pas de prompt surprise.
+  /// To call after a master password change / vault reset,
+  /// with the new key: if biometrics were already provisioned, it
+  /// updates them (otherwise the old copy would still encrypt the old
+  /// key). Does nothing if it was not enabled: no surprise prompt.
   ///
-  /// Si l'utilisateur annule ce prompt, on désactive plutôt que de laisser
-  /// une clé désormais périmée dans le store : un futur déverrouillage
-  /// biométrique la lirait "avec succès" mais renverrait l'ANCIENNE clé,
-  /// corrompant silencieusement le déchiffrement du coffre au lieu de
-  /// simplement retomber sur le mot de passe.
+  /// If the user cancels this prompt, we disable instead of leaving
+  /// a now-stale key in the store: a future biometric unlock
+  /// would read it "successfully" but return the OLD key,
+  /// silently corrupting the vault decryption instead of simply
+  /// falling back to the password.
   static Future<void> resyncAfterKeyChange(
     Uint8List key, {
     required String promptTitle,
@@ -125,7 +125,7 @@ class BiometricUnlockService {
     if (!success) await disable();
   }
 
-  // ── État ──────────────────────────────────────────────────────────────────────
+  // ── State ──────────────────────────────────────────────────────────────────────
 
   static Future<bool> isProvisioned() async {
     final prefs = await SharedPreferences.getInstance();
@@ -137,14 +137,14 @@ class BiometricUnlockService {
     await prefs.setBool(_prefProvisioned, value);
   }
 
-  // ── Bas niveau ────────────────────────────────────────────────────────────────
+  // ── Low level ────────────────────────────────────────────────────────────────
 
   static Future<BiometricStorageFile> _storage() {
     return BiometricStorage().getStorage(
       _storeName,
       options: StorageFileInitOptions(
         authenticationRequired: true,
-        // -1 = toujours redemander la biométrie, pas de fenêtre de validité.
+        // -1 = always ask for biometrics again, no validity window.
         authenticationValidityDurationSeconds: -1,
         androidBiometricOnly: true,
       ),

@@ -51,10 +51,10 @@ class _LockScreenState extends State<LockScreen> {
       promptTitle: l.biometricReason,
       cancelLabel: l.btnCancel,
     );
-    if (key == null || !mounted) return; // annulé/échoué → reste sur l'écran, mot de passe en repli
+    if (key == null || !mounted) return; // cancelled/failed -> stay on the screen, password as fallback
 
     MasterKeyService.setUnlockedKey(key);
-    UnlockThrottle.reset().ignore(); // la biométrie prouve que c'est le propriétaire
+    UnlockThrottle.reset().ignore(); // biometrics prove the owner is present
     FcmService.initialize();
     Navigator.pushReplacementNamed(context, '/home');
   }

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import './strength_level.dart';
 
-/// Calcul de la force d'un mot de passe — logique partagée entre
-/// [PasswordStrengthBar], [PasswordHealthPage] et tout widget qui en a besoin.
+/// Password strength calculation: logic shared between
+/// [PasswordStrengthBar], [PasswordHealthPage] and any widget that needs it.
 class PasswordScore {
   const PasswordScore._();
 
-  /// Score de 0 à 100.
+  /// Score from 0 to 100.
   static int compute(String password) {
     if (password.isEmpty) return 0;
     double s = 0;
@@ -33,9 +33,9 @@ class PasswordScore {
     return StrengthLevel.veryStrong;
   }
 
-  /// Catégorie technique à 3 niveaux ('weak' | 'medium' | 'strong'), seule
-  /// information envoyée au serveur pour les statistiques admin — distincte de
-  /// [level], qui reste un niveau d'affichage à 4 paliers pour l'utilisateur.
+  /// Technical 3-level category ('weak' | 'medium' | 'strong'), the only
+  /// information sent to the server for the admin statistics; distinct from
+  /// [level], which remains a 4-step display level for the user.
   static String category(int score) {
     if (score < 30) return 'weak';
     if (score < 60) return 'medium';

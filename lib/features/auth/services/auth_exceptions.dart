@@ -1,11 +1,11 @@
-/// Levée quand une opération qui exige une session est appelée sans token
-/// stocké (session absente ou déjà fermée).
+/// Thrown when an operation that requires a session is called without a stored
+/// token (missing or already closed session).
 class NotAuthenticatedException implements Exception {}
 
-/// Levée quand une opération de chiffrement/déchiffrement est appelée alors
-/// que la clé maître n'est pas chargée en mémoire (coffre verrouillé).
+/// Thrown when an encryption/decryption operation is called while
+/// the master key is not loaded in memory (locked vault).
 class MasterKeyMissingException implements Exception {}
 
-/// Levée quand le sel de dérivation du compte est absent du stockage sécurisé
-/// (installation incomplète ou compte invalide).
+/// Thrown when the account derivation salt is missing from secure storage
+/// (incomplete install or invalid account).
 class AccountSaltMissingException implements Exception {}

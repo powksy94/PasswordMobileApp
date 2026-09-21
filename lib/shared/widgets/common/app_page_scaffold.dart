@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import './gradient_background.dart';
 import './neon_text.dart';
 
-/// Squelette de page commun (AppBar transparent + titre néon + dégradé de
-/// fond), dupliqué jusqu'ici dans la majorité des pages de l'app — chaque
-/// page ne porte plus que son propre contenu, pas ce "chrome" visuel partagé.
+/// Shared page skeleton (transparent AppBar + neon title + background
+/// gradient), previously duplicated across most pages of the app. Each
+/// page now only carries its own content, not this shared visual "chrome".
 class AppPageScaffold extends StatelessWidget {
   final String title;
   final Widget body;

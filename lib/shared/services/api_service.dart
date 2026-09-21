@@ -41,10 +41,10 @@ class ApiService {
     );
   }
 
-  /// Remplace en une seule transaction tout-ou-rien le contenu chiffré de tous
-  /// les items listés (changement du mot de passe maître). [items] doit contenir,
-  /// pour chaque entrée, au minimum `id`, `title` et `password` déjà chiffrés
-  /// avec la nouvelle clé.
+  /// Replaces, in a single all-or-nothing transaction, the encrypted content of all
+  /// the listed items (master password change). [items] must contain,
+  /// for each entry, at least `id`, `title` and `password` already encrypted
+  /// with the new key.
   Future<void> reencryptVault(String token, List<Map<String, dynamic>> items) async {
     await _dio.put('/vault/reencrypt-all',
       data: {'items': items},

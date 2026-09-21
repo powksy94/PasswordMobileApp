@@ -5,14 +5,14 @@ import '../../../shared/services/autofill_cache_service.dart';
 import '../../../shared/services/role_provider.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Réagit à un token rejeté par le serveur : ferme la session, prévient
-/// l'utilisateur et le renvoie à l'écran de connexion.
+/// Reacts to a token rejected by the server: closes the session, notifies
+/// the user and redirects to the login screen.
 class SessionExpiryService {
   static bool _handling = false;
 
   static Future<void> handle(GlobalKey<NavigatorState> navigatorKey) async {
-    // Plusieurs requêtes en vol peuvent échouer en rafale : on ne traite
-    // qu'une fois, et pas du tout si la session est déjà fermée.
+    // Several in-flight requests can fail in a burst: we only handle
+    // it once, and not at all if the session is already closed.
     if (_handling) return;
     _handling = true;
     try {

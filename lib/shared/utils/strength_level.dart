@@ -1,7 +1,7 @@
 import '../../l10n/app_localizations.dart';
 
-/// Niveau de robustesse d'un secret, indépendant de la langue. Les scores
-/// ([PasswordScore], [PinScore]) le calculent ; l'affichage le traduit via
+/// Strength level of a secret, independent of the language. The scores
+/// ([PasswordScore], [PinScore]) compute it; the UI translates it via
 /// [StrengthLevelLabel.label].
 enum StrengthLevel { weak, medium, strong, veryStrong }
 

@@ -26,7 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _index = 0;
 
-  // GlobalKeys pour accéder aux méthodes publiques des pages d'onglet
+  // GlobalKeys to access the public methods of the tab pages
   final _vaultKey  = GlobalKey<VaultPageState>();
   final _healthKey = GlobalKey<PasswordHealthPageState>();
 
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
             text: titles[_index], fontSize: 22, color: accent, glow: true),
           actions: [
 
-            // ── Actions spécifiques à chaque onglet ───────────────────────
+            // ── Tab-specific actions ───────────────────────
             if (_index == 1)
               IconButton(
                 icon:    const Icon(Icons.add),
@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                 onPressed: () => _healthKey.currentState?.refresh(),
               ),
 
-            // ── Thème + menu ─────────────────────────────────────────────
+            // ── Theme + menu ─────────────────────────────────────────────
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [

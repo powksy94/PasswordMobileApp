@@ -5,10 +5,10 @@ import '../../../shared/services/api_service.dart';
 import '../../auth/services/auth_service.dart';
 import '../widgets/approval_dialog.dart';
 
-/// Gère Firebase Cloud Messaging :
-/// - Enregistrement du token FCM
-/// - Notifications d'approbation admin (connexion dashboard)
-/// - Notifications d'approbation vault admin (accès au vault)
+/// Handles Firebase Cloud Messaging:
+/// - FCM token registration
+/// - Admin approval notifications (dashboard login)
+/// - Vault admin approval notifications (vault access)
 class FcmService {
   static final _fcm = FirebaseMessaging.instance;
 
@@ -17,7 +17,7 @@ class FcmService {
 
   static final _localNotifications = FlutterLocalNotificationsPlugin();
 
-  // ── Initialisation ────────────────────────────────────────────────────────
+  // ── Initialization ────────────────────────────────────────────────────────
 
   static Future<void> initialize() async {
     await _fcm.requestPermission(
@@ -27,7 +27,7 @@ class FcmService {
       provisional: false,
     );
 
-    // Création du canal Android (requis Android 8+)
+    // Android channel creation (required on Android 8+)
     const androidChannel = AndroidNotificationChannel(
       _channelId,
       _channelName,
@@ -38,7 +38,7 @@ class FcmService {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(androidChannel);
 
-    // Affichage des notifications FCM en foreground
+    // Display FCM notifications in the foreground
     await _fcm.setForegroundNotificationPresentationOptions(
       alert: true,
       badge: true,
@@ -63,11 +63,11 @@ class FcmService {
       if (authToken == null) return;
       await ApiService().registerFcmToken(authToken, token);
     } catch (e) {
-      debugPrint('[FCM] erreur enregistrement token: $e');
+      debugPrint('[FCM] token registration error: $e');
     }
   }
 
-  // ── Handlers foreground + background (tap sur notif) ─────────────────────
+  // ── Handlers foreground + background (notification tap) ─────────────────────
 
   static void listenForeground(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {

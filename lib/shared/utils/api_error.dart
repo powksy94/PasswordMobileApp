@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import '../../l10n/app_localizations.dart';
 
-/// Message localisé pour une erreur d'appel API, déduit du seul code de
-/// statut HTTP : le texte renvoyé par le serveur (anglais, non traduit) n'est
-/// volontairement jamais affiché. Hors [DioException], l'erreur est
-/// inattendue — on ne montre pas son détail technique à l'utilisateur.
+/// Localized message for an API call error, derived only from the HTTP
+/// status code: the text returned by the server (English, untranslated) is
+/// deliberately never displayed. Outside [DioException], the error is
+/// unexpected: its technical detail is not shown to the user.
 String apiErrorMessage(AppLocalizations l, Object error) {
   if (error is! DioException) return l.errorUnexpected;
 
   final status = error.response?.statusCode;
-  if (status == null) return l.errorNoConnection; // timeout, hors-ligne, DNS…
+  if (status == null) return l.errorNoConnection; // timeout, offline, DNS...
 
   switch (status) {
     case 400: return l.errorHttpBadRequest;

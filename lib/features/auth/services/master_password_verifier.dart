@@ -3,24 +3,24 @@ import '../../../shared/services/api_service.dart';
 import '../../../shared/services/crypto_service.dart';
 
 enum MasterPasswordCheck {
-  /// Au moins un item du coffre se déchiffre avec la clé dérivée.
+  /// At least one vault item decrypts with the derived key.
   matches,
 
-  /// Le coffre contient des items mais aucun ne se déchiffre : mot de passe
-  /// maître incorrect.
+  /// The vault contains items but none decrypts: incorrect master
+  /// password.
   mismatch,
 
-  /// Impossible de trancher (coffre vide, coffre injoignable) : l'appelant
-  /// ne doit pas bloquer l'utilisateur.
+  /// Cannot decide (empty vault, vault unreachable): the caller
+  /// must not block the user.
   unverifiable,
 }
 
-/// Vérifie qu'un mot de passe maître saisi à la connexion correspond bien à
-/// celui qui a chiffré le coffre existant, avant que sa clé dérivée ne soit
-/// persistée (référence de vérification, stockage sécurisé, biométrie).
+/// Checks that a master password entered at login really matches
+/// the one that encrypted the existing vault, before its derived key is
+/// persisted (verification reference, secure storage, biometrics).
 ///
-/// Le chiffrement étant authentifié (AES-GCM), une mauvaise clé échoue
-/// toujours au déchiffrement.
+/// Since the encryption is authenticated (AES-GCM), a wrong key always
+/// fails at decryption.
 class MasterPasswordVerifier {
   static final _api = ApiService();
 

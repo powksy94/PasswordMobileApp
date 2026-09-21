@@ -5,8 +5,8 @@ import '../../../shared/services/autofill_cache_service.dart';
 import '../../../shared/services/role_provider.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Affiche la confirmation de déconnexion puis, si l'utilisateur confirme,
-/// nettoie la session et redirige vers l'écran de connexion.
+/// Shows the logout confirmation then, if the user confirms,
+/// cleans up the session and redirects to the login screen.
 class LogoutService {
   static Future<void> confirmAndLogout(BuildContext context) async {
     final l = AppLocalizations.of(context)!;

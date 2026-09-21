@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import './strength_level.dart';
 
-/// Calcul de robustesse d'un code PIN — voir PIN_VAULT_SPEC.md pour l'algorithme
-/// et le détail des pénalités. Logique volontairement indépendante de
-/// [PasswordScore] : alphabet, critères et seuils n'ont rien en commun.
+/// PIN strength calculation, see PIN_VAULT_SPEC.md for the algorithm
+/// and the penalty details. Logic deliberately independent from
+/// [PasswordScore]: alphabet, criteria and thresholds have nothing in common.
 ///
-/// Les pénalités s'additionnent (un PIN peut cumuler plusieurs signaux, ex.
-/// "ressemble à une date" + "commence par un département") — seule la
-/// détection d'un PIN de la liste des plus communs court-circuite le calcul
-/// à 0, tout le reste est ignoré dans ce cas.
+/// Penalties add up (a PIN can accumulate several signals, e.g.
+/// "looks like a date" + "starts with a department number"); only the
+/// detection of a PIN from the most-common list short-circuits the calculation
+/// to 0, everything else is ignored in that case.
 class PinScore {
   const PinScore._();
 
@@ -53,7 +53,7 @@ class PinScore {
     return Colors.lightGreenAccent;
   }
 
-  // ── Détections ────────────────────────────────────────────────────────────────
+  // ── Detections ────────────────────────────────────────────────────────────────
 
   static bool _isStrictSequence(String pin) {
     final digits = pin.split('').map(int.parse).toList();
@@ -63,15 +63,15 @@ class PinScore {
   }
 
   static bool _isRepetitionOrAlternating(String pin) {
-    if (pin.split('').every((c) => c == pin[0])) return true; // 0000, 111111…
-    if (pin == pin.split('').reversed.join())     return true; // miroir : 1221, 123321…
+    if (pin.split('').every((c) => c == pin[0])) return true; // 0000, 111111...
+    if (pin == pin.split('').reversed.join())     return true; // mirror: 1221, 123321...
 
     if (pin.length.isEven) {
-      // Alternance période 2 : 1212, 121212…
+      // Period-2 alternation: 1212, 121212...
       if (List.generate(pin.length, (i) => pin[i] == pin[i % 2]).every((v) => v)) {
         return true;
       }
-      // Paires répétées : 1122, 112233…
+      // Repeated pairs: 1122, 112233...
       if (List.generate(pin.length ~/ 2, (i) => pin[2 * i] == pin[2 * i + 1]).every((v) => v)) {
         return true;
       }
@@ -83,7 +83,7 @@ class PinScore {
     switch (pin.length) {
       case 4:
         final ddmm = _isValidDay(pin.substring(0, 2)) && _isValidMonth(pin.substring(2, 4));
-        final mmyy = _isValidMonth(pin.substring(0, 2)); // yy = 2 derniers chiffres, toujours plausible
+        final mmyy = _isValidMonth(pin.substring(0, 2)); // yy = last 2 digits, always plausible
         final yyyy = _isPlausibleYear4(pin);
         return ddmm || mmyy || yyyy;
       case 6:

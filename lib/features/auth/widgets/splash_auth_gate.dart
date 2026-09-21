@@ -26,13 +26,13 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
     await Future.delayed(const Duration(milliseconds: 700));
     if (!mounted) return;
 
-    // Session active (token + pas de flag logged_out)
+    // Active session (token + no logged_out flag)
     final isLoggedIn = await AuthService.isLoggedIn();
     if (!mounted) return;
 
     if (isLoggedIn) {
-      // Tente le déverrouillage biométrique immédiat, seulement si l'utilisateur
-      // l'a activé dans les réglages (sinon on tombe sur l'écran de verrouillage).
+      // Try the immediate biometric unlock, only if the user
+      // enabled it in the settings (otherwise we fall back to the lock screen).
       final biometricEnabled = await SettingsService.getBiometricEnabled();
       if (!mounted) return;
       final bioAvailable = biometricEnabled &&
@@ -59,8 +59,8 @@ class _SplashAuthGateState extends State<SplashAuthGate> {
       return;
     }
 
-    // Session fermée (soft-logout) → biométrie possible depuis /login
-    // Session inexistante → /login classique
+    // Closed session (soft logout) -> biometrics possible from /login
+    // No session -> regular /login
     Navigator.pushReplacementNamed(context, '/login');
   }
 

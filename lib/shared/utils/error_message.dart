@@ -6,10 +6,10 @@ import '../../features/vault/services/vault_exceptions.dart';
 import '../../l10n/app_localizations.dart';
 import './api_error.dart';
 
-/// Point de conversion unique « erreur → message affichable ». Toute page qui
-/// montre une erreur à l'utilisateur passe par ici plutôt que d'afficher
-/// `'$e'` : les exceptions connues sont traduites, les autres deviennent un
-/// message générique (leur détail technique va au log, jamais à l'écran).
+/// Single conversion point "error -> displayable message". Every page that
+/// shows an error to the user goes through here instead of displaying
+/// `'$e'`: known exceptions are translated, the others become a generic
+/// message (their technical detail goes to the log, never to the screen).
 String errorMessage(AppLocalizations l, Object error) {
   if (error is DioException)                  return apiErrorMessage(l, error);
   if (error is NotAuthenticatedException)     return l.errorNotAuthenticated;
@@ -21,6 +21,6 @@ String errorMessage(AppLocalizations l, Object error) {
   if (error is WrongMasterPasswordException)  return l.errorWrongMasterPassword;
   if (error is MasterPasswordChangeException) return l.errorMasterPasswordChangeFailed;
 
-  debugPrint('[errorMessage] erreur non traduite : $error');
+  debugPrint('[errorMessage] untranslated error: $error');
   return l.errorUnexpected;
 }

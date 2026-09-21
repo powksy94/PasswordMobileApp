@@ -77,11 +77,11 @@ class AuthService {
     await prefs.setBool(_prefLoggedOut, true);
   }
 
-  /// Le serveur a rejeté le token (expiré/invalide) : la session ne peut plus
-  /// être restaurée, même par biométrie. On supprime le token et on ferme le
-  /// coffre, mais on garde sel + clé persistée (le reste du profil) : la
-  /// reconnexion par mot de passe retrouve ainsi la même clé, et la copie
-  /// biométrique reste valable.
+  /// The server rejected the token (expired/invalid): the session can no longer
+  /// be restored, not even via biometrics. We delete the token and close the
+  /// vault, but keep the salt + persisted key (the rest of the profile): logging
+  /// back in with the password then recovers the same key, and the biometric copy
+  /// stays valid.
   static Future<void> expireSession() async {
     MasterKeyService.clearMasterKey();
     await _storage.delete(key: _keyToken);
@@ -163,14 +163,14 @@ class AuthService {
     await _storage.write(key: _keyRole,  value: role);
   }
 
-  // ── Privé ─────────────────────────────────────────────────────────────────────
+  // ── Private ─────────────────────────────────────────────────────────────────────
 
-  /// Dérive et persiste la clé maître. Si elle diffère de celle déjà
-  /// persistée (autre compte, mot de passe maître changé depuis un autre
-  /// appareil) ou si l'on ne peut pas comparer, la copie protégée par
-  /// biométrie est périmée : la désactiver évite qu'un prochain
-  /// déverrouillage biométrique n'installe l'ancienne clé. L'appelant la
-  /// re-provisionne ensuite avec la clé courante (`maybeAutoEnable`).
+  /// Derives and persists the master key. If it differs from the one already
+  /// persisted (other account, master password changed from another
+  /// device) or if we cannot compare, the biometric-protected copy
+  /// is stale: disabling it prevents a later biometric
+  /// unlock from installing the old key. The caller then
+  /// re-provisions it with the current key (`maybeAutoEnable`).
   static Future<void> _deriveKeyAndSyncBiometric(String salt, String masterPassword) async {
     final previous = await MasterKeyService.readPersistedKey();
     await MasterKeyService.setupFromLogin(salt, masterPassword);

@@ -9,7 +9,7 @@ import '../../vault/pages/vault_import_handler.dart';
 class VaultDataPanel extends StatelessWidget {
   const VaultDataPanel({super.key});
 
-  // Ouvre showVaultExportDialog, qui propose 3 options : biométrique, portable, texte brut.
+  // Opens showVaultExportDialog, which offers 3 options: biometric, portable, plain text.
   Future<void> _export(BuildContext context) async {
     try {
       final result = await VaultService.loadFromServer();

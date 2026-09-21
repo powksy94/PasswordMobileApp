@@ -4,11 +4,11 @@ import '../../auth/services/auth_service.dart';
 import '../../auth/services/biometric_service.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Type de demande d'approbation reçue par notification push.
+/// Type of approval request received via push notification.
 enum ApprovalDialogType { adminLogin, vaultAccess }
 
-/// Dialog générique demandant à l'utilisateur d'approuver ou refuser
-/// une connexion admin / un accès au vault admin, avec confirmation biométrique.
+/// Generic dialog asking the user to approve or deny
+/// an admin login / an admin vault access, with biometric confirmation.
 class ApprovalDialog extends StatefulWidget {
   final String             sessionId;
   final ApprovalDialogType type;

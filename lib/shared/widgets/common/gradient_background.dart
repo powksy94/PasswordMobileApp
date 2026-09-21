@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Dégradé de fond dépendant du thème, dupliqué jusqu'ici dans chaque page
-/// (coffre, réglages, formulaires) — extrait tel quel, sans changement visuel.
+/// Theme-dependent background gradient, previously duplicated in every page
+/// (vault, settings, forms), extracted as-is with no visual change.
 class GradientBackground extends StatelessWidget {
   final Widget child;
 

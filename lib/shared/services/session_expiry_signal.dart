@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-/// Signal global levé quand le serveur rejette le token de session (invalide
-/// ou expiré). Volontairement neutre : la couche réseau le lève sans rien
-/// savoir de l'authentification ni de la navigation, celui qui l'écoute
-/// (`main.dart`) décide quoi en faire.
+/// Global signal raised when the server rejects the session token (invalid
+/// or expired). Deliberately neutral: the network layer raises it without knowing
+/// anything about authentication or navigation; whoever listens to it
+/// (`main.dart`) decides what to do with it.
 class SessionExpirySignal {
   static final ValueNotifier<int> notifier = ValueNotifier(0);
 

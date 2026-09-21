@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Ralentit les tentatives répétées de mot de passe maître sur l'écran de
-/// verrouillage : les [freeAttempts] premières erreurs sont sans délai, puis
-/// chaque erreur supplémentaire double l'attente ([baseDelay], plafonnée à
-/// [maxDelay]). L'état est persisté pour qu'un simple redémarrage de
-/// l'application ne remette pas le compteur à zéro.
+/// Slows down repeated master password attempts on the lock
+/// screen: the first [freeAttempts] errors have no delay, then each
+/// additional error doubles the wait ([baseDelay], capped at
+/// [maxDelay]). The state is persisted so that a simple app restart
+/// does not reset the counter to zero.
 class UnlockThrottle {
   static const freeAttempts = 5;
   static const baseDelay    = Duration(seconds: 30);
@@ -14,7 +14,7 @@ class UnlockThrottle {
   static const _prefFailures    = 'unlock_failed_attempts';
   static const _prefLockedUntil = 'unlock_locked_until_ms';
 
-  /// Attente imposée après [failures] erreurs consécutives.
+  /// Wait imposed after [failures] consecutive errors.
   static Duration delayForFailures(int failures) {
     if (failures < freeAttempts) return Duration.zero;
     final doublings = min(failures - freeAttempts, 5);
@@ -22,7 +22,7 @@ class UnlockThrottle {
     return delay > maxDelay ? maxDelay : delay;
   }
 
-  /// Temps restant avant la prochaine tentative autorisée (zéro = libre).
+  /// Time left before the next allowed attempt (zero = free).
   static Future<Duration> remaining() async {
     final prefs = await SharedPreferences.getInstance();
     final until = prefs.getInt(_prefLockedUntil);
@@ -31,7 +31,7 @@ class UnlockThrottle {
     return left > 0 ? Duration(milliseconds: left) : Duration.zero;
   }
 
-  /// Enregistre une erreur et retourne l'attente qui en découle.
+  /// Records a failure and returns the resulting wait.
   static Future<Duration> recordFailure() async {
     final prefs = await SharedPreferences.getInstance();
     final failures = (prefs.getInt(_prefFailures) ?? 0) + 1;

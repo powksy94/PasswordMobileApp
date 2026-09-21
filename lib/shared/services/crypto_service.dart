@@ -5,9 +5,9 @@ import 'dart:typed_data';
 import 'package:encrypt/encrypt.dart';
 import 'package:pointycastle/export.dart' as pc;
 
-/// Fournit : deriveKey(password, saltBase64), encryptText(plain, key), decryptText(json, key)
+/// Provides: deriveKey(password, saltBase64), encryptText(plain, key), decryptText(json, key)
 class CryptoService {
-  /// Dérive une clé 32 bytes (AES-256) depuis un mot de passe et un salt (base64)
+  /// Derives a 32-byte key (AES-256) from a password and a salt (base64)
   static Uint8List deriveKey(String password, String saltBase64, {int iterations = 100000}) {
     final salt = base64Decode(saltBase64);
     final derivator = pc.PBKDF2KeyDerivator(pc.HMac(pc.SHA256Digest(), 64));
@@ -16,7 +16,7 @@ class CryptoService {
     return key;
   }
 
-  /// Chiffre avec AES-256-GCM (IV 12 bytes). Retourne JSON string contenant data + iv, base64.
+  /// Encrypts with AES-256-GCM (12-byte IV). Returns a JSON string containing data + iv, base64.
   static String encryptText(String plain, Uint8List keyBytes) {
     final key = Key(keyBytes);
     final rng     = Random.secure();
@@ -31,7 +31,7 @@ class CryptoService {
     return container;
   }
 
-  /// Déchiffre le JSON renvoyé par encryptText
+  /// Decrypts the JSON returned by encryptText
   static String decryptText(String cipherJson, Uint8List keyBytes) {
     final Map<String, dynamic> parsed = jsonDecode(cipherJson);
     final key = Key(keyBytes);

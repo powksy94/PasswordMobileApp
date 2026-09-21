@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 enum UserRole { user, admin, teamAdmin }
 
-/// Source unique de vérité pour le rôle de l'utilisateur courant.
+/// Single source of truth for the current user's role.
 ///
-/// Remplace l'ancien trio [RoleManager] / [AdminProvider] / [TeamAdminProvider].
-/// - Le rôle admin expire automatiquement après [_adminTimeout] d'inactivité.
-/// - Pas de persistance : la restauration au démarrage est faite par [AuthService].
+/// Replaces the former [RoleManager] / [AdminProvider] / [TeamAdminProvider] trio.
+/// - The admin role expires automatically after [_adminTimeout] of inactivity.
+/// - No persistence: restoration at startup is done by [AuthService].
 class RoleProvider extends ChangeNotifier {
   UserRole _role = UserRole.user;
   Timer?   _adminTimer;
@@ -19,7 +19,7 @@ class RoleProvider extends ChangeNotifier {
   bool get isTeamAdmin     => _role == UserRole.teamAdmin;
   bool get isUser          => _role == UserRole.user;
 
-  /// Définit le rôle. Lance le timer d'expiration pour [UserRole.admin].
+  /// Sets the role. Starts the expiry timer for [UserRole.admin].
   void setRole(UserRole role) {
     _adminTimer?.cancel();
     _role = role;
@@ -27,7 +27,7 @@ class RoleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Repasse en [UserRole.user] et annule le timer.
+  /// Switches back to [UserRole.user] and cancels the timer.
   void deactivate() => setRole(UserRole.user);
 
   void _startTimer() {

@@ -99,7 +99,7 @@ class _SignupPageState extends State<SignupPage> {
                 NeonText(text: AppLocalizations.of(context)!.signupTitle, fontSize: 26, color: accent, glow: true),
                 const SizedBox(height: 16),
 
-                // Barre de progression
+                // Progress bar
                 Row(
                   children: List.generate(2, (i) => Expanded(
                     child: Container(

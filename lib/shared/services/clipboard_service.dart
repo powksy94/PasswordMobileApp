@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import '../../features/settings/services/settings_service.dart';
 
-/// Copie un texte dans le presse-papiers puis programme son effacement
-/// après le délai configuré dans les réglages de confidentialité.
+/// Copies a text to the clipboard, then schedules its clearing
+/// after the delay configured in the privacy settings.
 class ClipboardService {
   static Future<void> copyAndScheduleClear(String text) async {
     await Clipboard.setData(ClipboardData(text: text));

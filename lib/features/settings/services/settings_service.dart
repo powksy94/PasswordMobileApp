@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsService {
   static const _keyLockTimeout = 'lock_timeout_minutes';
 
-  // -1 = jamais
+  // -1 = never
   static const int defaultTimeout = 5;
 
   static const List<int> timeoutOptions = [-1, 1, 5, 15, 30, 60];
@@ -23,7 +23,7 @@ class SettingsService {
     return Duration(minutes: minutes);
   }
 
-  // ── Confidentialité ───────────────────────────────────────────────────────
+  // ── Privacy ───────────────────────────────────────────────────────
 
   static const _keyClipboardClearSeconds = 'clipboard_clear_seconds';
   static const int defaultClipboardClearSeconds = 30;

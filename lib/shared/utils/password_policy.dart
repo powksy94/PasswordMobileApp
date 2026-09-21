@@ -1,10 +1,10 @@
 import '../../l10n/app_localizations.dart';
 
-/// Règle unique de robustesse appliquée partout où un mot de passe (compte ou
-/// maître) est créé ou modifié : inscription, changement de mot de passe,
-/// changement/réinitialisation du mot de passe maître. Ne s'applique pas au
-/// formulaire de connexion, qui valide un identifiant déjà existant et ne doit
-/// pas bloquer un compte créé sous une règle antérieure.
+/// Single strength rule applied wherever a password (account or
+/// master) is created or changed: signup, password change,
+/// master password change/reset. Does not apply to the
+/// login form, which validates an already existing credential and must not
+/// block an account created under an earlier rule.
 class PasswordPolicy {
   static const int minLength = 12;
 
@@ -18,7 +18,7 @@ class PasswordPolicy {
 
   static bool isValid(String v) => v.length >= minLength && meetsComplexity(v);
 
-  /// Utilisable directement comme `TextFormField.validator`.
+  /// Usable directly as `TextFormField.validator`.
   static String? validator(String? v, AppLocalizations l) {
     if (v == null || v.length < minLength) return l.validatorMinChars;
     if (!meetsComplexity(v)) return l.validatorPasswordComplexity;

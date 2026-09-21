@@ -16,18 +16,18 @@ class MasterKeyService {
 
   static Uint8List? _masterKey;
 
-  // ── Accesseurs ────────────────────────────────────────────────────────────────
+  // ── Accessors ────────────────────────────────────────────────────────────────
 
   static Uint8List? getMasterKey()   => _masterKey;
   static void       clearMasterKey() => _masterKey = null;
 
-  /// Adopte une clé obtenue par une voie externe (ex. [BiometricUnlockService]
-  /// après une vérification biométrique matérielle) comme clé maître courante,
-  /// sans re-dériver ni ré-écrire les artefacts de vérification par mot de
-  /// passe (déjà en place depuis la dernière connexion/dérivation).
+  /// Adopts a key obtained through an external route (e.g. [BiometricUnlockService]
+  /// after a hardware-backed biometric check) as the current master key,
+  /// without re-deriving or rewriting the password verification artifacts
+  /// (already in place since the last login/derivation).
   static void setUnlockedKey(Uint8List key) => _masterKey = key;
 
-  // ── Setup depuis login / register ─────────────────────────────────────────────
+  // ── Setup from login / register ─────────────────────────────────────────────
 
   static Future<void> setupFromLogin(String salt, String masterPassword) async {
     await _storage.write(key: _keySalt, value: salt);
@@ -46,9 +46,9 @@ class MasterKeyService {
     final stored = await _storage.read(key: _keyVerification);
 
     if (stored == null) {
-      // Pas de référence locale : plutôt que d'adopter aveuglément la saisie
-      // (une faute de frappe deviendrait la référence), on la recoupe avec le
-      // cache du coffre quand il existe. Sans cache, on ne peut pas trancher.
+      // No local reference: rather than blindly adopting the input
+      // (a typo would become the reference), cross-check it against the
+      // vault cache when it exists. Without a cache, we cannot decide.
       if (await _contradictsCachedVault(key)) return false;
       _masterKey = key;
       await _persistKeyArtifacts(key);
@@ -64,9 +64,9 @@ class MasterKeyService {
     }
   }
 
-  /// Clé persistée par la dernière connexion/dérivation, sans l'adopter comme
-  /// clé courante. Sert à détecter qu'une nouvelle dérivation produit une clé
-  /// différente (autre compte, mot de passe maître changé ailleurs).
+  /// Key persisted by the last login/derivation, without adopting it as the
+  /// current key. Used to detect that a new derivation produces a different
+  /// key (other account, master password changed elsewhere).
   static Future<Uint8List?> readPersistedKey() async {
     final stored = await _storage.read(key: _keyMasterKey);
     if (stored == null) return null;
@@ -80,7 +80,7 @@ class MasterKeyService {
     return true;
   }
 
-  // ── Changement de clé maître ──────────────────────────────────────────────────
+  // ── Master key change ──────────────────────────────────────────────────
 
   static Future<void> commitNewMasterKey(Uint8List key) async {
     _masterKey = key;
@@ -93,10 +93,10 @@ class MasterKeyService {
     return CryptoService.deriveKey(password, saltBase64);
   }
 
-  // ── Reset (purge coffre + nouvelle clé) ──────────────────────────────────────
+  // ── Reset (vault purge + new key) ──────────────────────────────────────
 
-  /// Dérive une nouvelle clé depuis [newMasterPassword] + le sel existant,
-  /// sans vérifier l'ancienne clé. À utiliser uniquement après purge du coffre.
+  /// Derives a new key from [newMasterPassword] + the existing salt,
+  /// without checking the old key. Use only after the vault has been purged.
   static Future<bool> resetMasterKey(String newMasterPassword) async {
     final salt = await _storage.read(key: _keySalt);
     if (salt == null) return false;
@@ -106,7 +106,7 @@ class MasterKeyService {
     return true;
   }
 
-  // ── Suppression complète ──────────────────────────────────────────────────────
+  // ── Full deletion ──────────────────────────────────────────────────────
 
   static Future<void> deleteAll() async {
     await _storage.delete(key: _keySalt);
@@ -114,7 +114,7 @@ class MasterKeyService {
     await _storage.delete(key: _keyMasterKey);
   }
 
-  // ── Utilitaires ───────────────────────────────────────────────────────────────
+  // ── Utilities ───────────────────────────────────────────────────────────────
 
   static Uint8List pcSecureRandom(int length) {
     final rnd = Random.secure();
@@ -129,7 +129,7 @@ class MasterKeyService {
       if (cached == null) return false;
       return MasterPasswordVerifier.probe(cached, key) == MasterPasswordCheck.mismatch;
     } catch (_) {
-      return false; // cache illisible : on ne bloque pas l'utilisateur
+      return false; // unreadable cache: we do not block the user
     }
   }
 

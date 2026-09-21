@@ -42,10 +42,10 @@ class _ResetVaultPageState extends State<ResetVaultPage> {
 
     setState(() => _loading = true);
     try {
-      // Une action aussi destructrice et irréversible exige de reprouver la
-      // possession du mot de passe maître actuel (comme pour son changement),
-      // pour éviter qu'un téléphone déverrouillé et laissé sans surveillance
-      // permette de tout effacer via une simple case à cocher.
+      // An action this destructive and irreversible requires proving again
+      // possession of the current master password (as for changing it),
+      // to prevent an unlocked, unattended phone from
+      // being wiped through a simple checkbox.
       final validCurrent = await MasterKeyService.unlockWithMasterPassword(_currentCtrl.text);
       if (!validCurrent) {
         _snack(l.errorWrongMasterPassword);

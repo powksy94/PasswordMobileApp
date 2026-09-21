@@ -250,6 +250,17 @@ class AppLocalizationsEs extends AppLocalizations {
   String get errorWrongMasterPassword => 'Contraseña maestra incorrecta';
 
   @override
+  String errorUnlockLockedOut(num seconds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      seconds,
+      locale: localeName,
+      other: '$seconds segundos',
+      one: '1 segundo',
+    );
+    return 'Demasiados intentos — inténtalo de nuevo en $_temp0';
+  }
+
+  @override
   String get errorVaultDecryptionFailed =>
       'No se pudo descifrar el cofre — verifica tu contraseña maestra';
 

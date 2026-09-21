@@ -574,6 +574,12 @@ abstract class AppLocalizations {
   /// **'Wrong master password'**
   String get errorWrongMasterPassword;
 
+  /// No description provided for @errorUnlockLockedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts — try again in {seconds, plural, one{1 second} other{{seconds} seconds}}'**
+  String errorUnlockLockedOut(num seconds);
+
   /// No description provided for @errorVaultDecryptionFailed.
   ///
   /// In en, this message translates to:

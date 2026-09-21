@@ -249,6 +249,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get errorWrongMasterPassword => 'Wrong master password';
 
   @override
+  String errorUnlockLockedOut(num seconds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      seconds,
+      locale: localeName,
+      other: '$seconds seconds',
+      one: '1 second',
+    );
+    return 'Too many attempts — try again in $_temp0';
+  }
+
+  @override
   String get errorVaultDecryptionFailed =>
       'Could not decrypt vault — please check your master password';
 

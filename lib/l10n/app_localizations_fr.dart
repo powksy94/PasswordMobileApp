@@ -251,6 +251,17 @@ class AppLocalizationsFr extends AppLocalizations {
   String get errorWrongMasterPassword => 'Mot de passe maître incorrect';
 
   @override
+  String errorUnlockLockedOut(num seconds) {
+    String _temp0 = intl.Intl.pluralLogic(
+      seconds,
+      locale: localeName,
+      other: '$seconds secondes',
+      one: '1 seconde',
+    );
+    return 'Trop de tentatives — réessayez dans $_temp0';
+  }
+
+  @override
   String get errorVaultDecryptionFailed =>
       'Impossible de déchiffrer le coffre — vérifiez votre mot de passe maître';
 

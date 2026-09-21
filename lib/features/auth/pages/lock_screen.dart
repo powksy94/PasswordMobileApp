@@ -3,6 +3,7 @@ import '../services/auth_service.dart';
 import '../services/master_key_service.dart';
 import '../services/biometric_service.dart';
 import '../services/biometric_unlock_service.dart';
+import '../services/unlock_throttle.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../widgets/lock_screen_panel.dart';
@@ -53,12 +54,21 @@ class _LockScreenState extends State<LockScreen> {
     if (key == null || !mounted) return; // annulé/échoué → reste sur l'écran, mot de passe en repli
 
     MasterKeyService.setUnlockedKey(key);
+    UnlockThrottle.reset().ignore(); // la biométrie prouve que c'est le propriétaire
     FcmService.initialize();
     Navigator.pushReplacementNamed(context, '/home');
   }
 
   Future<void> _unlockPassword() async {
     if (_passwordCtrl.text.isEmpty) return;
+
+    final wait = await UnlockThrottle.remaining();
+    if (!mounted) return;
+    if (wait > Duration.zero) {
+      _showLockedOut(wait);
+      return;
+    }
+
     setState(() => _loading = true);
 
     final success =
@@ -67,15 +77,29 @@ class _LockScreenState extends State<LockScreen> {
     setState(() => _loading = false);
 
     if (success) {
+      await UnlockThrottle.reset();
+      if (!mounted) return;
       FcmService.initialize();
       Navigator.pushReplacementNamed(context, '/home');
     } else {
       _passwordCtrl.clear();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.errorWrongMasterPassword)),
-      );
+      final delay = await UnlockThrottle.recordFailure();
+      if (!mounted) return;
+      if (delay > Duration.zero) {
+        _showLockedOut(delay);
+      } else {
+        _snack(AppLocalizations.of(context)!.errorWrongMasterPassword);
+      }
     }
   }
+
+  void _showLockedOut(Duration wait) {
+    final seconds = (wait.inMilliseconds / 1000).ceil();
+    _snack(AppLocalizations.of(context)!.errorUnlockLockedOut(seconds));
+  }
+
+  void _snack(String msg) =>
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
 
   Future<void> _logout() async {
     await AuthService.logout();

@@ -93,6 +93,7 @@
   "labelPinLength": "Longitud del PIN",
   "errorBiometricKey": "Clave biométrica no encontrada — ingresa tu contraseña maestra",
   "errorWrongMasterPassword": "Contraseña maestra incorrecta",
+  "errorUnlockLockedOut": "Demasiados intentos — inténtalo de nuevo en {seconds, plural, one{1 segundo} other{{seconds} segundos}}",
   "errorVaultDecryptionFailed": "No se pudo descifrar el cofre — verifica tu contraseña maestra",
   "warningVaultItemsSkipped": "{count, plural, one{1 elemento} other{{count} elementos}} no se pudo descifrar y {count, plural, one{está oculto} other{están ocultos}}. Tus datos no se han perdido — intenta cerrar sesión y volver a iniciarla.",
   "btnGenerate": "Generar",

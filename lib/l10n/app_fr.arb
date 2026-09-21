@@ -93,6 +93,7 @@
   "labelPinLength": "Longueur du PIN",
   "errorBiometricKey": "Clé biométrique introuvable — entrez le mot de passe maître",
   "errorWrongMasterPassword": "Mot de passe maître incorrect",
+  "errorUnlockLockedOut": "Trop de tentatives — réessayez dans {seconds, plural, one{1 seconde} other{{seconds} secondes}}",
   "errorVaultDecryptionFailed": "Impossible de déchiffrer le coffre — vérifiez votre mot de passe maître",
   "warningVaultItemsSkipped": "{count, plural, one{1 élément n'a} other{{count} éléments n'ont}} pas pu être déchiffré et {count, plural, one{est masqué} other{sont masqués}}. Vos données ne sont pas perdues — essayez de vous déconnecter puis reconnecter.",
   "btnGenerate": "Générer",

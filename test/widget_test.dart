@@ -3,12 +3,12 @@ import 'package:password_mobile_app/features/generator/services/password_generat
 
 void main() {
   group('PasswordGenerator', () {
-    test('génère un mot de passe de la longueur demandée', () {
+    test('generates a password of the requested length', () {
       final pwd = PasswordGenerator.generate(length: 20);
       expect(pwd.length, equals(20));
     });
 
-    test('respecte les types de caractères activés', () {
+    test('respects the enabled character types', () {
       final pwd = PasswordGenerator.generate(
         length: 32,
         useLower: true,
@@ -21,12 +21,12 @@ void main() {
       expect(RegExp(r'[0-9]').hasMatch(pwd), isFalse);
     });
 
-    test('exclut les caractères spécifiés', () {
+    test('excludes the specified characters', () {
       final pwd = PasswordGenerator.generate(length: 64, exclude: 'aeiou');
       expect(RegExp(r'[aeiou]').hasMatch(pwd), isFalse);
     });
 
-    test('lève une exception si tous les caractères sont exclus', () {
+    test('throws an exception if all characters are excluded', () {
       const alphabet = 'abcdefghijklmnopqrstuvwxyz'
           'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
           '0123456789'

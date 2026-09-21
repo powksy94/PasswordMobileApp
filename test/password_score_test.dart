@@ -5,67 +5,67 @@ import 'package:password_mobile_app/shared/utils/strength_level.dart';
 
 void main() {
   group('PasswordScore.compute', () {
-    test('mot de passe vide → 0', () {
+    test('empty password -> 0', () {
       expect(PasswordScore.compute(''), equals(0));
     });
 
-    test('score entre 0 et 100 pour tout mot de passe', () {
+    test('score between 0 and 100 for any password', () {
       for (final pw in ['a', 'abc123', 'A1!aaaaaaaaaaaaaaa', 'x' * 100]) {
         final s = PasswordScore.compute(pw);
         expect(s, inInclusiveRange(0, 100));
       }
     });
 
-    test('mot de passe court simple → Faible (< 30)', () {
+    test('short simple password -> weak (< 30)', () {
       expect(PasswordScore.compute('abc'), lessThan(30));
     });
 
-    test('mot de passe long et complexe → Très fort (≥ 80)', () {
+    test('long complex password -> very strong (>= 80)', () {
       expect(PasswordScore.compute('Aa1!Aa1!Aa1!Aa1!'), greaterThanOrEqualTo(80));
     });
 
-    test('16 caractères sans complexité → score partiel', () {
+    test('16 characters without complexity -> partial score', () {
       final s = PasswordScore.compute('aaaaaaaaaaaaaaaa'); // 16 lowercase
-      // Longueur = 50, complexité mixte = 0 → 50 total
+      // Length = 50, mixed complexity = 0 -> 50 total
       expect(s, equals(50));
     });
   });
 
   group('PasswordScore.color', () {
-    test('score faible → rouge', () {
+    test('weak score -> red', () {
       expect(PasswordScore.color(20), equals(Colors.redAccent));
     });
 
-    test('score moyen → orange', () {
+    test('medium score -> orange', () {
       expect(PasswordScore.color(45), equals(Colors.orangeAccent));
     });
 
-    test('score fort → vert clair', () {
+    test('strong score -> light green', () {
       expect(PasswordScore.color(70), equals(Colors.lightGreenAccent));
     });
 
-    test('score très fort → cyan', () {
+    test('very strong score -> cyan', () {
       expect(PasswordScore.color(90), equals(Colors.cyanAccent));
     });
   });
 
   group('PasswordScore.level', () {
-    test('weak pour score < 30', () {
+    test('weak for score < 30', () {
       expect(PasswordScore.level(0), equals(StrengthLevel.weak));
       expect(PasswordScore.level(29), equals(StrengthLevel.weak));
     });
 
-    test('medium pour score 30–59', () {
+    test('medium for score 30-59', () {
       expect(PasswordScore.level(30), equals(StrengthLevel.medium));
       expect(PasswordScore.level(59), equals(StrengthLevel.medium));
     });
 
-    test('strong pour score 60–79', () {
+    test('strong for score 60-79', () {
       expect(PasswordScore.level(60), equals(StrengthLevel.strong));
       expect(PasswordScore.level(79), equals(StrengthLevel.strong));
     });
 
-    test('veryStrong pour score ≥ 80', () {
+    test('veryStrong for score >= 80', () {
       expect(PasswordScore.level(80), equals(StrengthLevel.veryStrong));
       expect(PasswordScore.level(100), equals(StrengthLevel.veryStrong));
     });

@@ -3,13 +3,13 @@ import 'package:password_mobile_app/features/generator/services/password_generat
 
 void main() {
   group('PasswordGenerator', () {
-    test('génère la longueur exacte demandée', () {
+    test('generates the exact requested length', () {
       for (final len in [4, 8, 16, 32, 64]) {
         expect(PasswordGenerator.generate(length: len).length, equals(len));
       }
     });
 
-    test('respecte useLower = false', () {
+    test('respects useLower = false', () {
       final pwd = PasswordGenerator.generate(
         length: 40,
         useLower: false,
@@ -18,7 +18,7 @@ void main() {
       expect(RegExp(r'[a-z]').hasMatch(pwd), isFalse);
     });
 
-    test('respecte useUpper = false', () {
+    test('respects useUpper = false', () {
       final pwd = PasswordGenerator.generate(
         length: 40,
         useUpper: false,
@@ -27,7 +27,7 @@ void main() {
       expect(RegExp(r'[A-Z]').hasMatch(pwd), isFalse);
     });
 
-    test('respecte useDigits = false', () {
+    test('respects useDigits = false', () {
       final pwd = PasswordGenerator.generate(
         length: 40,
         useDigits: false,
@@ -36,12 +36,12 @@ void main() {
       expect(RegExp(r'[0-9]').hasMatch(pwd), isFalse);
     });
 
-    test('exclut les caractères spécifiés', () {
+    test('excludes the specified characters', () {
       final pwd = PasswordGenerator.generate(length: 64, exclude: 'aeiou0');
       expect(RegExp(r'[aeiou0]').hasMatch(pwd), isFalse);
     });
 
-    test('requireAllTypes garantit la présence de chaque type', () {
+    test('requireAllTypes guarantees the presence of each type', () {
       final pwd = PasswordGenerator.generate(
         length: 16,
         requireAllTypes: true,
@@ -51,7 +51,7 @@ void main() {
       expect(RegExp(r'[0-9]').hasMatch(pwd), isTrue);
     });
 
-    test('lève une exception si tous les caractères sont exclus', () {
+    test('throws an exception if all characters are excluded', () {
       const all = 'abcdefghijklmnopqrstuvwxyz'
           'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
           '0123456789'
@@ -62,10 +62,10 @@ void main() {
       );
     });
 
-    test('deux appels successifs produisent des résultats différents', () {
+    test('two successive calls produce different results', () {
       final a = PasswordGenerator.generate(length: 24);
       final b = PasswordGenerator.generate(length: 24);
-      // Probabilité de collision négligeable sur 24 caractères
+      // Negligible collision probability over 24 characters
       expect(a, isNot(equals(b)));
     });
   });

@@ -4,13 +4,13 @@ import './generator_exceptions.dart';
 
 export './generator_exceptions.dart';
 
-/// Orchestration (validation + persistance + presse-papiers) pour le
-/// générateur de mots de passe — séparée de l'UI, sans dépendance à
-/// `State`/`setState`, sur le même principe que `VaultReencryptService`.
+/// Orchestration (validation + persistence + clipboard) for the
+/// password generator, separated from the UI, with no dependency on
+/// `State`/`setState`, following the same principle as `VaultReencryptService`.
 class PasswordGeneratorController {
-  /// Valide puis ajoute le mot de passe généré au coffre.
-  /// Lève [MissingLabelException] si le label est vide ; toute autre
-  /// exception (réseau, etc.) remonte telle quelle à l'appelant.
+  /// Validates then adds the generated password to the vault.
+  /// Throws [MissingLabelException] if the label is empty; any other
+  /// exception (network, etc.) bubbles up unchanged to the caller.
   Future<void> addToVault({
     required String label,
     required String password,

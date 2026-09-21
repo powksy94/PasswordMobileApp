@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Sélecteur "Mots de passe / PINs" en haut de la page Générateur — même
-/// pattern que VaultTypeSelector.
+/// "Passwords / PINs" selector at the top of the Generator page, same
+/// pattern as VaultTypeSelector.
 class GeneratorTypeSelector extends StatelessWidget {
   final String selected;
   final ValueChanged<String> onChanged;

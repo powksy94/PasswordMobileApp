@@ -6,8 +6,8 @@ import './pin_generator_controls.dart';
 import '../../../shared/utils/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Mirroring de [PasswordGeneratorSection] pour les PINs — widget fin,
-/// orchestration dans [PinGeneratorController], rendu du résultat dans
+/// Mirrors [PasswordGeneratorSection] for PINs: thin widget,
+/// orchestration in [PinGeneratorController], result rendering in
 /// [GeneratedPinResultPanel].
 class PinGeneratorSection extends StatefulWidget {
   final VoidCallback? onVaultUpdated;

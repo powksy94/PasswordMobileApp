@@ -5,7 +5,7 @@ import './health_section_header.dart';
 import './pin_health_item_tile.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Section "PINs réutilisés" de la page Santé.
+/// "Reused PINs" section of the health page.
 class ReusedPinsSection extends StatelessWidget {
   final List<List<VaultItem>>   groups;
   final ValueChanged<VaultItem> onEdit;

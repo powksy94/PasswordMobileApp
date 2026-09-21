@@ -5,9 +5,9 @@ import './generated_password_display.dart';
 import './vault_save_form.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Bloc "résultat" affiché une fois un mot de passe généré : valeur + score
-/// + formulaire de sauvegarde + bouton d'ajout. Extrait de
-/// [PasswordGeneratorSection] pour que son `build()` reste court.
+/// "Result" block shown once a password is generated: value + score
+/// + save form + add button. Extracted from
+/// [PasswordGeneratorSection] so that its `build()` stays short.
 class GeneratedPasswordResultPanel extends StatelessWidget {
   final String       password;
   final bool         showPassword;

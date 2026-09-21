@@ -7,7 +7,7 @@ plugins {
     id("com.google.gms.google-services")
 }
 
-// Lecture du keystore de release
+// Reading the release keystore
 val keyPropertiesFile = rootProject.file("key.properties")
 val keyProperties = Properties().apply {
     if (keyPropertiesFile.exists()) load(keyPropertiesFile.inputStream())

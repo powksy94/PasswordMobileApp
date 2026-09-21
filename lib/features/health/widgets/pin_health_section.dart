@@ -6,8 +6,8 @@ import './reused_pins_section.dart';
 import './health_all_good_panel.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Section "Santé des PINs" : analyse (faibles, réutilisés) et rendu,
-/// entièrement autonome à partir des items PIN fournis par la page.
+/// "PIN health" section: analysis (weak, reused) and rendering,
+/// fully self-contained from the PIN items provided by the page.
 class PinHealthSection extends StatelessWidget {
   final List<VaultItem>         items;
   final ValueChanged<VaultItem> onEdit;
@@ -18,8 +18,8 @@ class PinHealthSection extends StatelessWidget {
     required this.onEdit,
   });
 
-  // Seuil symétrique du < 60 utilisé pour les mots de passe : frontière
-  // medium/strong de PinScore (0-30 weak, 30-65 medium, 65+ strong).
+  // Threshold symmetric to the < 60 used for passwords: the
+  // medium/strong boundary of PinScore (0-30 weak, 30-65 medium, 65+ strong).
   List<VaultItem> get _weak =>
       items.where((i) => PinScore.compute(i.pin) < 65).toList();
 

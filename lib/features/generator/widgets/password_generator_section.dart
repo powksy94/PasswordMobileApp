@@ -6,10 +6,10 @@ import './generator_controls.dart';
 import '../../../shared/utils/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Contenu de l'ancienne PasswordGeneratorPage — la page n'est plus qu'un
-/// switcher entre ce widget et [PinGeneratorSection]. Widget fin : toute
-/// l'orchestration (validation, sauvegarde, presse-papiers) vit dans
-/// [PasswordGeneratorController], et le rendu du résultat dans
+/// Content of the former PasswordGeneratorPage: the page is now only a
+/// switcher between this widget and [PinGeneratorSection]. Thin widget: all
+/// the orchestration (validation, saving, clipboard) lives in
+/// [PasswordGeneratorController], and the result rendering in
 /// [GeneratedPasswordResultPanel].
 class PasswordGeneratorSection extends StatefulWidget {
   final VoidCallback? onVaultUpdated;

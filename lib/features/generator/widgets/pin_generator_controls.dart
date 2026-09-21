@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../shared/widgets/common/neon_text.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Choix de la longueur du PIN — 4 ou 6 uniquement (voir PIN_VAULT_SPEC.md :
-/// pas de longueur libre pour un PIN, contrairement au mot de passe).
+/// PIN length choice: 4 or 6 only (see PIN_VAULT_SPEC.md:
+/// no free length for a PIN, unlike the password).
 class PinGeneratorControls extends StatelessWidget {
   final int length;
   final ValueChanged<int> onLengthChanged;

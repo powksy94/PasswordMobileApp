@@ -4,35 +4,35 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('UnlockThrottle.delayForFailures', () {
-    test('aucun délai pour les premières erreurs', () {
+    test('no delay for the first errors', () {
       for (var i = 0; i < UnlockThrottle.freeAttempts; i++) {
         expect(UnlockThrottle.delayForFailures(i), Duration.zero);
       }
     });
 
-    test('30 s à la 5e erreur puis doublement', () {
+    test('30 s at the 5th error then doubling', () {
       expect(UnlockThrottle.delayForFailures(5), const Duration(seconds: 30));
       expect(UnlockThrottle.delayForFailures(6), const Duration(seconds: 60));
       expect(UnlockThrottle.delayForFailures(7), const Duration(seconds: 120));
     });
 
-    test('plafonné à 15 minutes', () {
+    test('capped at 15 minutes', () {
       expect(UnlockThrottle.delayForFailures(10), UnlockThrottle.maxDelay);
       expect(UnlockThrottle.delayForFailures(500), UnlockThrottle.maxDelay);
     });
   });
 
-  group('UnlockThrottle persistance', () {
+  group('UnlockThrottle persistence', () {
     setUp(() => SharedPreferences.setMockInitialValues({}));
 
-    test('libre tant que le seuil n\'est pas atteint', () async {
+    test('free while the threshold is not reached', () async {
       for (var i = 0; i < UnlockThrottle.freeAttempts - 1; i++) {
         expect(await UnlockThrottle.recordFailure(), Duration.zero);
       }
       expect(await UnlockThrottle.remaining(), Duration.zero);
     });
 
-    test('verrouille à la 5e erreur puis reset libère', () async {
+    test('locks at the 5th error then reset unlocks', () async {
       for (var i = 0; i < UnlockThrottle.freeAttempts - 1; i++) {
         await UnlockThrottle.recordFailure();
       }

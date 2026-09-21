@@ -5,7 +5,7 @@ import './health_section_header.dart';
 import './pin_health_item_tile.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Section "PINs faibles" de la page Santé.
+/// "Weak PINs" section of the health page.
 class WeakPinsSection extends StatelessWidget {
   final List<VaultItem>         items;
   final ValueChanged<VaultItem> onEdit;

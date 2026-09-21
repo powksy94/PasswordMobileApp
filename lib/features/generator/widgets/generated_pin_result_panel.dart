@@ -5,8 +5,8 @@ import './generated_pin_display.dart';
 import './pin_vault_save_form.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Bloc "résultat" affiché une fois un PIN généré : valeur + score +
-/// formulaire de sauvegarde + bouton d'ajout. Mirroring de
+/// "Result" block shown once a PIN is generated: value + score +
+/// save form + add button. Mirrors
 /// [GeneratedPasswordResultPanel].
 class GeneratedPinResultPanel extends StatelessWidget {
   final String       pin;

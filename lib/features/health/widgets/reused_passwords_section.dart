@@ -5,7 +5,7 @@ import './health_section_header.dart';
 import './health_item_tile.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Section "Mots de passe réutilisés" de la page Santé des mots de passe.
+/// "Reused passwords" section of the password health page.
 class ReusedPasswordsSection extends StatelessWidget {
   final List<List<VaultItem>>   groups;
   final ValueChanged<VaultItem> onEdit;

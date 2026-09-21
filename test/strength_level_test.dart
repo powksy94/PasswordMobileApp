@@ -6,7 +6,7 @@ import 'package:password_mobile_app/shared/utils/strength_level.dart';
 
 void main() {
   group('StrengthLevel.label', () {
-    test('français', () {
+    test('French', () {
       final l = AppLocalizationsFr();
       expect(
         StrengthLevel.values.map((s) => s.label(l)),
@@ -14,7 +14,7 @@ void main() {
       );
     });
 
-    test('anglais', () {
+    test('English', () {
       final l = AppLocalizationsEn();
       expect(
         StrengthLevel.values.map((s) => s.label(l)),
@@ -22,7 +22,7 @@ void main() {
       );
     });
 
-    test('espagnol', () {
+    test('Spanish', () {
       final l = AppLocalizationsEs();
       expect(
         StrengthLevel.values.map((s) => s.label(l)),

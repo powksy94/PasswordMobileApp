@@ -12,32 +12,32 @@ List<dynamic> _vaultFor(Uint8List key, {int items = 2}) => List.generate(
 
 void main() {
   group('MasterPasswordVerifier.probe', () {
-    test('matches quand la clé déchiffre le coffre', () {
+    test('matches when the key decrypts the vault', () {
       final key = _key(1);
       expect(MasterPasswordVerifier.probe(_vaultFor(key), key), MasterPasswordCheck.matches);
     });
 
-    test('mismatch quand la clé est incorrecte', () {
+    test('mismatch when the key is incorrect', () {
       expect(
         MasterPasswordVerifier.probe(_vaultFor(_key(1)), _key(2)),
         MasterPasswordCheck.mismatch,
       );
     });
 
-    test('unverifiable quand le coffre est vide', () {
+    test('unverifiable when the vault is empty', () {
       expect(MasterPasswordVerifier.probe([], _key(1)), MasterPasswordCheck.unverifiable);
     });
 
-    test('matches si au moins un item est lisible (item corrompu ignoré)', () {
+    test('matches if at least one item is readable (corrupted item ignored)', () {
       final key = _key(1);
       final raw = [
-        {'id': 'bad', 'title': 'pas-du-json'},
+        {'id': 'bad', 'title': 'not-json'},
         ..._vaultFor(key, items: 1),
       ];
       expect(MasterPasswordVerifier.probe(raw, key), MasterPasswordCheck.matches);
     });
 
-    test('mismatch quand tous les items sont corrompus', () {
+    test('mismatch when all items are corrupted', () {
       final raw = [
         {'id': 'a', 'title': 'x'},
         {'id': 'b'},

@@ -21,7 +21,7 @@ void main() {
   final en = AppLocalizationsEn();
 
   group('apiErrorMessage', () {
-    test('traduit par statut HTTP', () {
+    test('translates by HTTP status', () {
       expect(apiErrorMessage(fr, _dioError(status: 400)), fr.errorHttpBadRequest);
       expect(apiErrorMessage(fr, _dioError(status: 401)), fr.errorHttpUnauthorized);
       expect(apiErrorMessage(fr, _dioError(status: 403)), fr.errorHttpForbidden);
@@ -31,15 +31,15 @@ void main() {
       expect(apiErrorMessage(fr, _dioError(status: 500)), fr.errorHttpServer);
     });
 
-    test('statut inconnu → erreur réseau avec le code', () {
+    test('unknown status -> network error with the code', () {
       expect(apiErrorMessage(fr, _dioError(status: 418)), fr.errorHttpNetwork(418));
     });
 
-    test('sans réponse (hors-ligne, timeout) → pas de connexion', () {
+    test('no response (offline, timeout) -> no connection', () {
       expect(apiErrorMessage(fr, _dioError()), fr.errorNoConnection);
     });
 
-    test("n'affiche jamais le texte anglais du serveur", () {
+    test("never displays the English server text", () {
       final msg = apiErrorMessage(
         en,
         _dioError(status: 401, data: {'error': 'Invalid credentials'}),
@@ -48,15 +48,15 @@ void main() {
       expect(msg, isNot(contains('Invalid credentials')));
     });
 
-    test("erreur hors Dio → message générique, sans fuite du détail", () {
-      final msg = apiErrorMessage(fr, Exception('secret technique'));
+    test("non-Dio error -> generic message, without leaking the detail", () {
+      final msg = apiErrorMessage(fr, Exception('technical secret'));
       expect(msg, fr.errorUnexpected);
       expect(msg, isNot(contains('secret')));
     });
   });
 
   group('SessionExpiryInterceptor.isTokenRejection', () {
-    test('401 TOKEN_INVALID → oui', () {
+    test('401 TOKEN_INVALID -> yes', () {
       expect(
         SessionExpiryInterceptor.isTokenRejection(
           _dioError(status: 401, data: {'code': 'TOKEN_INVALID'}),
@@ -65,7 +65,7 @@ void main() {
       );
     });
 
-    test('401 métier sans code → non', () {
+    test('business 401 without code -> no', () {
       expect(
         SessionExpiryInterceptor.isTokenRejection(
           _dioError(status: 401, data: {'error': 'Current password is incorrect'}),

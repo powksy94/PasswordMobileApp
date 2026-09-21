@@ -1,7 +1,7 @@
-/// Levée par [PasswordGeneratorController.addToVault]/[PinGeneratorController.addToVault]
-/// quand le label est vide.
+/// Thrown by [PasswordGeneratorController.addToVault]/[PinGeneratorController.addToVault]
+/// when the label is empty.
 class MissingLabelException implements Exception {}
 
-/// Levée par [PasswordGenerator.generate] quand aucun jeu de caractères n'est
-/// sélectionné, ou quand les exclusions les retirent tous.
+/// Thrown by [PasswordGenerator.generate] when no character set is
+/// selected, or when the exclusions remove all of them.
 class NoCharacterAvailableException implements Exception {}

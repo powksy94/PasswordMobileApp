@@ -5,7 +5,7 @@ import './health_section_header.dart';
 import './health_item_tile.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Section "Mots de passe faibles" de la page Santé des mots de passe.
+/// "Weak passwords" section of the password health page.
 class WeakPasswordsSection extends StatelessWidget {
   final List<VaultItem>           items;
   final ValueChanged<VaultItem>   onEdit;

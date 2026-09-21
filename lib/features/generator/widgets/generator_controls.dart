@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../shared/widgets/common/neon_text.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Slider de longueur + cases à cocher des jeux de caractères.
-/// Purement présentatif — chaque changement remonte via callback.
+/// Length slider + checkboxes for the character sets.
+/// Purely presentational: every change bubbles up via callback.
 class GeneratorControls extends StatelessWidget {
   final int  length;
   final bool useLower;

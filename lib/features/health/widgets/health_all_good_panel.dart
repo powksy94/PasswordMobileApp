@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../shared/widgets/common/glass_panel.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Affiché quand aucun mot de passe faible ni réutilisé n'est détecté.
+/// Shown when no weak or reused password is detected.
 class HealthAllGoodPanel extends StatelessWidget {
   const HealthAllGoodPanel({super.key});
 

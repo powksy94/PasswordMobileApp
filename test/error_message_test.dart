@@ -13,7 +13,7 @@ void main() {
   final fr = AppLocalizationsFr();
 
   group('errorMessage', () {
-    test('exceptions typées connues → message localisé', () {
+    test('known typed exceptions -> localized message', () {
       expect(errorMessage(fr, NotAuthenticatedException()), fr.errorNotAuthenticated);
       expect(errorMessage(fr, MasterKeyMissingException()), fr.errorMasterKeyMissing);
       expect(errorMessage(fr, AccountSaltMissingException()), fr.errorAccountSaltMissing);
@@ -27,7 +27,7 @@ void main() {
       );
     });
 
-    test('DioException → message par statut', () {
+    test('DioException -> message per status', () {
       final req = RequestOptions(path: '/x');
       final err = DioException(
         requestOptions: req,
@@ -37,14 +37,14 @@ void main() {
       expect(errorMessage(fr, err), fr.errorHttpConflict);
     });
 
-    test("exception inconnue → message générique, sans fuite du texte technique", () {
-      final msg = errorMessage(fr, Exception('Non authentifié brut'));
+    test("unknown exception -> generic message, without leaking the technical text", () {
+      final msg = errorMessage(fr, Exception('raw unauthenticated text'));
       expect(msg, fr.errorUnexpected);
       expect(msg, isNot(contains('Exception')));
-      expect(msg, isNot(contains('brut')));
+      expect(msg, isNot(contains('raw')));
     });
 
-    test('aucun jeu de caractères → NoCharacterAvailableException (générateur)', () {
+    test('no character set -> NoCharacterAvailableException (generator)', () {
       expect(
         () => PasswordGenerator.generate(
           useLower: false, useUpper: false, useDigits: false, useSpecials: false,
@@ -54,7 +54,7 @@ void main() {
     });
   });
 
-  group('messages du lot : pas de tiret cadratin', () {
+  group('messages of this batch: no em dash', () {
     test('fr / en / es', () {
       for (final l in [AppLocalizationsFr(), AppLocalizationsEn(), AppLocalizationsEs()]) {
         final texts = [
@@ -63,7 +63,7 @@ void main() {
           l.exportBiometricSubtitle, l.errorNoConnection, l.errorHttpServer, l.offlineBanner,
         ];
         for (final t in texts) {
-          expect(t, isNot(contains('—')), reason: t);
+          expect(t, isNot(contains(String.fromCharCode(0x2014))), reason: t);
         }
       }
     });

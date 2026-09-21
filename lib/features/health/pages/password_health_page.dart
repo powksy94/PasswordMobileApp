@@ -16,7 +16,7 @@ class PasswordHealthPage extends StatefulWidget {
   State<PasswordHealthPage> createState() => PasswordHealthPageState();
 }
 
-// State public → accessible via GlobalKey depuis HomePage
+// Public State -> accessible via GlobalKey from HomePage
 class PasswordHealthPageState extends State<PasswordHealthPage> {
   List<VaultItem> _items = [];
   bool    _loading = true;
@@ -37,7 +37,7 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
 
   void _onVaultVersionChanged() => _load();
 
-  // ── Action publique (appelée par HomePage via GlobalKey) ──────────────────
+  // ── Public action (called by HomePage via GlobalKey) ──────────────────
 
   Future<void> refresh() => _load();
 
@@ -56,9 +56,9 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
     }
   }
 
-  // Le détail de l'analyse (score, faibles, réutilisés) vit dans
-  // PasswordHealthSection/PinHealthSection, chacune autonome à partir de la
-  // sous-liste d'items de son type — cette page ne fait que charger et router.
+  // The analysis detail (score, weak, reused) lives in
+  // PasswordHealthSection/PinHealthSection, each self-contained from the
+  // sub-list of items of its type: this page only loads and routes.
   List<VaultItem> get _passwordItems =>
       _items.where((i) => i.type != 'pin').toList();
 
@@ -73,7 +73,7 @@ class PasswordHealthPageState extends State<PasswordHealthPage> {
     await _load();
   }
 
-  // ── Build — pas de Scaffold ni d'AppBar (géré par HomePage) ──────────────
+  // ── Build - no Scaffold or AppBar (handled by HomePage) ──────────────
 
   @override
   Widget build(BuildContext context) {

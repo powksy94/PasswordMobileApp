@@ -19,14 +19,14 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-// Certains plugins (ex. screen_protector, file_picker) ne déclarent pas de
-// jvmTarget Kotlin explicite : avec JDK 21, leur tâche Kotlin cible 21 alors
-// que leur tâche Java cible la version qu'ils déclarent eux-mêmes (11, 17…),
-// ce qui fait échouer la compilation ("Inconsistent JVM-target compatibility").
-// Chaque plugin déclarant une cible Java différente, on ne peut pas forcer une
-// valeur fixe : on aligne donc dynamiquement le jvmTarget Kotlin de chaque
-// sous-projet sur SA PROPRE cible Java (compileOptions.targetCompatibility),
-// sans modifier celle-ci (déjà finalisée par AGP au moment où ce bloc s'exécute).
+// Some plugins (e.g. screen_protector, file_picker) do not declare an explicit
+// Kotlin jvmTarget: with JDK 21, their Kotlin task targets 21 while
+// their Java task targets the version they declare themselves (11, 17...),
+// which makes the compilation fail ("Inconsistent JVM-target compatibility").
+// Since each plugin declares a different Java target, we cannot force a
+// fixed value: we therefore dynamically align the Kotlin jvmTarget of each
+// subproject on ITS OWN Java target (compileOptions.targetCompatibility),
+// without modifying the latter (already finalized by AGP when this block runs).
 subprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         val javaTarget = project.extensions.findByType<com.android.build.gradle.BaseExtension>()

@@ -6,9 +6,9 @@ import './weak_passwords_section.dart';
 import './reused_passwords_section.dart';
 import './health_all_good_panel.dart';
 
-/// Section "Santé des mots de passe" : analyse (score global, faibles,
-/// réutilisés) et rendu, entièrement autonome à partir des items mot de
-/// passe fournis par la page.
+/// "Password health" section: analysis (overall score, weak,
+/// reused) and rendering, fully self-contained from the password
+/// items provided by the page.
 class PasswordHealthSection extends StatelessWidget {
   final List<VaultItem>         items;
   final ValueChanged<VaultItem> onEdit;

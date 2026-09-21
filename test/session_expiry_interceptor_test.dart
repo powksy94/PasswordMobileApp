@@ -33,25 +33,25 @@ Future<void> _request(int status, Map<String, dynamic> body) async {
   try {
     await dio.get('https://example.test/x');
   } on DioException {
-    // attendu : les statuts >= 400 lèvent
+    // expected: statuses >= 400 throw
   }
 }
 
 void main() {
   group('SessionExpiryInterceptor', () {
-    test('lève le signal sur un 401 TOKEN_INVALID', () async {
+    test('raises the signal on a 401 TOKEN_INVALID', () async {
       final before = SessionExpirySignal.notifier.value;
       await _request(401, {'error': 'Invalid or expired token', 'code': 'TOKEN_INVALID'});
       expect(SessionExpirySignal.notifier.value, before + 1);
     });
 
-    test('ignore un 401 métier sans code (mauvais mot de passe actuel)', () async {
+    test('ignores a business 401 without a code (wrong current password)', () async {
       final before = SessionExpirySignal.notifier.value;
       await _request(401, {'error': 'Current password is incorrect'});
       expect(SessionExpirySignal.notifier.value, before);
     });
 
-    test('ignore les autres statuts', () async {
+    test('ignores other statuses', () async {
       final before = SessionExpirySignal.notifier.value;
       await _request(500, {'error': 'boom', 'code': 'TOKEN_INVALID'});
       expect(SessionExpirySignal.notifier.value, before);

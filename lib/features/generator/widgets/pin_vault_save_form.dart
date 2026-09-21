@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// Mirroring réduit de [VaultSaveForm] pour un PIN : pas de login/url, comme
+/// Reduced mirror of [VaultSaveForm] for a PIN: no login/url, like
 /// [PinItemForm].
 class PinVaultSaveForm extends StatelessWidget {
   final TextEditingController labelController;

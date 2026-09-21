@@ -3,8 +3,8 @@ import '../widgets/generator_type_selector.dart';
 import '../widgets/password_generator_section.dart';
 import '../widgets/pin_generator_section.dart';
 
-/// Switcher entre le générateur de mots de passe et de PINs — même API
-/// publique qu'avant (onVaultUpdated) : aucun changement dans home_page.dart.
+/// Switcher between the password and PIN generators, same public API
+/// as before (onVaultUpdated): no change in home_page.dart.
 class PasswordGeneratorPage extends StatefulWidget {
   final VoidCallback? onVaultUpdated;
 
@@ -17,7 +17,7 @@ class PasswordGeneratorPage extends StatefulWidget {
 class _PasswordGeneratorPageState extends State<PasswordGeneratorPage> {
   String _selectedType = 'password';
 
-  // ── Build — pas de Scaffold (géré par HomePage) ──────────────────────────
+  // ── Build - no Scaffold (handled by HomePage) ──────────────────────────
 
   @override
   Widget build(BuildContext context) {

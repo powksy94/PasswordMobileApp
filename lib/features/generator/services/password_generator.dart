@@ -24,14 +24,14 @@ class PasswordGenerator {
     if (useDigits) chars += _digits;
     if (useSpecials) chars += _specials;
 
-    // 🔥 Exclusion des caractères non désirés
+    // 🔥 Exclude unwanted characters
     chars = chars.split("").where((c) => !exclude.contains(c)).join();
 
     if (chars.isEmpty) throw NoCharacterAvailableException();
 
     List<String> password = [];
 
-    // 🔐 Assure un caractère de chaque type si demandé
+    // 🔐 Ensure one character of each type if requested
     if (requireAllTypes) {
       if (useLower) password.add(_pick(_lower, exclude, rand));
       if (useUpper) password.add(_pick(_upper, exclude, rand));
@@ -39,12 +39,12 @@ class PasswordGenerator {
       if (useSpecials) password.add(_pick(_specials, exclude, rand));
     }
 
-    // 🔐 Ajoute des caractères aléatoires jusqu'à atteindre la longueur
+    // 🔐 Add random characters until the length is reached
     while (password.length < length) {
       password.add(chars[rand.nextInt(chars.length)]);
     }
 
-    // 🔀 Mélange final
+    // 🔀 Final shuffle
     password.shuffle(rand);
 
     return password.join();

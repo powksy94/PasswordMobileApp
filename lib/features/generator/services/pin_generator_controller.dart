@@ -4,12 +4,12 @@ import './generator_exceptions.dart';
 
 export './generator_exceptions.dart';
 
-/// Orchestration (validation + persistance + presse-papiers) pour le
-/// générateur de PINs — miroir de [PasswordGeneratorController], sans code
-/// partagé (logiques indépendantes, voir PIN_VAULT_SPEC.md).
+/// Orchestration (validation + persistence + clipboard) for the
+/// PIN generator, mirror of [PasswordGeneratorController], with no shared
+/// code (independent logic, see PIN_VAULT_SPEC.md).
 class PinGeneratorController {
-  /// Valide puis ajoute le PIN généré au coffre.
-  /// Lève [MissingLabelException] si le label est vide.
+  /// Validates then adds the generated PIN to the vault.
+  /// Throws [MissingLabelException] if the label is empty.
   Future<void> addToVault({
     required String label,
     required String pin,

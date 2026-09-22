@@ -25,18 +25,40 @@ class VaultService {
 
   // ── Loading (network -> cache on failure) ────────────────────────────
 
+  /// Vault payload already fetched once (by the login master-password
+  /// check) that the very next [loadFromServer] call can reuse instead of
+  /// refetching the same data over the network. One-shot: consumed as soon
+  /// as it's read, whether or not it ends up being used.
+  static List<dynamic>? _preloadedRaw;
+
+  /// Called by the login flow right after verifying the master password
+  /// against a freshly downloaded vault, so that flow's fetch isn't wasted.
+  static void primeFromVerification(List<dynamic> raw) => _preloadedRaw = raw;
+
+  /// Shares a single in-flight request between callers asking for the vault
+  /// at the same time (e.g. the Vault and Health tabs, both mounted at once
+  /// by HomePage's IndexedStack) instead of firing one HTTP call each.
+  static Future<({List<VaultItem> items, bool fromCache, int skippedCount})>? _inFlight;
+
   /// Returns the items, a [fromCache] flag telling whether the data comes
   /// from the cache, and [skippedCount]: the number of items present on the server/cache
   /// but that could not be decrypted (to report to the user rather
   /// than silently making them disappear from the vault).
-  static Future<({List<VaultItem> items, bool fromCache, int skippedCount})> loadFromServer() async {
+  static Future<({List<VaultItem> items, bool fromCache, int skippedCount})> loadFromServer() {
+    return _inFlight ??= _fetchAndDecrypt().whenComplete(() => _inFlight = null);
+  }
+
+  static Future<({List<VaultItem> items, bool fromCache, int skippedCount})> _fetchAndDecrypt() async {
     final token = await AuthService.getToken();
     if (token == null) throw NotAuthenticatedException();
     final key = MasterKeyService.getMasterKey();
     if (key == null) throw MasterKeyMissingException();
 
+    final preloaded = _preloadedRaw;
+    _preloadedRaw = null;
+
     try {
-      final raw    = await _api.getVault(token);
+      final raw    = preloaded ?? await _api.getVault(token);
       await VaultCache.save(raw);
       final result = VaultCodec.decryptRaw(raw, key);
       if (raw.isNotEmpty && result.items.isEmpty) {

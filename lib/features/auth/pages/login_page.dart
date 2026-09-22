@@ -5,6 +5,7 @@ import '../services/biometric_service.dart';
 import '../services/biometric_unlock_service.dart';
 import '../services/master_key_service.dart';
 import '../services/master_password_verifier.dart';
+import '../../vault/services/vault_service.dart';
 import '../../settings/services/settings_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../../../shared/services/role_provider.dart';
@@ -161,7 +162,7 @@ class _LoginPageState extends State<LoginPage>
       if (masterPw == null || masterPw.isEmpty || !mounted) return null;
 
       setState(() => _loading = true);
-      final check = await MasterPasswordVerifier.checkAgainstServerVault(
+      final result = await MasterPasswordVerifier.checkAgainstServerVault(
         token:          token,
         salt:           salt,
         masterPassword: masterPw,
@@ -169,7 +170,12 @@ class _LoginPageState extends State<LoginPage>
       if (!mounted) return null;
       setState(() => _loading = false);
 
-      if (check != MasterPasswordCheck.mismatch) return masterPw;
+      if (result.check != MasterPasswordCheck.mismatch) {
+        // Spares VaultPage/PasswordHealthPage an immediate re-fetch of the
+        // vault we just downloaded to verify the password.
+        if (result.raw != null) VaultService.primeFromVerification(result.raw!);
+        return masterPw;
+      }
       _snack(AppLocalizations.of(context)!.errorWrongMasterPassword);
     }
     return null;

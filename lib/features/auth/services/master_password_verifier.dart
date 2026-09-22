@@ -24,7 +24,11 @@ enum MasterPasswordCheck {
 class MasterPasswordVerifier {
   static final _api = ApiService();
 
-  static Future<MasterPasswordCheck> checkAgainstServerVault({
+  /// [raw] is the vault payload fetched to perform the check, exposed so the
+  /// caller can hand it to [VaultService.primeFromVerification] and spare
+  /// the app an immediate, redundant re-fetch of the same vault right after
+  /// login. `null` only when the fetch itself failed.
+  static Future<({MasterPasswordCheck check, List<dynamic>? raw})> checkAgainstServerVault({
     required String token,
     required String salt,
     required String masterPassword,
@@ -33,9 +37,10 @@ class MasterPasswordVerifier {
     try {
       raw = await _api.getVault(token);
     } catch (_) {
-      return MasterPasswordCheck.unverifiable;
+      return (check: MasterPasswordCheck.unverifiable, raw: null);
     }
-    return probe(raw, CryptoService.deriveKey(masterPassword, salt));
+    final check = probe(raw, CryptoService.deriveKey(masterPassword, salt));
+    return (check: check, raw: raw);
   }
 
   static MasterPasswordCheck probe(List<dynamic> raw, Uint8List key) {

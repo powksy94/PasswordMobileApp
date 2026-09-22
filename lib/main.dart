@@ -33,7 +33,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await Firebase.initializeApp();
-  await MobileAds.instance.initialize();
+  // Ads are best-effort and this call can take several seconds on a slow
+  // network: never let it block the first frame from being drawn. A missed
+  // interstitial on a very fast first login is an acceptable trade-off.
+  MobileAds.instance.initialize().ignore();
   runApp(
     ChangeNotifierProvider(
       create: (_) => RoleProvider(),

@@ -7,8 +7,17 @@ import android.view.autofill.AutofillId
 
 class StructureParser(private val structure: AssistStructure) {
 
-    val usernameIds = mutableListOf<AutofillId>()
-    val passwordIds = mutableListOf<AutofillId>()
+    companion object {
+        // Not a View.AUTOFILL_HINT_* constant (those predate this hint): it lives
+        // on androidx.autofill.HintConstants.AUTOFILL_HINT_NEW_PASSWORD, which
+        // resolves to this exact string. Used as a literal to avoid adding the
+        // androidx.autofill dependency for a single constant.
+        private const val AUTOFILL_HINT_NEW_PASSWORD = "newPassword"
+    }
+
+    val usernameIds    = mutableListOf<AutofillId>()
+    val passwordIds    = mutableListOf<AutofillId>()
+    val newPasswordIds = mutableListOf<AutofillId>()
     var webDomain:   String? = null
 
     fun parse() {
@@ -26,6 +35,11 @@ class StructureParser(private val structure: AssistStructure) {
             when {
                 hints.any { it == View.AUTOFILL_HINT_USERNAME || it == View.AUTOFILL_HINT_EMAIL_ADDRESS } ->
                     usernameIds += id
+                // Checked before the generic password hint/type below: a field explicitly
+                // marked "new password" (account creation, password change) gets the
+                // generation suggestion instead of a fill-from-vault suggestion.
+                hints.any { it == AUTOFILL_HINT_NEW_PASSWORD } ->
+                    newPasswordIds += id
                 hints.any { it == View.AUTOFILL_HINT_PASSWORD } ->
                     passwordIds += id
                 isPasswordType(node) -> passwordIds += id

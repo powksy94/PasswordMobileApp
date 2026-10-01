@@ -141,6 +141,10 @@
   "errorGeneratorNoCharset": "No characters available - enable a character type or reduce the exclusions.",
   "exportBiometricTitle": "Unlock the export",
   "exportBiometricSubtitle": "Access to the vault encryption key",
+  "autofillGenerateTitle": "Generate a password",
+  "autofillGenerateSubtitle": "Unlock your vault to continue",
+  "autofillSaveTitle": "Add to vault?",
+  "autofillSaveContent": "A password generated for {domain} was detected. Add it to your vault?",
   "errorVaultDecryptionFailed": "Could not decrypt vault - please check your master password",
   "warningVaultItemsSkipped": "{count, plural, one{1 item} other{{count} items}} could not be decrypted and are hidden. Your data is not lost - try logging out and back in.",
   "@warningVaultItemsSkipped": {

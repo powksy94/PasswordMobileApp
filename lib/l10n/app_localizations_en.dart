@@ -410,6 +410,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get exportBiometricSubtitle => 'Access to the vault encryption key';
 
   @override
+  String get autofillGenerateTitle => 'Generate a password';
+
+  @override
+  String get autofillGenerateSubtitle => 'Unlock your vault to continue';
+
+  @override
+  String get autofillSaveTitle => 'Add to vault?';
+
+  @override
+  String autofillSaveContent(Object domain) {
+    return 'A password generated for $domain was detected. Add it to your vault?';
+  }
+
+  @override
   String get errorVaultDecryptionFailed =>
       'Could not decrypt vault - please check your master password';
 

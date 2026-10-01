@@ -18,7 +18,7 @@ import 'features/settings/pages/account_settings_page.dart';
 
 // Theme & widgets
 import 'theme/app_theme.dart';
-import 'features/auth/widgets/splash_auth_gate.dart';
+import 'features/auth/widgets/boot_gate.dart';
 
 // Services
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -28,6 +28,7 @@ import 'features/auth/services/session_expiry_service.dart';
 import 'shared/services/session_expiry_signal.dart';
 import 'shared/services/autofill_cache_service.dart';
 import 'features/settings/services/settings_service.dart';
+import 'features/vault/services/pending_autofill_save_handler.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -108,6 +109,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           AutofillCacheService.clear().ignore();
           _navigatorKey.currentState
               ?.pushNamedAndRemoveUntil('/lock', (r) => false);
+        } else {
+          // Still unlocked: a password generated via the autofill "new
+          // password" suggestion while this screen was backgrounded may be
+          // waiting for confirmation (see pending_autofill_save_handler.dart).
+          final context = _navigatorKey.currentContext;
+          if (context != null) checkPendingAutofillSave(context).ignore();
         }
       }
     }
@@ -136,9 +143,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         Locale('fr'),
         Locale('es'),
       ],
-      initialRoute: '/splash',
+      initialRoute: '/boot',
       routes: {
-        '/splash':    (_) => const SplashAuthGate(),
+        '/boot':      (_) => const BootGate(),
         '/login':     (_) => const LoginPage(),
         '/signup':         (_) => const SignupPage(),
         '/signup-success': (_) => const SignupSuccessPage(),

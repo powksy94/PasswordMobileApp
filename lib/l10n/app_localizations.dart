@@ -862,6 +862,30 @@ abstract class AppLocalizations {
   /// **'Access to the vault encryption key'**
   String get exportBiometricSubtitle;
 
+  /// No description provided for @autofillGenerateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Generate a password'**
+  String get autofillGenerateTitle;
+
+  /// No description provided for @autofillGenerateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock your vault to continue'**
+  String get autofillGenerateSubtitle;
+
+  /// No description provided for @autofillSaveTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add to vault?'**
+  String get autofillSaveTitle;
+
+  /// No description provided for @autofillSaveContent.
+  ///
+  /// In en, this message translates to:
+  /// **'A password generated for {domain} was detected. Add it to your vault?'**
+  String autofillSaveContent(Object domain);
+
   /// No description provided for @errorVaultDecryptionFailed.
   ///
   /// In en, this message translates to:

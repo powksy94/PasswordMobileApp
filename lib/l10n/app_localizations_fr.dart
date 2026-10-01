@@ -413,6 +413,21 @@ class AppLocalizationsFr extends AppLocalizations {
       'Accès à la clé de chiffrement du coffre';
 
   @override
+  String get autofillGenerateTitle => 'Générer un mot de passe';
+
+  @override
+  String get autofillGenerateSubtitle =>
+      'Déverrouillez votre coffre pour continuer';
+
+  @override
+  String get autofillSaveTitle => 'Ajouter au coffre ?';
+
+  @override
+  String autofillSaveContent(Object domain) {
+    return 'Un mot de passe généré pour $domain a été détecté. Voulez-vous l\'ajouter à votre coffre ?';
+  }
+
+  @override
   String get errorVaultDecryptionFailed =>
       'Impossible de déchiffrer le coffre - vérifiez votre mot de passe maître';
 

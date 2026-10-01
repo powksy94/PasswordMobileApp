@@ -7,6 +7,7 @@ import '../../../shared/widgets/common/neon_text.dart';
 import '../../../shared/services/role_provider.dart';
 import '../../auth/services/logout_service.dart';
 import '../../notifications/services/fcm_service.dart';
+import '../../vault/services/pending_autofill_save_handler.dart';
 import '../../../l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -46,6 +47,12 @@ class _HomePageState extends State<HomePage> {
       _listenerAdded = true;
       FcmService.initialize();
       FcmService.listenForeground(context);
+      // Whatever path led here (login, lock screen, splash auto-unlock), the
+      // vault is now unlocked: a good moment to check for a password
+      // generated via autofill while it wasn't (see
+      // pending_autofill_save_handler.dart). A no-op if there is nothing
+      // pending.
+      checkPendingAutofillSave(context).ignore();
       _prevRole      = _roleProvider.role;
       _roleListener  = () {
         if (!mounted) return;

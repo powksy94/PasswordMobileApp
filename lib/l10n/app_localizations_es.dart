@@ -415,6 +415,20 @@ class AppLocalizationsEs extends AppLocalizations {
       'Acceso a la clave de cifrado de la bóveda';
 
   @override
+  String get autofillGenerateTitle => 'Generar una contraseña';
+
+  @override
+  String get autofillGenerateSubtitle => 'Desbloquea tu cofre para continuar';
+
+  @override
+  String get autofillSaveTitle => '¿Añadir al cofre?';
+
+  @override
+  String autofillSaveContent(Object domain) {
+    return 'Se detectó una contraseña generada para $domain. ¿Quieres añadirla a tu cofre?';
+  }
+
+  @override
   String get errorVaultDecryptionFailed =>
       'No se pudo descifrar el cofre - verifica tu contraseña maestra';
 

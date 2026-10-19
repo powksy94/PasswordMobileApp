@@ -65,8 +65,11 @@ class MainActivity : FlutterFragmentActivity() {
                         }.onFailure { e -> result.error("PARSE_ERROR", e.message, null) }
                     }
                     "clear" -> {
-                        AutofillCache.clear(this)
-                        result.success(null)
+                        // EncryptedSharedPreferences can throw on some devices
+                        // (corrupted keystore): report it instead of crashing the call.
+                        runCatching { AutofillCache.clear(this) }
+                            .onSuccess { result.success(null) }
+                            .onFailure { e -> result.error("CLEAR_ERROR", e.message, null) }
                     }
                     else -> result.notImplemented()
                 }

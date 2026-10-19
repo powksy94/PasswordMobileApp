@@ -18,8 +18,15 @@ class SessionExpiryService {
     try {
       if (await AuthService.getToken() == null) return;
 
-      await AutofillCacheService.clear();
+      // Drop the rejected token first: if anything below fails, the user
+      // must not stay stuck with a dead session that biometrics keep
+      // "unlocking" (offline vault, every write rejected with a 401).
       await AuthService.expireSession();
+      try {
+        await AutofillCacheService.clear();
+      } catch (e) {
+        debugPrint('[Session] autofill cache clear failed: $e');
+      }
 
       final context = navigatorKey.currentContext;
       if (context == null || !context.mounted) return;

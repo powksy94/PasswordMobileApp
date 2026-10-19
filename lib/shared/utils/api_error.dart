@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import '../../l10n/app_localizations.dart';
+import '../services/session_expiry_interceptor.dart';
 
 /// Localized message for an API call error, derived only from the HTTP
 /// status code: the text returned by the server (English, untranslated) is
@@ -10,6 +11,9 @@ String apiErrorMessage(AppLocalizations l, Object error) {
 
   final status = error.response?.statusCode;
   if (status == null) return l.errorNoConnection; // timeout, offline, DNS...
+
+  // A rejected session token is not a "wrong credentials" 401.
+  if (SessionExpiryInterceptor.isTokenRejection(error)) return l.sessionExpired;
 
   switch (status) {
     case 400: return l.errorHttpBadRequest;

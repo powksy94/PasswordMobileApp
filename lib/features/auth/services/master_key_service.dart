@@ -36,6 +36,14 @@ class MasterKeyService {
     await _persistKeyArtifacts(key);
   }
 
+  /// Login completed with a vault key already recovered on this device
+  /// (biometric copy, verified against the vault) instead of a master password.
+  static Future<void> setupFromUnlockedKey(String salt, Uint8List key) async {
+    await _storage.write(key: _keySalt, value: salt);
+    _masterKey = key;
+    await _persistKeyArtifacts(key);
+  }
+
   // ── Unlock ────────────────────────────────────────────────────────────────────
 
   static Future<bool> unlockWithMasterPassword(String masterPassword) async {

@@ -9,9 +9,10 @@ import './biometric_unlock_service.dart';
 class AuthService {
   static const _storage = FlutterSecureStorage();
 
-  static const _keyToken = 'auth_token';
-  static const _keyRole  = 'auth_role';
-  static const _keyEmail = 'auth_email';
+  static const _keyToken   = 'auth_token';
+  static const _keyRefresh = 'auth_refresh_token';
+  static const _keyRole    = 'auth_role';
+  static const _keyEmail   = 'auth_email';
 
   static const _prefLoggedOut = 'session_logged_out';
   static const _prefUserEmail = 'user_email';
@@ -31,27 +32,37 @@ class AuthService {
 
   // ── Login ─────────────────────────────────────────────────────────────────────
 
-  static Future<({String token, String role, String salt})> loginToServer(
+  static Future<({String token, String? refreshToken, String role, String salt})> loginToServer(
       String email, String password) async {
     final res = await _api.login(email, password);
     return (
-      token: res['token'] as String,
-      role:  res['role']  as String? ?? 'user',
-      salt:  res['salt']  as String,
+      token:        res['token']        as String,
+      refreshToken: res['refreshToken'] as String?,
+      role:         res['role']         as String? ?? 'user',
+      salt:         res['salt']         as String,
     );
   }
 
+  /// Exactly one of [masterPassword] (key derived from it) or [unlockedKey]
+  /// (vault key recovered from this device's biometric copy, see
+  /// BiometricReloginService) must be given.
   static Future<void> completeLogin({
     required String token,
+    required String? refreshToken,
     required String role,
     required String salt,
-    required String masterPassword,
     required String email,
+    String? masterPassword,
+    Uint8List? unlockedKey,
   }) async {
-    await _storage.write(key: _keyToken, value: token);
-    await _storage.write(key: _keyRole,  value: role);
+    assert((masterPassword == null) != (unlockedKey == null));
+    await saveSession(token: token, refreshToken: refreshToken, role: role);
     await _storage.write(key: _keyEmail, value: email);
-    await _deriveKeyAndSyncBiometric(salt, masterPassword);
+    if (unlockedKey != null) {
+      await MasterKeyService.setupFromUnlockedKey(salt, unlockedKey);
+    } else {
+      await _deriveKeyAndSyncBiometric(salt, masterPassword!);
+    }
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefLoggedOut);
@@ -64,7 +75,7 @@ class AuthService {
       String email, String password, String masterPassword) async {
     final s = await loginToServer(email, password);
     await completeLogin(
-      token: s.token, role: s.role, salt: s.salt,
+      token: s.token, refreshToken: s.refreshToken, role: s.role, salt: s.salt,
       masterPassword: masterPassword, email: email,
     );
   }
@@ -85,14 +96,24 @@ class AuthService {
   static Future<void> expireSession() async {
     MasterKeyService.clearMasterKey();
     await _storage.delete(key: _keyToken);
+    await _storage.delete(key: _keyRefresh);
     await _storage.delete(key: _keyRole);
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_prefLoggedOut);
   }
 
   static Future<void> fullLogout() async {
+    // Best effort: revokes this device's session server-side; logging out
+    // must still work offline.
+    final refreshToken = await _storage.read(key: _keyRefresh);
+    if (refreshToken != null) {
+      await _api.logout(refreshToken)
+          .timeout(const Duration(seconds: 3))
+          .catchError((_) {});
+    }
     MasterKeyService.clearMasterKey();
     await _storage.delete(key: _keyToken);
+    await _storage.delete(key: _keyRefresh);
     await _storage.delete(key: _keyRole);
     await _storage.delete(key: _keyEmail);
     await MasterKeyService.deleteAll();
@@ -158,9 +179,26 @@ class AuthService {
   static Future<String> getUserRoleString() async =>
       await _storage.read(key: _keyRole) ?? 'user';
 
+  static Future<String?> getRefreshToken() => _storage.read(key: _keyRefresh);
+
   static Future<void> updateTokenAndRole(String newToken, String role) async {
     await _storage.write(key: _keyToken, value: newToken);
     await _storage.write(key: _keyRole,  value: role);
+  }
+
+  /// Stores a session issued by the server (login, refresh, password
+  /// change). A null [refreshToken] (older backend) leaves none stored.
+  static Future<void> saveSession({
+    required String token,
+    required String? refreshToken,
+    required String role,
+  }) async {
+    await updateTokenAndRole(token, role);
+    if (refreshToken != null) {
+      await _storage.write(key: _keyRefresh, value: refreshToken);
+    } else {
+      await _storage.delete(key: _keyRefresh);
+    }
   }
 
   // ── Private ─────────────────────────────────────────────────────────────────────

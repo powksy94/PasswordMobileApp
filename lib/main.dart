@@ -26,6 +26,8 @@ import 'shared/services/role_provider.dart';
 import 'features/auth/services/master_key_service.dart';
 import 'features/auth/services/session_expiry_service.dart';
 import 'shared/services/session_expiry_signal.dart';
+import 'shared/services/session_expiry_interceptor.dart';
+import 'features/auth/services/session_refresh_service.dart';
 import 'shared/services/autofill_cache_service.dart';
 import 'features/settings/services/settings_service.dart';
 import 'features/vault/services/pending_autofill_save_handler.dart';
@@ -38,6 +40,7 @@ void main() async {
   // network: never let it block the first frame from being drawn. A missed
   // interstitial on a very fast first login is an acceptable trade-off.
   MobileAds.instance.initialize().ignore();
+  SessionExpiryInterceptor.refreshSession = SessionRefreshService.refresh;
   runApp(
     ChangeNotifierProvider(
       create: (_) => RoleProvider(),

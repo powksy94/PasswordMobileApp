@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../services/auth_service.dart';
 import '../services/biometric_service.dart';
 import '../services/biometric_unlock_service.dart';
+import '../services/biometric_relogin_service.dart';
 import '../services/master_key_service.dart';
 import '../services/master_password_verifier.dart';
 import '../../vault/services/vault_service.dart';
@@ -105,25 +106,40 @@ class _LoginPageState extends State<LoginPage>
         _passwordCtrl.text,
       );
       if (!mounted) return;
+      final l = AppLocalizations.of(context)!;
+
+      final bio = await BiometricReloginService.tryUnlock(
+        email:       _emailCtrl.text.trim(),
+        token:       session.token,
+        promptTitle: l.biometricReason,
+        cancelLabel: l.btnCancel,
+      );
+      if (!mounted) return;
       setState(() => _loading = false);
 
-      final masterPw = await _askVerifiedMasterPassword(
-        token: session.token,
-        salt:  session.salt,
-      );
-      if (masterPw == null || !mounted) return;
+      String? masterPw;
+      if (bio != null) {
+        if (bio.raw != null) VaultService.primeFromVerification(bio.raw!);
+      } else {
+        masterPw = await _askVerifiedMasterPassword(
+          token: session.token,
+          salt:  session.salt,
+        );
+        if (masterPw == null || !mounted) return;
+      }
 
       setState(() => _loading = true);
       await AuthService.completeLogin(
         token:          session.token,
+        refreshToken:   session.refreshToken,
         role:           session.role,
         salt:           session.salt,
         masterPassword: masterPw,
+        unlockedKey:    bio?.key,
         email:          _emailCtrl.text.trim(),
       );
       if (!mounted) return;
 
-      final l = AppLocalizations.of(context)!;
       final key = MasterKeyService.getMasterKey();
       if (key != null) {
         await BiometricUnlockService.maybeAutoEnable(

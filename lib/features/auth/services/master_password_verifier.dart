@@ -32,6 +32,17 @@ class MasterPasswordVerifier {
     required String token,
     required String salt,
     required String masterPassword,
+  }) =>
+      checkKeyAgainstServerVault(
+        token: token,
+        key:   CryptoService.deriveKey(masterPassword, salt),
+      );
+
+  /// Same check for a key obtained without the master password (biometric
+  /// copy kept on this device).
+  static Future<({MasterPasswordCheck check, List<dynamic>? raw})> checkKeyAgainstServerVault({
+    required String token,
+    required Uint8List key,
   }) async {
     final List<dynamic> raw;
     try {
@@ -39,8 +50,7 @@ class MasterPasswordVerifier {
     } catch (_) {
       return (check: MasterPasswordCheck.unverifiable, raw: null);
     }
-    final check = probe(raw, CryptoService.deriveKey(masterPassword, salt));
-    return (check: check, raw: raw);
+    return (check: probe(raw, key), raw: raw);
   }
 
   static MasterPasswordCheck probe(List<dynamic> raw, Uint8List key) {

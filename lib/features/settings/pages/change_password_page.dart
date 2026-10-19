@@ -50,8 +50,18 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
     try {
       final token = await AuthService.getToken();
       if (token == null) throw NotAuthenticatedException();
-      await ApiService().changePassword(
+      final res = await ApiService().changePassword(
           token, _currentPwCtrl.text, _newPwCtrl.text);
+      // Every session was revoked server-side: keep this device logged in
+      // with the fresh one returned.
+      final newToken = res['token'] as String?;
+      if (newToken != null) {
+        await AuthService.saveSession(
+          token:        newToken,
+          refreshToken: res['refreshToken'] as String?,
+          role:         res['role'] as String? ?? await AuthService.getUserRoleString(),
+        );
+      }
       if (!mounted) return;
       _currentPwCtrl.clear();
       _newPwCtrl.clear();

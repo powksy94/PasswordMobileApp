@@ -21,6 +21,17 @@ class ApiService {
     return res.data as Map<String, dynamic>;
   }
 
+  /// Rotates the refresh token: returns a new `token`/`refreshToken`/`role`.
+  /// A dead session answers 401 with code `REFRESH_INVALID`.
+  Future<Map<String, dynamic>> refreshSession(String refreshToken) async {
+    final res = await _dio.post('/auth/refresh', data: {'refreshToken': refreshToken});
+    return res.data as Map<String, dynamic>;
+  }
+
+  Future<void> logout(String refreshToken) async {
+    await _dio.post('/auth/logout', data: {'refreshToken': refreshToken});
+  }
+
   Future<List<dynamic>> getVault(String token) async {
     final res = await _dio.get('/vault', options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
@@ -74,16 +85,19 @@ class ApiService {
     );
   }
 
-  Future<void> changePassword(
+  /// Other devices are logged out: the response carries this device's new
+  /// session (`token`/`refreshToken`/`role`).
+  Future<Map<String, dynamic>> changePassword(
     String token,
     String currentPassword,
     String newPassword,
   ) async {
-    await _dio.post(
+    final res = await _dio.post(
       '/auth/change-password',
       data: {'currentPassword': currentPassword, 'newPassword': newPassword},
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
+    return res.data as Map<String, dynamic>;
   }
 
   Future<void> registerFcmToken(String token, String fcmToken, {String? locale}) async {

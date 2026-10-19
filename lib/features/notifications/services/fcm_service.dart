@@ -28,9 +28,32 @@ class FcmService {
 
   static final _localNotifications = FlutterLocalNotificationsPlugin();
 
+  // initialize() is called fire-and-forget from several screens (splash,
+  // lock, login, home), sometimes concurrently: the one-time setup is shared
+  // so requestPermission is never run twice at once.
+  static Future<void>? _setup;
+  static bool _listeningTokenRefresh = false;
+
   // ── Initialization ────────────────────────────────────────────────────────
 
   static Future<void> initialize() async {
+    try {
+      await (_setup ??= _setupOnce());
+    } catch (e) {
+      _setup = null;
+      debugPrint('[FCM] setup error: $e');
+      return;
+    }
+
+    // Re-run on every call: the auth token may only exist after login.
+    await _registerToken();
+    if (!_listeningTokenRefresh) {
+      _listeningTokenRefresh = true;
+      FirebaseMessaging.instance.onTokenRefresh.listen(_sendTokenToServer);
+    }
+  }
+
+  static Future<void> _setupOnce() async {
     await _fcm.requestPermission(
       alert:       true,
       badge:       true,
@@ -61,9 +84,6 @@ class FcmService {
       badge: true,
       sound: true,
     );
-
-    await _registerToken();
-    FirebaseMessaging.instance.onTokenRefresh.listen(_sendTokenToServer);
   }
 
   // ── Token ─────────────────────────────────────────────────────────────────

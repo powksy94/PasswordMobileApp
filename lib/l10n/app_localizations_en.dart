@@ -669,6 +669,12 @@ class AppLocalizationsEn extends AppLocalizations {
       'Each reminder must be later than the previous one';
 
   @override
+  String get btnWeakReminderLater => 'Later';
+
+  @override
+  String get btnWeakReminderOpenHealth => 'Open Health page';
+
+  @override
   String delayInHours(int count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,

@@ -236,6 +236,8 @@
   "labelDelayHours": "hours",
   "labelDelayDays": "days",
   "errorDelaysNotIncreasing": "Each reminder must be later than the previous one",
+  "btnWeakReminderLater": "Later",
+  "btnWeakReminderOpenHealth": "Open Health page",
   "delayInHours": "{count,plural, one{in {count} hour} other{in {count} hours}}",
   "@delayInHours": {
     "placeholders": { "count": { "type": "int" } }

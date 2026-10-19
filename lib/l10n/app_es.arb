@@ -228,6 +228,8 @@
   "labelDelayHours": "horas",
   "labelDelayDays": "días",
   "errorDelaysNotIncreasing": "Cada recordatorio debe ser posterior al anterior",
+  "btnWeakReminderLater": "Más tarde",
+  "btnWeakReminderOpenHealth": "Ver la página Salud",
   "delayInHours": "{count,plural, one{en {count} hora} other{en {count} horas}}",
   "delayInDays": "{count,plural, one{en {count} día} other{en {count} días}}",
 

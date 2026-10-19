@@ -6,6 +6,7 @@ import '../../../shared/services/api_service.dart';
 import '../../auth/services/auth_service.dart';
 import '../../home/services/home_tab_request_service.dart';
 import '../widgets/approval_dialog.dart';
+import '../../../l10n/app_localizations.dart';
 
 /// Handles Firebase Cloud Messaging:
 /// - FCM token registration
@@ -116,22 +117,26 @@ class FcmService {
   static void listenForeground(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {
       if (!context.mounted) return;
-      _handleMessage(context, message.data);
+      _handleMessage(context, message, foreground: true);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
       if (!context.mounted) return;
-      _handleMessage(context, message.data);
+      _handleMessage(context, message, foreground: false);
     });
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message == null) return;
       if (!context.mounted) return;
-      _handleMessage(context, message.data);
+      _handleMessage(context, message, foreground: false);
     });
   }
 
-  static Future<void> _handleMessage(BuildContext context, Map<String, dynamic> data) async {
+  /// [foreground] is true when the push arrives while the app is open (no
+  /// user action yet), false when the user tapped the system notification.
+  static Future<void> _handleMessage(BuildContext context, RemoteMessage message,
+      {required bool foreground}) async {
+    final data      = message.data;
     final type      = data['type'] as String?;
     final sessionId = data['sessionId'] as String? ?? '';
     final requestIp = data['requestIp'] as String?;
@@ -151,10 +156,38 @@ class FcmService {
           _showDialog(context, sessionId, ApprovalDialogType.vaultAccess, requestIp);
         }
       case 'weak_item_reminder':
-        // Informational only (unlike the admin approval cases above): no
-        // confirmation dialog, just switch HomePage to the Health tab.
-        HomeTabRequestService.requestHealthTab();
+        // Tapping the notification is already an explicit choice: switch
+        // HomePage to the Health tab directly. In the foreground the push
+        // arrives unprompted, so ask first instead of switching abruptly.
+        if (!foreground) {
+          HomeTabRequestService.requestHealthTab();
+        } else if (context.mounted) {
+          _showWeakReminderDialog(context, message.notification);
+        }
     }
+  }
+
+  static Future<void> _showWeakReminderDialog(
+      BuildContext context, RemoteNotification? notification) async {
+    final l = AppLocalizations.of(context)!;
+    final openHealth = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text(notification?.title ?? l.titleWeakReminders),
+        content: notification?.body != null ? Text(notification!.body!) : null,
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: Text(l.btnWeakReminderLater),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            child: Text(l.btnWeakReminderOpenHealth),
+          ),
+        ],
+      ),
+    );
+    if (openHealth == true) HomeTabRequestService.requestHealthTab();
   }
 
   static void _showDialog(BuildContext context, String sessionId,

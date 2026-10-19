@@ -1330,6 +1330,18 @@ abstract class AppLocalizations {
   /// **'Each reminder must be later than the previous one'**
   String get errorDelaysNotIncreasing;
 
+  /// No description provided for @btnWeakReminderLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later'**
+  String get btnWeakReminderLater;
+
+  /// No description provided for @btnWeakReminderOpenHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Health page'**
+  String get btnWeakReminderOpenHealth;
+
   /// No description provided for @delayInHours.
   ///
   /// In en, this message translates to:

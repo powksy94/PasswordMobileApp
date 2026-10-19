@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:share_plus/share_plus.dart';
 import '../models/vault_item.dart';
 import '../services/vault_export_service.dart';
 import '../services/biometric_export_service.dart';
 import '../services/biometric_prompt_texts.dart';
+import '../widgets/export_destination_sheet.dart';
 import '../../../shared/utils/error_message.dart';
 import '../../../l10n/app_localizations.dart';
 
-/// The exported file is written to an app-private folder (see
-/// getExportScratchDirectory): under scoped storage (Android 10+), we cannot
-/// guarantee that a public "Download/" path is writable. The
-/// system share sheet lets the user choose the real
-/// destination (Files, Drive, email...).
-Future<void> _shareExportedFile(BuildContext context, String path) async {
-  await Share.shareXFiles([XFile(path)]);
-}
+/// The exported file is first written to an app-private folder (see
+/// getExportScratchDirectory): under scoped storage (Android 10+), a public
+/// "Download/" path is not writable directly. [deliverExportedFile] then lets
+/// the user save it on the phone or share it.
+Future<void> _shareExportedFile(BuildContext context, String path) =>
+    deliverExportedFile(context, path);
 
 Future<void> exportVaultBiometric(
   BuildContext context,

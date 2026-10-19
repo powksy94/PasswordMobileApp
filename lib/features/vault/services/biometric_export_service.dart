@@ -93,6 +93,7 @@ class BiometricExportService {
                 'password': i.password,
                 'notes':    i.notes,
                 'icon':     i.icon,
+                'url':      i.url,
                 'pin':      i.pin,
               })
           .toList());

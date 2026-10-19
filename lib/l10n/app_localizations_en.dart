@@ -766,7 +766,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bodyPortableExport =>
-      'The file will be encrypted with your master password.\n\nIt will be saved to your Downloads folder.';
+      'The file will be encrypted with your master password.\n\nYou will then choose where to save it.';
+
+  @override
+  String get titleExportDestination => 'Where to save the export?';
+
+  @override
+  String get optionExportSaveToDevice => 'Save on this phone';
+
+  @override
+  String get optionExportSaveToDeviceSubtitle => 'Downloads or another folder';
+
+  @override
+  String get optionExportShare => 'Share';
+
+  @override
+  String get optionExportShareSubtitle => 'Drive, email, another app...';
+
+  @override
+  String get snackExportSaved => 'Export saved';
 
   @override
   String get btnExport => 'Export';
@@ -776,7 +794,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bodyJsonExport =>
-      '⚠️ This file will contain your passwords in plaintext.\n\nIt will be saved to your Downloads folder.';
+      '⚠️ This file will contain your passwords in plaintext.\n\nYou will then choose where to save it.';
 
   @override
   String get dialogTitleSelectVaultFile =>

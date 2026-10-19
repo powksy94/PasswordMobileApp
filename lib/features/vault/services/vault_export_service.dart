@@ -23,6 +23,7 @@ class VaultExportService {
           'password': i.password,
           'notes':    i.notes,
           'icon':     i.icon,
+          'url':      i.url,
           'pin':      i.pin,
         }).toList(),
       ),
@@ -39,7 +40,7 @@ class VaultExportService {
     final jsonStr   = jsonEncode(items.map((i) => {
       'type': i.type, 'label': i.label, 'login': i.login,
       'password': i.password, 'notes': i.notes, 'icon': i.icon,
-      'pin': i.pin,
+      'url': i.url, 'pin': i.pin,
     }).toList());
     final encrypted = CryptoService.encryptText(jsonStr, key);
 

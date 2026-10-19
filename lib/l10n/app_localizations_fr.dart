@@ -781,7 +781,26 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bodyPortableExport =>
-      'Le fichier sera chiffré avec votre mot de passe maître.\n\nIl sera enregistré dans votre dossier Téléchargements.';
+      'Le fichier sera chiffré avec votre mot de passe maître.\n\nVous choisirez ensuite où l\'enregistrer.';
+
+  @override
+  String get titleExportDestination => 'Où enregistrer l\'export ?';
+
+  @override
+  String get optionExportSaveToDevice => 'Enregistrer sur le téléphone';
+
+  @override
+  String get optionExportSaveToDeviceSubtitle =>
+      'Téléchargements ou un autre dossier';
+
+  @override
+  String get optionExportShare => 'Partager';
+
+  @override
+  String get optionExportShareSubtitle => 'Drive, email, autre application...';
+
+  @override
+  String get snackExportSaved => 'Export enregistré';
 
   @override
   String get btnExport => 'Exporter';
@@ -791,7 +810,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get bodyJsonExport =>
-      '⚠️ Ce fichier contiendra vos mots de passe en texte brut.\n\nIl sera enregistré dans votre dossier Téléchargements.';
+      '⚠️ Ce fichier contiendra vos mots de passe en texte brut.\n\nVous choisirez ensuite où l\'enregistrer.';
 
   @override
   String get dialogTitleSelectVaultFile =>

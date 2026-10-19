@@ -1477,8 +1477,44 @@ abstract class AppLocalizations {
   /// No description provided for @bodyPortableExport.
   ///
   /// In en, this message translates to:
-  /// **'The file will be encrypted with your master password.\n\nIt will be saved to your Downloads folder.'**
+  /// **'The file will be encrypted with your master password.\n\nYou will then choose where to save it.'**
   String get bodyPortableExport;
+
+  /// No description provided for @titleExportDestination.
+  ///
+  /// In en, this message translates to:
+  /// **'Where to save the export?'**
+  String get titleExportDestination;
+
+  /// No description provided for @optionExportSaveToDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Save on this phone'**
+  String get optionExportSaveToDevice;
+
+  /// No description provided for @optionExportSaveToDeviceSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloads or another folder'**
+  String get optionExportSaveToDeviceSubtitle;
+
+  /// No description provided for @optionExportShare.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get optionExportShare;
+
+  /// No description provided for @optionExportShareSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Drive, email, another app...'**
+  String get optionExportShareSubtitle;
+
+  /// No description provided for @snackExportSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Export saved'**
+  String get snackExportSaved;
 
   /// No description provided for @btnExport.
   ///
@@ -1495,7 +1531,7 @@ abstract class AppLocalizations {
   /// No description provided for @bodyJsonExport.
   ///
   /// In en, this message translates to:
-  /// **'⚠️ This file will contain your passwords in plaintext.\n\nIt will be saved to your Downloads folder.'**
+  /// **'⚠️ This file will contain your passwords in plaintext.\n\nYou will then choose where to save it.'**
   String get bodyJsonExport;
 
   /// No description provided for @dialogTitleSelectVaultFile.

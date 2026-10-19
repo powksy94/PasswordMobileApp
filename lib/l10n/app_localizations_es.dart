@@ -783,7 +783,25 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get bodyPortableExport =>
-      'El archivo se cifrará con tu contraseña maestra.\n\nSe guardará en tu carpeta de Descargas.';
+      'El archivo se cifrará con tu contraseña maestra.\n\nLuego elegirás dónde guardarlo.';
+
+  @override
+  String get titleExportDestination => '¿Dónde guardar la exportación?';
+
+  @override
+  String get optionExportSaveToDevice => 'Guardar en el teléfono';
+
+  @override
+  String get optionExportSaveToDeviceSubtitle => 'Descargas u otra carpeta';
+
+  @override
+  String get optionExportShare => 'Compartir';
+
+  @override
+  String get optionExportShareSubtitle => 'Drive, correo, otra aplicación...';
+
+  @override
+  String get snackExportSaved => 'Exportación guardada';
 
   @override
   String get btnExport => 'Exportar';
@@ -793,7 +811,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get bodyJsonExport =>
-      '⚠️ Este archivo contendrá tus contraseñas en texto plano.\n\nSe guardará en tu carpeta de Descargas.';
+      '⚠️ Este archivo contendrá tus contraseñas en texto plano.\n\nLuego elegirás dónde guardarlo.';
 
   @override
   String get dialogTitleSelectVaultFile =>

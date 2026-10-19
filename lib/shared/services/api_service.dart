@@ -86,10 +86,35 @@ class ApiService {
     );
   }
 
-  Future<void> registerFcmToken(String token, String fcmToken) async {
+  Future<void> registerFcmToken(String token, String fcmToken, {String? locale}) async {
     await _dio.post(
       '/auth/fcm-token',
-      data: {'fcmToken': fcmToken},
+      data: {'fcmToken': fcmToken, if (locale != null) 'locale': locale},
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+  }
+
+  Future<Map<String, dynamic>> getWeakReminderSettings(String token) async {
+    final response = await _dio.get(
+      '/auth/weak-reminder-settings',
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+    return response.data as Map<String, dynamic>;
+  }
+
+  Future<void> updateWeakReminderSettings(
+    String token, {
+    required bool enabled,
+    required bool includeMedium,
+    required List<int> delaysHours,
+  }) async {
+    await _dio.put(
+      '/auth/weak-reminder-settings',
+      data: {
+        'enabled': enabled,
+        'includeMedium': includeMedium,
+        'delaysHours': delaysHours,
+      },
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
   }

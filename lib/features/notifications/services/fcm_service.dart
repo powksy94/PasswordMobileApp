@@ -1,19 +1,30 @@
+import 'dart:ui' as ui;
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../../shared/services/api_service.dart';
 import '../../auth/services/auth_service.dart';
+import '../../home/services/home_tab_request_service.dart';
 import '../widgets/approval_dialog.dart';
 
 /// Handles Firebase Cloud Messaging:
 /// - FCM token registration
 /// - Admin approval notifications (dashboard login)
 /// - Vault admin approval notifications (vault access)
+/// - Weak/medium item push reminders
 class FcmService {
   static final _fcm = FirebaseMessaging.instance;
 
   static const _channelId   = 'admin_auth';
   static const _channelName = 'Approbations admin';
+
+  static const _weakReminderChannelId   = 'weak_reminders';
+  static const _weakReminderChannelName = 'Rappels de sécurité';
+
+  // Locales actually supported by the app (see supportedLocales in
+  // main.dart) - sent alongside the FCM token so server-sent push text
+  // (weak_item_reminder) can match the app's own localization.
+  static const _supportedLocales = {'en', 'fr', 'es'};
 
   static final _localNotifications = FlutterLocalNotificationsPlugin();
 
@@ -33,10 +44,16 @@ class FcmService {
       _channelName,
       importance: Importance.high,
     );
-    await _localNotifications
+    const weakReminderChannel = AndroidNotificationChannel(
+      _weakReminderChannelId,
+      _weakReminderChannelName,
+      importance: Importance.defaultImportance,
+    );
+    final androidPlugin = _localNotifications
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(androidChannel);
+            AndroidFlutterLocalNotificationsPlugin>();
+    await androidPlugin?.createNotificationChannel(androidChannel);
+    await androidPlugin?.createNotificationChannel(weakReminderChannel);
 
     // Display FCM notifications in the foreground
     await _fcm.setForegroundNotificationPresentationOptions(
@@ -61,10 +78,17 @@ class FcmService {
     try {
       final authToken = await AuthService.getToken();
       if (authToken == null) return;
-      await ApiService().registerFcmToken(authToken, token);
+      await ApiService().registerFcmToken(authToken, token, locale: _currentLocale());
     } catch (e) {
       debugPrint('[FCM] token registration error: $e');
     }
+  }
+
+  /// Device locale restricted to the app's actually supported ones
+  /// (fallback 'en', the app's default - see supportedLocales in main.dart).
+  static String _currentLocale() {
+    final code = ui.PlatformDispatcher.instance.locale.languageCode;
+    return _supportedLocales.contains(code) ? code : 'en';
   }
 
   // ── Handlers foreground + background (notification tap) ─────────────────────
@@ -106,6 +130,10 @@ class FcmService {
         if (context.mounted) {
           _showDialog(context, sessionId, ApprovalDialogType.vaultAccess, requestIp);
         }
+      case 'weak_item_reminder':
+        // Informational only (unlike the admin approval cases above): no
+        // confirmation dialog, just switch HomePage to the Health tab.
+        HomeTabRequestService.requestHealthTab();
     }
   }
 

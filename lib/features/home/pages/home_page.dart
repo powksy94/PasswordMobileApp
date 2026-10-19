@@ -8,6 +8,7 @@ import '../../../shared/services/role_provider.dart';
 import '../../auth/services/logout_service.dart';
 import '../../notifications/services/fcm_service.dart';
 import '../../vault/services/pending_autofill_save_handler.dart';
+import '../services/home_tab_request_service.dart';
 import '../../../l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,6 +54,7 @@ class _HomePageState extends State<HomePage> {
       // pending_autofill_save_handler.dart). A no-op if there is nothing
       // pending.
       checkPendingAutofillSave(context).ignore();
+      HomeTabRequestService.requestedTabIndex.addListener(_onTabRequested);
       _prevRole      = _roleProvider.role;
       _roleListener  = () {
         if (!mounted) return;
@@ -68,11 +70,19 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _onTabRequested() {
+    final requested = HomeTabRequestService.requestedTabIndex.value;
+    if (requested == null || !mounted) return;
+    setState(() => _index = requested);
+    HomeTabRequestService.requestedTabIndex.value = null;
+  }
+
   @override
   void dispose() {
     if (_roleListener != null) {
       _roleProvider.removeListener(_roleListener!);
     }
+    HomeTabRequestService.requestedTabIndex.removeListener(_onTabRequested);
     super.dispose();
   }
 

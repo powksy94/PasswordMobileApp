@@ -631,6 +631,66 @@ class AppLocalizationsEn extends AppLocalizations {
   String get linkTermsOfService => 'Terms of service';
 
   @override
+  String get titleWeakReminders => 'Security reminders';
+
+  @override
+  String get titleWeakRemindersEnabled => 'Receive security reminders';
+
+  @override
+  String get subtitleWeakRemindersEnabled =>
+      'Get notified when a password or PIN is weak';
+
+  @override
+  String get titleWeakRemindersIncludeMedium => 'Include moderate weaknesses';
+
+  @override
+  String get subtitleWeakRemindersIncludeMedium =>
+      'Matches what the Health page already flags as needing attention - turn off to keep only the most critical cases';
+
+  @override
+  String get titleWeakReminderDelays => 'Reminder delays';
+
+  @override
+  String labelReminderStage(int n) {
+    return 'Reminder $n';
+  }
+
+  @override
+  String get optionCustomDelay => 'Custom...';
+
+  @override
+  String get labelDelayHours => 'hours';
+
+  @override
+  String get labelDelayDays => 'days';
+
+  @override
+  String get errorDelaysNotIncreasing =>
+      'Each reminder must be later than the previous one';
+
+  @override
+  String delayInHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'in $count hours',
+      one: 'in $count hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String delayInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'in $count days',
+      one: 'in $count day',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get titleChangeMasterPassword => 'Change master password';
 
   @override

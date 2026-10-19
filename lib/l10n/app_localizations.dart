@@ -1264,6 +1264,84 @@ abstract class AppLocalizations {
   /// **'Terms of service'**
   String get linkTermsOfService;
 
+  /// No description provided for @titleWeakReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Security reminders'**
+  String get titleWeakReminders;
+
+  /// No description provided for @titleWeakRemindersEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive security reminders'**
+  String get titleWeakRemindersEnabled;
+
+  /// No description provided for @subtitleWeakRemindersEnabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Get notified when a password or PIN is weak'**
+  String get subtitleWeakRemindersEnabled;
+
+  /// No description provided for @titleWeakRemindersIncludeMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Include moderate weaknesses'**
+  String get titleWeakRemindersIncludeMedium;
+
+  /// No description provided for @subtitleWeakRemindersIncludeMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Matches what the Health page already flags as needing attention - turn off to keep only the most critical cases'**
+  String get subtitleWeakRemindersIncludeMedium;
+
+  /// No description provided for @titleWeakReminderDelays.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder delays'**
+  String get titleWeakReminderDelays;
+
+  /// No description provided for @labelReminderStage.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder {n}'**
+  String labelReminderStage(int n);
+
+  /// No description provided for @optionCustomDelay.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom...'**
+  String get optionCustomDelay;
+
+  /// No description provided for @labelDelayHours.
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get labelDelayHours;
+
+  /// No description provided for @labelDelayDays.
+  ///
+  /// In en, this message translates to:
+  /// **'days'**
+  String get labelDelayDays;
+
+  /// No description provided for @errorDelaysNotIncreasing.
+  ///
+  /// In en, this message translates to:
+  /// **'Each reminder must be later than the previous one'**
+  String get errorDelaysNotIncreasing;
+
+  /// No description provided for @delayInHours.
+  ///
+  /// In en, this message translates to:
+  /// **'{count,plural, one{in {count} hour} other{in {count} hours}}'**
+  String delayInHours(int count);
+
+  /// No description provided for @delayInDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count,plural, one{in {count} day} other{in {count} days}}'**
+  String delayInDays(int count);
+
   /// No description provided for @titleChangeMasterPassword.
   ///
   /// In en, this message translates to:

@@ -222,6 +222,29 @@
   "linkPrivacyPolicy": "Privacy policy",
   "linkTermsOfService": "Terms of service",
 
+  "titleWeakReminders": "Security reminders",
+  "titleWeakRemindersEnabled": "Receive security reminders",
+  "subtitleWeakRemindersEnabled": "Get notified when a password or PIN is weak",
+  "titleWeakRemindersIncludeMedium": "Include moderate weaknesses",
+  "subtitleWeakRemindersIncludeMedium": "Matches what the Health page already flags as needing attention - turn off to keep only the most critical cases",
+  "titleWeakReminderDelays": "Reminder delays",
+  "labelReminderStage": "Reminder {n}",
+  "@labelReminderStage": {
+    "placeholders": { "n": { "type": "int" } }
+  },
+  "optionCustomDelay": "Custom...",
+  "labelDelayHours": "hours",
+  "labelDelayDays": "days",
+  "errorDelaysNotIncreasing": "Each reminder must be later than the previous one",
+  "delayInHours": "{count,plural, one{in {count} hour} other{in {count} hours}}",
+  "@delayInHours": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "delayInDays": "{count,plural, one{in {count} day} other{in {count} days}}",
+  "@delayInDays": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "titleChangeMasterPassword": "Change master password",
   "warningChangeMasterPasswordTitle": "Critical, irreversible action",
   "warningChangeMasterPasswordBody": "This operation re-encrypts your entire vault with a new master password.\n\n⚠️ If you forget this new password, your vault will be permanently unrecoverable - we cannot reset it.\n\nWrite it down in a safe place before continuing.",

@@ -17,6 +17,7 @@ import '../../../l10n/app_localizations.dart';
 import './change_password_page.dart';
 import './change_master_password_page.dart';
 import './reset_vault_page.dart';
+import './weak_reminders_settings_page.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({super.key});
@@ -112,6 +113,20 @@ class _AccountSettingsPageState extends State<AccountSettingsPage> {
               LockTimeoutPanel(),
               const SizedBox(height: 20),
               const PrivacySettingsPanel(),
+              const SizedBox(height: 20),
+              GlassPanel(
+                width: double.infinity,
+                padding: EdgeInsets.zero,
+                child: ListTile(
+                  leading: const Icon(Icons.notifications_active_outlined),
+                  title: Text(l.titleWeakReminders),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const WeakRemindersSettingsPage()),
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               const VaultDataPanel(),
               const SizedBox(height: 20),

@@ -645,6 +645,67 @@ class AppLocalizationsEs extends AppLocalizations {
   String get linkTermsOfService => 'Condiciones de uso';
 
   @override
+  String get titleWeakReminders => 'Recordatorios de seguridad';
+
+  @override
+  String get titleWeakRemindersEnabled => 'Recibir recordatorios de seguridad';
+
+  @override
+  String get subtitleWeakRemindersEnabled =>
+      'Recibir un aviso cuando una contraseña o PIN sea débil';
+
+  @override
+  String get titleWeakRemindersIncludeMedium =>
+      'Incluir las debilidades moderadas';
+
+  @override
+  String get subtitleWeakRemindersIncludeMedium =>
+      'Coincide con lo que la página Salud ya marca como a corregir - desactivar para quedarse solo con los casos más críticos';
+
+  @override
+  String get titleWeakReminderDelays => 'Plazo de los recordatorios';
+
+  @override
+  String labelReminderStage(int n) {
+    return 'Recordatorio $n';
+  }
+
+  @override
+  String get optionCustomDelay => 'Personalizado...';
+
+  @override
+  String get labelDelayHours => 'horas';
+
+  @override
+  String get labelDelayDays => 'días';
+
+  @override
+  String get errorDelaysNotIncreasing =>
+      'Cada recordatorio debe ser posterior al anterior';
+
+  @override
+  String delayInHours(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'en $count horas',
+      one: 'en $count hora',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String delayInDays(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'en $count días',
+      one: 'en $count día',
+    );
+    return '$_temp0';
+  }
+
+  @override
   String get titleChangeMasterPassword => 'Cambiar la contraseña maestra';
 
   @override

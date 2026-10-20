@@ -787,6 +787,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String get snackExportSaved => 'Export saved';
 
   @override
+  String get btnForgotPassword => 'Forgot password?';
+
+  @override
+  String get titleForgotPassword => 'Forgot password';
+
+  @override
+  String get bodyForgotPasswordEmail =>
+      'Enter your account email: we will send you a 6-digit code.';
+
+  @override
+  String get btnSendCode => 'Send code';
+
+  @override
+  String bodyForgotPasswordCode(String email) {
+    return 'If an account exists for $email, a code has just been sent to it. It is valid for 15 minutes.';
+  }
+
+  @override
+  String get labelResetCode => 'Code received by email';
+
+  @override
+  String get tooltipPasteCode => 'Paste the code';
+
+  @override
+  String get validatorResetCode => 'The code has 6 digits';
+
+  @override
+  String get btnResetPassword => 'Reset password';
+
+  @override
+  String get btnResendCode => 'Resend code';
+
+  @override
+  String get snackCodeResent =>
+      'If an account exists, a new code has been sent';
+
+  @override
+  String get errorResetCodeInvalid =>
+      'Invalid or expired code. Request a new code if needed.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Too many attempts, try again in a few minutes.';
+
+  @override
+  String get successPasswordReset =>
+      'Password reset. Log in with your new password.';
+
+  @override
+  String get noteResetVault =>
+      'Only your login password is reset. Your vault still opens with your master password, or with your fingerprint on this phone.';
+
+  @override
   String get btnExport => 'Export';
 
   @override

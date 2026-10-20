@@ -1516,6 +1516,96 @@ abstract class AppLocalizations {
   /// **'Export saved'**
   String get snackExportSaved;
 
+  /// No description provided for @btnForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password?'**
+  String get btnForgotPassword;
+
+  /// No description provided for @titleForgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password'**
+  String get titleForgotPassword;
+
+  /// No description provided for @bodyForgotPasswordEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your account email: we will send you a 6-digit code.'**
+  String get bodyForgotPasswordEmail;
+
+  /// No description provided for @btnSendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send code'**
+  String get btnSendCode;
+
+  /// No description provided for @bodyForgotPasswordCode.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists for {email}, a code has just been sent to it. It is valid for 15 minutes.'**
+  String bodyForgotPasswordCode(String email);
+
+  /// No description provided for @labelResetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Code received by email'**
+  String get labelResetCode;
+
+  /// No description provided for @tooltipPasteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the code'**
+  String get tooltipPasteCode;
+
+  /// No description provided for @validatorResetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'The code has 6 digits'**
+  String get validatorResetCode;
+
+  /// No description provided for @btnResetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get btnResetPassword;
+
+  /// No description provided for @btnResendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get btnResendCode;
+
+  /// No description provided for @snackCodeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'If an account exists, a new code has been sent'**
+  String get snackCodeResent;
+
+  /// No description provided for @errorResetCodeInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired code. Request a new code if needed.'**
+  String get errorResetCodeInvalid;
+
+  /// No description provided for @errorTooManyRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts, try again in a few minutes.'**
+  String get errorTooManyRequests;
+
+  /// No description provided for @successPasswordReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset. Log in with your new password.'**
+  String get successPasswordReset;
+
+  /// No description provided for @noteResetVault.
+  ///
+  /// In en, this message translates to:
+  /// **'Only your login password is reset. Your vault still opens with your master password, or with your fingerprint on this phone.'**
+  String get noteResetVault;
+
   /// No description provided for @btnExport.
   ///
   /// In en, this message translates to:

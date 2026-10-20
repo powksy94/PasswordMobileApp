@@ -804,6 +804,59 @@ class AppLocalizationsEs extends AppLocalizations {
   String get snackExportSaved => 'Exportación guardada';
 
   @override
+  String get btnForgotPassword => '¿Olvidaste tu contraseña?';
+
+  @override
+  String get titleForgotPassword => 'Contraseña olvidada';
+
+  @override
+  String get bodyForgotPasswordEmail =>
+      'Introduce el correo de tu cuenta: te enviaremos un código de 6 dígitos.';
+
+  @override
+  String get btnSendCode => 'Enviar el código';
+
+  @override
+  String bodyForgotPasswordCode(String email) {
+    return 'Si existe una cuenta para $email, se le acaba de enviar un código. Es válido durante 15 minutos.';
+  }
+
+  @override
+  String get labelResetCode => 'Código recibido por correo';
+
+  @override
+  String get tooltipPasteCode => 'Pegar el código';
+
+  @override
+  String get validatorResetCode => 'El código tiene 6 dígitos';
+
+  @override
+  String get btnResetPassword => 'Restablecer la contraseña';
+
+  @override
+  String get btnResendCode => 'Reenviar el código';
+
+  @override
+  String get snackCodeResent =>
+      'Si existe una cuenta, se ha enviado un nuevo código';
+
+  @override
+  String get errorResetCodeInvalid =>
+      'Código no válido o caducado. Solicita un nuevo código si es necesario.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Demasiados intentos, inténtalo de nuevo en unos minutos.';
+
+  @override
+  String get successPasswordReset =>
+      'Contraseña restablecida. Inicia sesión con la nueva.';
+
+  @override
+  String get noteResetVault =>
+      'Solo se restablece la contraseña de inicio de sesión. Tu bóveda se sigue abriendo con tu contraseña maestra, o con tu huella en este teléfono.';
+
+  @override
   String get btnExport => 'Exportar';
 
   @override

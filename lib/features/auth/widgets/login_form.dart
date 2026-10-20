@@ -13,6 +13,7 @@ class LoginForm extends StatelessWidget {
   final Animation<double>      rotationAnimation;
   final bool                   showBiometric;
   final VoidCallback?          onBiometricTap;
+  final VoidCallback?          onForgotPassword;
 
   const LoginForm({
     super.key,
@@ -25,6 +26,7 @@ class LoginForm extends StatelessWidget {
     required this.rotationAnimation,
     this.showBiometric  = false,
     this.onBiometricTap,
+    this.onForgotPassword,
   });
 
   @override
@@ -109,7 +111,19 @@ class LoginForm extends StatelessWidget {
                 fillColor:  fill,
               ),
             ),
-            const SizedBox(height: 16),
+            if (onForgotPassword != null)
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: loading ? null : onForgotPassword,
+                  child: Text(
+                    l.btnForgotPassword,
+                    style: TextStyle(color: accent, fontSize: 12),
+                  ),
+                ),
+              )
+            else
+              const SizedBox(height: 16),
 
             SizedBox(
               width: double.infinity,

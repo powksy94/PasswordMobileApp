@@ -10,6 +10,7 @@ import 'package:screen_protector/screen_protector.dart';
 import 'features/auth/pages/login_page.dart';
 import 'features/auth/pages/signup_page.dart';
 import 'features/auth/pages/signup_success_page.dart';
+import 'features/auth/pages/forgot_password_page.dart';
 import 'features/auth/pages/lock_screen.dart';
 import 'features/home/pages/home_page.dart';
 import 'features/vault/pages/vault_page.dart';
@@ -152,6 +153,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         '/login':     (_) => const LoginPage(),
         '/signup':         (_) => const SignupPage(),
         '/signup-success': (_) => const SignupSuccessPage(),
+        '/forgot-password': (_) => const ForgotPasswordPage(),
         '/lock':      (_) => const LockScreen(),
         '/home':      (_) => HomePage(
               onThemeToggle:    changeTheme,

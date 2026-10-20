@@ -32,6 +32,22 @@ class ApiService {
     await _dio.post('/auth/logout', data: {'refreshToken': refreshToken});
   }
 
+  /// Emails a one-time code if the account exists. Always succeeds (202)
+  /// for any email: the server never tells which accounts exist.
+  Future<void> requestPasswordReset(String email) async {
+    await _dio.post('/auth/password-reset/request', data: {'email': email});
+  }
+
+  /// Sets [newPassword] if [code] is valid. A rejection answers 400 with
+  /// code `INVALID_CODE` or `WEAK_PASSWORD`.
+  Future<void> confirmPasswordReset(String email, String code, String newPassword) async {
+    await _dio.post('/auth/password-reset/confirm', data: {
+      'email':       email,
+      'code':        code,
+      'newPassword': newPassword,
+    });
+  }
+
   Future<List<dynamic>> getVault(String token) async {
     final res = await _dio.get('/vault', options: Options(headers: {'Authorization': 'Bearer $token'}),
     );

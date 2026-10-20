@@ -206,6 +206,17 @@ class _LoginPageState extends State<LoginPage>
     }
   }
 
+  /// The reset page pops with the email on success: prefilled for the login
+  /// with the new password.
+  Future<void> _openForgotPassword() async {
+    final email = await Navigator.pushNamed(
+      context, '/forgot-password', arguments: _emailCtrl.text.trim(),
+    );
+    if (email is! String || !mounted) return;
+    _emailCtrl.text = email;
+    _passwordCtrl.clear();
+  }
+
   void _snack(String msg) =>
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
 
@@ -224,6 +235,7 @@ class _LoginPageState extends State<LoginPage>
             rotationAnimation: _rotationAnimation,
             showBiometric:     _showBiometric,
             onBiometricTap:    _loginWithBiometric,
+            onForgotPassword:  _openForgotPassword,
           ),
         ),
       ),

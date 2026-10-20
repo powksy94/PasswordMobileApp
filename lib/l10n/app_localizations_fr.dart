@@ -803,6 +803,59 @@ class AppLocalizationsFr extends AppLocalizations {
   String get snackExportSaved => 'Export enregistré';
 
   @override
+  String get btnForgotPassword => 'Mot de passe oublié ?';
+
+  @override
+  String get titleForgotPassword => 'Mot de passe oublié';
+
+  @override
+  String get bodyForgotPasswordEmail =>
+      'Saisissez l\'email de votre compte : nous vous enverrons un code à 6 chiffres.';
+
+  @override
+  String get btnSendCode => 'Envoyer le code';
+
+  @override
+  String bodyForgotPasswordCode(String email) {
+    return 'Si un compte existe pour $email, un code vient d\'y être envoyé. Il est valable 15 minutes.';
+  }
+
+  @override
+  String get labelResetCode => 'Code reçu par email';
+
+  @override
+  String get tooltipPasteCode => 'Coller le code';
+
+  @override
+  String get validatorResetCode => 'Le code contient 6 chiffres';
+
+  @override
+  String get btnResetPassword => 'Réinitialiser le mot de passe';
+
+  @override
+  String get btnResendCode => 'Renvoyer le code';
+
+  @override
+  String get snackCodeResent =>
+      'Si un compte existe, un nouveau code a été envoyé';
+
+  @override
+  String get errorResetCodeInvalid =>
+      'Code invalide ou expiré. Demandez un nouveau code si besoin.';
+
+  @override
+  String get errorTooManyRequests =>
+      'Trop de tentatives, réessayez dans quelques minutes.';
+
+  @override
+  String get successPasswordReset =>
+      'Mot de passe réinitialisé. Connectez-vous avec le nouveau.';
+
+  @override
+  String get noteResetVault =>
+      'Seul le mot de passe de connexion est réinitialisé. Votre coffre s\'ouvre toujours avec votre mot de passe maître, ou avec votre empreinte sur ce téléphone.';
+
+  @override
   String get btnExport => 'Exporter';
 
   @override
